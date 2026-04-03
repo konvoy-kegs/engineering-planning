@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konvoy Kegs — Engineering Planning</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 48px 24px; }
+  .logo { font-size: 2.4rem; font-weight: 800; margin-bottom: 4px; }
+  .logo span { color: var(--accent); }
+  .subtitle { color: var(--muted); margin-bottom: 48px; font-size: 1rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; width: 100%; max-width: 1000px; }
+  .card { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px; text-decoration: none; color: var(--text); transition: all 0.2s; }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .card h2 { font-size: 1.1rem; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+  .card .date { color: var(--accent); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; background: rgba(74,222,128,0.15); color: var(--green); margin-left: 8px; }
+  footer { margin-top: 64px; color: var(--surface2); font-size: 0.8rem; }
+</style>
+</head>
+<body>
+  <div class="logo">Konvoy <span>Engineering</span></div>
+  <p class="subtitle">Sprint reviews, planning dashboards & team insights</p>
+
+  <div class="grid">
+    <a class="card" href="sprint-review-2026-04-03.html">
+      <div class="date">April 3, 2026</div>
+      <h2>Sprint Review <span class="badge">Latest</span></h2>
+      <p>End-of-sprint dashboard with team breakdown, status charts, Doug's departure handover, Sentry issues, and dependency mapping.</p>
+    </a>
+
+    <!-- Add future sprint reviews here like this:
+    <a class="card" href="sprint-review-2026-04-17.html">
+      <div class="date">April 17, 2026</div>
+      <h2>Sprint Review</h2>
+      <p>Summary of this sprint's work...</p>
+    </a>
+    -->
+  </div>
+
+  <footer>Konvoy Kegs Engineering &middot; Katch Cloud</footer>
+</body>
+</html>

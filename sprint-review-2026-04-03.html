@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katch Cloud Sprint Review — April 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --orange: #fb923c;
+    --red: #f87171; --purple: #a78bfa; --pink: #f472b6;
+    --blue: #60a5fa; --cyan: #22d3ee;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 24px; }
+  h1 { font-size: 1.8rem; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+  .grid { display: grid; gap: 20px; margin-bottom: 20px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .card { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--surface2); }
+  .card h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--accent); }
+  .card h3 { font-size: 0.95rem; margin: 12px 0 8px; color: var(--muted); }
+  .stat-card { text-align: center; }
+  .stat-card .number { font-size: 2.4rem; font-weight: 700; }
+  .stat-card .label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  .chart-container { position: relative; height: 280px; }
+  .chart-container.tall { height: 340px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 8px 10px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--surface2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 8px 10px; border-bottom: 1px solid rgba(51,65,85,0.5); vertical-align: top; }
+  tr:hover { background: rgba(56,189,248,0.05); }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+  .badge-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-review { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-progress { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .badge-ready { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .badge-backlog { background: rgba(148,163,184,0.15); color: var(--muted); }
+  .badge-discovery { background: rgba(244,114,182,0.15); color: var(--pink); }
+  .badge-qa { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .badge-urgent { background: rgba(248,113,113,0.2); color: var(--red); }
+
+  /* Alert */
+  .alert { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .alert h2 { color: var(--red) !important; font-size: 1rem; margin-bottom: 8px; }
+  .alert p { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+  .alert ul { margin: 8px 0 0 18px; color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
+
+  .section-title { font-size: 1.3rem; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--surface2); }
+
+  /* Person summary cards */
+  .person-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; color: var(--bg); }
+  .person-stats { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .person-stat { font-size: 0.82rem; color: var(--muted); }
+  .person-stat strong { color: var(--text); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .tag { font-size: 0.72rem; padding: 1px 6px; border-radius: 4px; background: var(--surface2); color: var(--muted); margin-right: 3px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Katch Cloud — Sprint Review</h1>
+<p class="subtitle">Project Board Snapshot · April 3, 2026 (Public Holiday) · Enriched with Slack & Sentry data</p>
+
+<!-- Alert: Doug's Departure -->
+<div class="alert">
+  <h2>⚠ Doug Bamber — Finishing This Week</h2>
+  <p>Doug has <strong>zero open tickets</strong> on the project board — all 5 tracked items are Done. However, Slack release notes reveal significantly more work delivered (see below). Key handover items:</p>
+  <ul>
+    <li><strong>2 unresolved Sentry issues</strong> assigned to Doug: "Bot detected" on SignUpForm (KONVOY-WEB-APP-S6, 8 users) and "Google Maps failed to load" on collection-request (KONVOY-WEB-APP-S9)</li>
+    <li>Doug is <strong>assigning FE backlog tickets to Bea</strong> and planning knowledge transfer sessions (Slack, Apr 1)</li>
+    <li>Handover recordings being saved to <strong>SharePoint → Development → Recordings</strong></li>
+    <li>Sessions planned for: Vercel, LaunchDarkly, environment setup, GitHub workflows</li>
+    <li><strong>LastPass admin access</strong> needs resolving — Doug couldn't grant Rob admin (needs Feruz or a licence)</li>
+  </ul>
+</div>
+
+<!-- KPI Stats -->
+<div class="grid grid-4">
+  <div class="card stat-card"><div class="number" style="color:var(--green)">47</div><div class="label">Total Items on Board</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">47</div><div class="label">Completed (Done)</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--yellow)">7</div><div class="label">In Review / QA</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--orange)">30</div><div class="label">Open (Ready/Backlog/Discovery/In-Progress)</div></div>
+</div>
+
+<!-- Charts Row -->
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Tickets by Status</h2>
+    <div class="chart-container"><canvas id="statusChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Completed Items by Person</h2>
+    <div class="chart-container"><canvas id="completedChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Open Items by Person</h2>
+    <div class="chart-container"><canvas id="openChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Work Distribution by Label</h2>
+    <div class="chart-container"><canvas id="labelChart"></canvas></div>
+  </div>
+</div>
+
+<!-- Per-Person Breakdown -->
+<h2 class="section-title">Team Breakdown</h2>
+
+<!-- DOUG -->
+<div class="card" style="margin-bottom:20px">
+  <div class="person-header">
+    <div class="avatar" style="background:var(--orange)">D</div>
+    <div><strong>Doug Bamber</strong> <span class="badge badge-urgent">Finishing this week</span><br><span style="color:var(--muted);font-size:0.82rem">Frontend · React · Orders Experience</span></div>
+  </div>
+  <div class="person-stats">
+    <div class="person-stat"><strong style="color:var(--green)">5</strong> Done (board)</div>
+    <div class="person-stat"><strong style="color:var(--green)">~18</strong> PRs in releases</div>
+    <div class="person-stat"><strong style="color:var(--red)">2</strong> Sentry issues</div>
+    <div class="person-stat"><strong style="color:var(--green)">0</strong> Open tickets</div>
+  </div>
+  <h3>Board Items (All Done)</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Status</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4245">#4245</a></td><td>Add activity logs to Organisation page</td><td><span class="badge badge-done">Done</span></td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4251">#4251</a></td><td>Improve order form location, transport, and validation behaviour</td><td><span class="badge badge-done">Done</span></td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4269">#4269</a></td><td>Schedule Collections at Creation</td><td><span class="badge badge-done">Done</span></td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/4066">#4066</a></td><td>FE Orders Table</td><td><span class="badge badge-done">Done</span></td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4262">#4262</a></td><td>Add includeTotal flag to assets request</td><td><span class="badge badge-done">Done</span></td></tr>
+  </table>
+  <h3>Additional PRs (from Slack Release Notes, not on board)</h3>
+  <table>
+    <tr><th>PR</th><th>Title</th><th>Release</th></tr>
+    <tr><td>#4425</td><td>Add group by period support to orders chart</td><td>v1.89.8</td></tr>
+    <tr><td>#4481</td><td>Implement orders list in organisation view</td><td>v1.89.8</td></tr>
+    <tr><td>#4496</td><td>Hide order activity for non-operators</td><td>v1.89.8</td></tr>
+    <tr><td>#4433</td><td>Allow konvoy admins to edit pricing during order creation</td><td>v1.89.9</td></tr>
+    <tr><td>#4513</td><td>Remove pallet size for transfers</td><td>v1.89.9</td></tr>
+    <tr><td>#4459</td><td>Year over year comparison on orders charts</td><td>v1.89.9</td></tr>
+    <tr><td>#4511</td><td>Enforce pallet-size keg quantities</td><td>v1.89.9</td></tr>
+    <tr><td>#4522</td><td>Display internal notes on OrderPage</td><td>v1.89.9</td></tr>
+    <tr><td>#4545</td><td>Add "This Month & Next" date range preset</td><td>v1.89.9</td></tr>
+    <tr><td>#4482</td><td>View organisation details in side panel</td><td>v1.89.9</td></tr>
+    <tr><td>#4520</td><td>Open form inputs in fullscreen modal on mobile</td><td>v1.89.9</td></tr>
+    <tr><td>#4485</td><td>Show all SKUs for Konvoy admins</td><td>v1.89.9</td></tr>
+    <tr><td>#4524</td><td>Hide actioned web collection requests</td><td>v1.89.9</td></tr>
+    <tr><td>#4552</td><td>Increase Card scrollable CSS specificity</td><td>v1.89.9</td></tr>
+    <tr><td>#4547</td><td>Guard toLocaleString on undefined totals</td><td>v1.89.9</td></tr>
+  </table>
+  <h3>Sentry Issues (Unresolved, Assigned to Doug)</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Users</th><th>Events</th><th>First Seen</th></tr>
+    <tr><td><a href="https://konvoy-katch.sentry.io/issues/KONVOY-WEB-APP-S6">S6</a></td><td>Bot detected — SignUpForm</td><td>8</td><td>13</td><td>~18hrs ago</td></tr>
+    <tr><td><a href="https://konvoy-katch.sentry.io/issues/KONVOY-WEB-APP-S9">S9</a></td><td>Google Maps failed to load for unauthenticated user</td><td>1</td><td>1</td><td>~4hrs ago</td></tr>
+  </table>
+</div>
+
+<!-- MILLICENT -->
+<div class="card" style="margin-bottom:20px">
+  <div class="person-header">
+    <div class="avatar" style="background:var(--purple)">M</div>
+    <div><strong>Millicent Convento</strong><br><span style="color:var(--muted);font-size:0.82rem">Backend · PHP/Symfony · Orders API · NetSuite</span></div>
+  </div>
+  <div class="person-stats">
+    <div class="person-stat"><strong style="color:var(--green)">14</strong> Done</div>
+    <div class="person-stat"><strong style="color:var(--yellow)">2</strong> In Review</div>
+    <div class="person-stat"><strong style="color:var(--blue)">1</strong> In Progress</div>
+    <div class="person-stat"><strong style="color:var(--purple)">4</strong> Ready</div>
+    <div class="person-stat"><strong style="color:var(--pink)">5</strong> Discovery</div>
+  </div>
+  <h3>Pre-Sprint Open Tickets</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Status</th><th>Priority</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4155">#4155</a></td><td>WIP: Invoice API endpoints</td><td><span class="badge badge-ready">Ready</span></td><td>Medium</td></tr>
+  </table>
+  <h3>Current Sprint Open Tickets</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Status</th><th>Priority</th><th>Size</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4383">#4383</a></td><td>Mark legacy endpoints as deprecated</td><td><span class="badge badge-review">Review</span></td><td>Low</td><td>Small</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4394">#4394</a></td><td>Upgrade Symfony 7.4 → 8.0</td><td><span class="badge badge-review">Review</span></td><td>Low</td><td>X-Large</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4491">#4491</a></td><td>Order Items Sorting when Submitting</td><td><span class="badge badge-progress">In Progress</span></td><td>Medium</td><td>Medium</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4395">#4395</a></td><td>Upgrade PHP to 8.5</td><td><span class="badge badge-ready">Ready</span></td><td>Medium</td><td>Medium</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4396">#4396</a></td><td>Cleanup OrderAllControllerTest</td><td><span class="badge badge-ready">Ready</span></td><td>Low</td><td>Medium</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4397">#4397</a></td><td>Use Nelmio Bundle for API docs</td><td><span class="badge badge-ready">Ready</span></td><td>Low</td><td>X-Large</td></tr>
+  </table>
+  <h3>Discovery (NetSuite Epics)</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Priority</th><th>Story Points</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4302">#4302</a></td><td>[NS] Epic 3: Posting Period Fix</td><td>High</td><td>1</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4304">#4304</a></td><td>[NS] Epic 8: Reporting / CSV Export Gaps</td><td>High</td><td>6</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4315">#4315</a></td><td>[NS] Epic 2: Credit Memos / Credit Notes</td><td>Low</td><td>22</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4327">#4327</a></td><td>[NS] Epic 7: Volume Forecast Bulk Upload</td><td>Low</td><td>8</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4337">#4337</a></td><td>[NS] Epic 5: Hybrid Customers</td><td>—</td><td>6</td></tr>
+  </table>
+</div>
+
+<!-- ROB -->
+<div class="card" style="margin-bottom:20px">
+  <div class="person-header">
+    <div class="avatar" style="background:var(--accent)">R</div>
+    <div><strong>Rob Wilde</strong><br><span style="color:var(--muted);font-size:0.82rem">Head of Engineering · Infra/DevOps · Backend · K8s/AWS</span></div>
+  </div>
+  <div class="person-stats">
+    <div class="person-stat"><strong style="color:var(--green)">20</strong> Done</div>
+    <div class="person-stat"><strong style="color:var(--yellow)">3</strong> In Review</div>
+    <div class="person-stat"><strong style="color:var(--blue)">2</strong> In Progress</div>
+    <div class="person-stat"><strong style="color:var(--purple)">3</strong> Ready</div>
+    <div class="person-stat"><strong style="color:var(--muted)">10</strong> Backlog</div>
+    <div class="person-stat"><strong style="color:var(--pink)">4</strong> Discovery</div>
+    <div class="person-stat"><strong style="color:var(--cyan)">1</strong> QA</div>
+  </div>
+  <h3>Pre-Sprint Open Tickets</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Status</th><th>Priority</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4045">#4045</a></td><td>Upgrade to MySQL 8.4 LTS</td><td><span class="badge badge-discovery">Discovery</span></td><td>Low</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4239">#4239</a></td><td>Increase PHPStan level to 6</td><td><span class="badge badge-backlog">Backlog</span></td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4243">#4243</a></td><td>Market-specific Terms & Conditions</td><td><span class="badge badge-backlog">Backlog</span></td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4253">#4253</a></td><td>Remove references to S class (Sigfox) devices</td><td><span class="badge badge-qa">QA</span></td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4254">#4254</a></td><td>Remove all references to SSID Bank</td><td><span class="badge badge-backlog">Backlog</span></td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4255">#4255</a></td><td>Get many invoices</td><td><span class="badge badge-review">Review</span></td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4261">#4261</a></td><td>Implement Get Many Invoices endpoint</td><td><span class="badge badge-review">Review</span></td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4268">#4268</a></td><td>OpenTelemetry Distributed Tracing (Phase 1)</td><td><span class="badge badge-review">Review</span></td><td>Low</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4283">#4283</a></td><td>Stocktake (BE)</td><td><span class="badge badge-backlog">Backlog</span></td><td>High</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4288">#4288</a></td><td>Discovery: Collections Reporting & Insights (BE)</td><td><span class="badge badge-discovery">Discovery</span></td><td>High</td></tr>
+  </table>
+  <h3>Current Sprint Open Tickets</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Status</th><th>Priority</th><th>Size</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4457">#4457</a></td><td>Optimize slow GET /api/assets query</td><td><span class="badge badge-progress">In Progress</span></td><td>High</td><td>Medium</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4478">#4478</a></td><td>Audit command: KC vs NetSuite billing emails</td><td><span class="badge badge-progress">In Progress</span></td><td>High</td><td>Small</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4477">#4477</a></td><td>Fix null billing emails overwriting NetSuite</td><td><span class="badge badge-ready">Ready</span></td><td>Medium</td><td>Medium</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4379">#4379</a></td><td>Fix circuit breaker TTL + namespace contamination</td><td><span class="badge badge-ready">Ready</span></td><td>Medium</td><td>Small</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/kubernetes/issues/435">#435</a></td><td>Grafana Cloud alerts for CrashLoopBackOff + KEDA</td><td><span class="badge badge-review">Review</span></td><td>High</td><td>Small</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4296">#4296</a></td><td>[NS] Epic 0: Foundation / Infrastructure</td><td><span class="badge badge-ready">Ready</span></td><td>High</td><td>X-Large</td></tr>
+  </table>
+</div>
+
+<!-- BEA -->
+<div class="card" style="margin-bottom:20px">
+  <div class="person-header">
+    <div class="avatar" style="background:var(--pink)">B</div>
+    <div><strong>Bea Bain</strong> <span class="badge" style="background:rgba(74,222,128,0.15);color:var(--green)">New — Contractor</span><br><span style="color:var(--muted);font-size:0.82rem">Frontend · UI/UX · Discovery & Planning</span></div>
+  </div>
+  <div class="person-stats">
+    <div class="person-stat"><strong style="color:var(--green)">0</strong> Done</div>
+    <div class="person-stat"><strong style="color:var(--pink)">5</strong> Discovery</div>
+    <div class="person-stat"><strong style="color:var(--muted)">10</strong> Backlog</div>
+  </div>
+  <h3>Discovery Items</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Priority</th><th>Points</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4340">#4340</a></td><td>[NS] Epic 9: Contract PDFs in KC</td><td>Low</td><td>8</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4289">#4289</a></td><td>Collections Reporting & Insights (UI)</td><td>Medium</td><td>8</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4275">#4275</a></td><td>Transfers & Rentals overview page</td><td>Low</td><td>21</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4281">#4281</a></td><td>Stocktake (UI)</td><td>High</td><td>8</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4401">#4401</a></td><td>Producers: End-of-Month Stock Count</td><td>Low</td><td>8</td></tr>
+  </table>
+  <h3>Backlog Epics (Receiving from Doug)</h3>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Type</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4377">#4377</a></td><td>Epic: Updated Orders Experience</td><td>enhancement</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4369">#4369</a></td><td>Add Email Status Indicator to Orders Table</td><td>front end</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4427">#4427</a></td><td>View Location Details in Side Panel</td><td>front end</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4479">#4479</a></td><td>Make first column fixed for Orders</td><td>front end</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4447">#4447</a></td><td>Collection Request Detail Page</td><td>front end</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4467">#4467</a></td><td>Epic: Support Desk Backlog Cleanup</td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4468">#4468</a></td><td>Epic: Self Service Improvements</td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4469">#4469</a></td><td>Epic: Platform Health & BAU</td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4470">#4470</a></td><td>Epic: Collections Reporting</td><td>—</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4471">#4471</a></td><td>Epic: Stocktake</td><td>—</td></tr>
+  </table>
+</div>
+
+<!-- Doug Dependency Section -->
+<h2 class="section-title">Tickets Dependent on Doug's Work</h2>
+<div class="card">
+  <p style="color:var(--muted);font-size:0.88rem;margin-bottom:14px;">Doug built the core Orders frontend (table, forms, charts, side panels). These open tickets directly extend or depend on his code:</p>
+  <table>
+    <tr><th>Issue</th><th>Title</th><th>Assignee</th><th>Status</th><th>Doug's Related Work</th></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4491">#4491</a></td><td>Order Items Sorting when Submitting</td><td>Millicent</td><td><span class="badge badge-progress">In Progress</span></td><td>Order form (#4251)</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4369">#4369</a></td><td>Email Status Indicator on Orders Table</td><td>Bea</td><td><span class="badge badge-backlog">Backlog</span></td><td>Orders table (#4066)</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4479">#4479</a></td><td>Fixed first column for Orders</td><td>Bea</td><td><span class="badge badge-backlog">Backlog</span></td><td>Orders table (#4066)</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4427">#4427</a></td><td>View Location Details in Side Panel</td><td>Bea</td><td><span class="badge badge-backlog">Backlog</span></td><td>Org side panel (#4482), Order form (#4251)</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4447">#4447</a></td><td>Collection Request Detail Page</td><td>Bea</td><td><span class="badge badge-backlog">Backlog</span></td><td>Schedule collections (#4269), hide actioned (#4524)</td></tr>
+    <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4377">#4377</a></td><td>Epic: Updated Orders Experience</td><td>Bea</td><td><span class="badge badge-backlog">Backlog</span></td><td>All orders FE work</td></tr>
+    <tr><td colspan="5" style="color:var(--muted);font-size:0.82rem;padding-top:12px">
+      <strong>Sentry:</strong> KONVOY-WEB-APP-S6 (Bot detected, SignUpForm) and KONVOY-WEB-APP-S9 (Google Maps, collection-request) are both assigned to Doug and need reassignment.
+    </td></tr>
+  </table>
+</div>
+
+<script>
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = 'rgba(51,65,85,0.5)';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+// Status chart
+new Chart(document.getElementById('statusChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Done', 'In Review / QA', 'In Progress', 'Ready', 'Backlog', 'Discovery'],
+    datasets: [{
+      data: [47, 7, 3, 7, 14, 12],
+      backgroundColor: ['#4ade80','#fbbf24','#60a5fa','#a78bfa','#64748b','#f472b6'],
+      borderWidth: 0, hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle' } }
+    }
+  }
+});
+
+// Completed by person
+new Chart(document.getElementById('completedChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Rob', 'Millicent', 'Doug\n(board)', 'Doug\n(+releases)', 'Bea', 'Unassigned'],
+    datasets: [{
+      label: 'Completed',
+      data: [20, 14, 5, 15, 0, 8],
+      backgroundColor: ['#38bdf8','#a78bfa','#fb923c','rgba(251,146,60,0.4)','#f472b6','#64748b'],
+      borderRadius: 6, barPercentage: 0.7
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+  }
+});
+
+// Open by person
+new Chart(document.getElementById('openChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Rob', 'Millicent', 'Bea', 'Doug', 'Unassigned'],
+    datasets: [
+      { label: 'In Progress', data: [2,1,0,0,0], backgroundColor: '#60a5fa', borderRadius: 4 },
+      { label: 'Review/QA', data: [4,2,0,0,2], backgroundColor: '#fbbf24', borderRadius: 4 },
+      { label: 'Ready', data: [3,4,0,0,0], backgroundColor: '#a78bfa', borderRadius: 4 },
+      { label: 'Discovery', data: [4,5,5,0,1], backgroundColor: '#f472b6', borderRadius: 4 },
+      { label: 'Backlog', data: [10,0,10,0,1], backgroundColor: '#64748b', borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { padding: 10, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } } } },
+    scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { display: false } } }
+  }
+});
+
+// Labels chart
+new Chart(document.getElementById('labelChart'), {
+  type: 'polarArea',
+  data: {
+    labels: ['feature', 'bug/fix', 'enhancement', 'chore', 'back end', 'front end', 'Discovery', 'devops'],
+    datasets: [{
+      data: [16, 14, 18, 8, 12, 6, 8, 3],
+      backgroundColor: [
+        'rgba(74,222,128,0.5)','rgba(248,113,113,0.5)','rgba(96,165,250,0.5)',
+        'rgba(148,163,184,0.5)','rgba(167,139,250,0.5)','rgba(244,114,182,0.5)',
+        'rgba(251,191,36,0.5)','rgba(34,211,238,0.5)'
+      ],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'right', labels: { padding: 10, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } } } },
+    scales: { r: { grid: { color: 'rgba(51,65,85,0.4)' }, ticks: { display: false } } }
+  }
+});
+</script>
+</body>
+</html>
