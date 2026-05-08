@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Release-Week Postmortem Prelude — v1.89.11 → v1.89.15 · May 8, 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --orange: #fb923c;
+    --red: #f87171; --purple: #a78bfa; --pink: #f472b6;
+    --blue: #60a5fa; --cyan: #22d3ee;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 24px; max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+  .grid { display: grid; gap: 20px; margin-bottom: 20px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .grid-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+  .grid-6 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; }
+  .card { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--surface2); }
+  .card h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--accent); }
+  .card h3 { font-size: 0.95rem; margin: 12px 0 8px; color: var(--muted); }
+  .stat-card { text-align: center; }
+  .stat-card .number { font-size: 2.4rem; font-weight: 700; }
+  .stat-card .label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  .stat-card .delta { font-size: 0.78rem; margin-top: 2px; }
+  .chart-container { position: relative; height: 280px; }
+  .chart-container.tall { height: 360px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 8px 10px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--surface2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 8px 10px; border-bottom: 1px solid rgba(51,65,85,0.5); vertical-align: top; }
+  tr:hover { background: rgba(56,189,248,0.05); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+  .badge-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-review { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-progress { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .badge-ready { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .badge-backlog { background: rgba(148,163,184,0.15); color: var(--muted); }
+  .badge-discovery { background: rgba(244,114,182,0.15); color: var(--pink); }
+  .badge-qa { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .badge-urgent { background: rgba(248,113,113,0.2); color: var(--red); }
+  .badge-new { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-warning { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-p0 { background: rgba(248,113,113,0.2); color: var(--red); }
+  .badge-p1 { background: rgba(251,146,60,0.2); color: var(--orange); }
+  .badge-p2 { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-p3 { background: rgba(148,163,184,0.15); color: var(--muted); }
+
+  .alert { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .alert-red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .alert-yellow { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); }
+  .alert-green { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.3); }
+  .alert-orange { background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.3); }
+  .alert-blue { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.3); }
+  .alert h2 { font-size: 1rem; margin-bottom: 8px; }
+  .alert-red h2 { color: var(--red) !important; }
+  .alert-yellow h2 { color: var(--yellow) !important; }
+  .alert-green h2 { color: var(--green) !important; }
+  .alert-orange h2 { color: var(--orange) !important; }
+  .alert-blue h2 { color: var(--blue) !important; }
+  .alert p, .alert li { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+  .alert ul { margin: 8px 0 0 18px; }
+
+  .section-title { font-size: 1.3rem; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--surface2); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .timeline { position: relative; padding-left: 32px; margin: 16px 0; }
+  .timeline::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px; width: 2px; background: var(--surface2); }
+  .timeline-item { position: relative; margin-bottom: 18px; }
+  .timeline-dot { position: absolute; left: -28px; top: 4px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--bg); }
+  .dot-deploy { background: var(--accent); }
+  .dot-incident { background: var(--red); }
+  .dot-fix { background: var(--green); }
+  .dot-revert { background: var(--orange); }
+  .dot-report { background: var(--purple); }
+  .timeline-time { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+  .timeline-title { font-size: 0.95rem; margin: 2px 0 4px; }
+  .timeline-detail { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.8rem; color: var(--muted); margin: 8px 0 0; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 50%; }
+
+  .question-card { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--purple); border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; }
+  .question-card .q-number { font-size: 0.78rem; color: var(--purple); font-weight: 700; letter-spacing: 1px; }
+  .question-card h3 { font-size: 0.98rem; color: var(--text); margin: 4px 0 6px; font-weight: 600; }
+  .question-card p { color: var(--muted); font-size: 0.86rem; line-height: 1.55; }
+  .question-card .q-tag { display: inline-block; font-size: 0.72rem; padding: 1px 6px; border-radius: 4px; background: var(--surface2); color: var(--muted); margin-right: 4px; margin-top: 6px; }
+
+  .crumb { font-size: 0.85rem; color: var(--muted); margin-bottom: 14px; }
+  .crumb a { color: var(--accent); }
+
+  .commit { font-family: 'JetBrains Mono', 'Consolas', monospace; font-size: 0.78rem; color: var(--muted); }
+  .pill { display: inline-block; padding: 1px 7px; border-radius: 4px; background: var(--surface2); color: var(--text); font-size: 0.75rem; font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4, .grid-5, .grid-6 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<p class="crumb"><a href="index.html">← Engineering Planning</a></p>
+
+<h1>Release-Week Postmortem &mdash; Prelude</h1>
+<p class="subtitle">v1.89.11 &rarr; v1.89.15 &middot; Mon 4 May 03:56 &rarr; Fri 8 May 02:30 AEST &middot; Compiled May 8, 2026</p>
+
+<!-- Purpose -->
+<div class="alert alert-blue">
+  <h2>Purpose of This Document</h2>
+  <p>This is a <strong>scoping document</strong> for the postmortem Rob will run on the weekend, once the active fires from this release week are out. It captures the timeline of events, what we currently believe about cause and effect, and the open questions the postmortem itself needs to answer. It deliberately does <strong>not</strong> draw conclusions or assign blame &mdash; that's the postmortem's job, with the team in the room.</p>
+  <p style="margin-top:10px"><strong>Companion document:</strong> the long-form narrative report <a href="release-review-2026-05-04-to-08.md"><code>release-review-2026-05-04-to-08.md</code></a> in the Sprint Planning folder, with full root-cause notes per issue.</p>
+</div>
+
+<!-- Active fires -->
+<div class="alert alert-red">
+  <h2>Active Fires &mdash; Still Burning at Time of Writing</h2>
+  <ul>
+    <li><strong><a href="https://github.com/konvoy-kegs/konvoy/issues/4775">#4775</a> NetSuite region custom-list lookup 500s prod-oc org edits</strong> &mdash; P1, OPEN, third-party root cause (NetSuite-side change to <code>CUSTOMLISTKV_CUSTOMER_REGION_LIST</code>). Alice cannot edit organisations on prod-oc. <strong>Hotfix Part A recommended this morning</strong> (downgrade catch to logged warning, omit optional region field).</li>
+    <li><strong>KONVOY-WEB-APP-12X</strong> &mdash; <code>TypeError: t.toLowerCase is not a function</code> on <code>/oc/.../orders</code>. First seen Thu 7 May 13:00 AEST, <strong>last seen 11 minutes before this report ran</strong>. Not yet ticketed. Frontend, ramping up Bea's onboarding context.</li>
+    <li><strong>Sentry workflow drift</strong> &mdash; 11 issues from this week still showing <code>unresolved</code> despite the underlying defects being fixed and shipped. Not blocking, but obscures the real signal.</li>
+  </ul>
+</div>
+
+<!-- KPI Stats -->
+<h2 class="section-title">By the Numbers</h2>
+<div class="grid grid-6">
+  <div class="card stat-card"><div class="number" style="color:var(--accent)">5</div><div class="label">Releases Mon&rarr;Fri</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--orange)">31</div><div class="label">Issues Filed</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">19</div><div class="label">Closed</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--yellow)">12</div><div class="label">Still Open</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--red)">11</div><div class="label">New Sentry IDs</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--purple)">1</div><div class="label">Fix Rolled Back</div></div>
+</div>
+
+<!-- Charts -->
+<div class="grid grid-2">
+  <div class="card">
+    <h2>What Caused the Issues This Week?</h2>
+    <div class="chart-container"><canvas id="causeChart"></canvas></div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:8px;line-height:1.5">Of 31 issues filed, only ~6 (19%) were genuine v1.89.11 regressions. The rest split between cascade fallout, latent bugs, a wrong-field fix, NetSuite-side regression, and follow-on hardening tickets.</p>
+  </div>
+  <div class="card">
+    <h2>Issues by Release</h2>
+    <div class="chart-container"><canvas id="releaseChart"></canvas></div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:8px;line-height:1.5">v1.89.11 introduced the bulk; subsequent releases were fix-driven, with one (v1.89.14) introducing new errors via a fix that exposed latent bugs.</p>
+  </div>
+</div>
+
+<!-- Deploy timeline visualization -->
+<h2 class="section-title">Week Timeline</h2>
+
+<div class="card">
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--accent)"></span> Deploy</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--red)"></span> Sentry incident</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--green)"></span> Fix shipped</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--orange)"></span> Rollback</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--purple)"></span> User report</div>
+  </div>
+
+  <div class="timeline" style="margin-top:20px">
+    <div class="timeline-item">
+      <div class="timeline-dot dot-deploy"></div>
+      <div class="timeline-time">MON 4 MAY · 03:56 AEST</div>
+      <div class="timeline-title"><span class="pill">v1.89.11</span> deployed by rob-ee-wilde &middot; <span class="commit">cbaea13</span></div>
+      <div class="timeline-detail">50+ items: FL-13 backend foundation (PRs #4643/#4644/#4651/#4680/#4687), MCP OAuth (#4647/#4677/#4685), OrderForm rewrite, transport-toggle replacement (#4645), customer/producer merge (#4642), default rentals filters (#4692), Symfony <code>HEADER_X_FORWARDED_ALL</code> replacement (#4674), dependency bumps. Largest release of the cycle.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-report"></div>
+      <div class="timeline-time">MON 4 MAY · 09:27 AEST &middot; T+5h31m</div>
+      <div class="timeline-title">Marc relays Alice&rsquo;s first 3 regression reports via Slack DM</div>
+      <div class="timeline-detail">Channel <code>C0B0Y1QQGB1</code>, parent ts <code>1777850828.073019</code>. P0 transport partner field, P1 refill pricing, P2 clone-date. Tracking issue <a href="https://github.com/konvoy-kegs/konvoy/issues/4741">#4741</a> opened same morning. Fourth (P3 rentals date filter) added later that day as <a href="https://github.com/konvoy-kegs/konvoy/issues/4747">#4747</a>.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-deploy"></div>
+      <div class="timeline-time">TUE 5 MAY · 01:02 AEST &middot; T+21h06m</div>
+      <div class="timeline-title"><span class="pill">v1.89.12</span> deployed &middot; <span class="commit">dfebb2f</span></div>
+      <div class="timeline-detail">5 fixes: <a href="https://github.com/konvoy-kegs/konvoy/pull/4752">#4752</a> v1.89.11 regression rollup (closes <a href="https://github.com/konvoy-kegs/konvoy/issues/4741">#4741</a> + 4 sub-issues), <a href="https://github.com/konvoy-kegs/konvoy/pull/4737">#4737</a> TRUSTED_PROXIES env binding default, <a href="https://github.com/konvoy-kegs/konvoy/pull/4731">#4731</a> hide activity by default, <a href="https://github.com/konvoy-kegs/konvoy/pull/4733">#4733</a> notes layout polish, <a href="https://github.com/konvoy-kegs/konvoy/pull/4751">#4751</a> reset clone date.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-report"></div>
+      <div class="timeline-time">WED 6 MAY · ~MORNING</div>
+      <div class="timeline-title">Alice reports transfers list issue in #konvoyteam (v1.89.13 release thread)</div>
+      <div class="timeline-detail">&ldquo;Transfers page seems to be out of chronological order, and when trying to use a filters for dates or markets, they don&rsquo;t work.&rdquo; Filed as <a href="https://github.com/konvoy-kegs/konvoy/issues/4780">#4780</a>. Root cause traces back 2 days to PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4716">#4716</a> in v1.89.11 &mdash; FL-13 PR incidentally deleted the <code>TransferFilter::fromArray()</code> call; Symfony silently substituted an empty service.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-deploy"></div>
+      <div class="timeline-time">WED 6 MAY · 09:22 AEST</div>
+      <div class="timeline-title"><span class="pill">v1.89.13</span> deployed &middot; <span class="commit">deb58a9</span></div>
+      <div class="timeline-detail">8 mixed: 1 feature (<a href="https://github.com/konvoy-kegs/konvoy/pull/4768">#4768</a> default rental sort), 7 fixes including null-safety on <a href="https://github.com/konvoy-kegs/konvoy/pull/4772">#4772</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/4773">#4773</a>, refillFee guard <a href="https://github.com/konvoy-kegs/konvoy/pull/4759">#4759</a>, transferColumns null-guard <a href="https://github.com/konvoy-kegs/konvoy/pull/4758">#4758</a>, fuel surcharge clear-on-pickup <a href="https://github.com/konvoy-kegs/konvoy/pull/4746">#4746</a>, invoice timestamps <a href="https://github.com/konvoy-kegs/konvoy/pull/4739">#4739</a> (Sentry KONVOY-API-2V1).</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-report"></div>
+      <div class="timeline-time">WED 6 MAY · DAY</div>
+      <div class="timeline-title">Marc reports order completion-date silently reverts to today</div>
+      <div class="timeline-detail">Filed as <a href="https://github.com/konvoy-kegs/konvoy/issues/4783">#4783</a>. Looked like a v1.89.11 regression at first; investigation showed <strong>2.5-month-old latent typo</strong> in <code>CompleteOrderInputDto::$completeDate</code> (DTO mtime 2026-02-27). Rob's note in the issue body: &ldquo;This is not a regression from the v1.89.11 deploy this morning &mdash; coincidence with the timing of Marc's report.&rdquo;</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-deploy"></div>
+      <div class="timeline-time">WED 6 MAY · 19:19 AEST</div>
+      <div class="timeline-title"><span class="pill">v1.89.14</span> deployed (same-day 2nd) &middot; <span class="commit">1b205eb</span></div>
+      <div class="timeline-detail">4 fixes: <a href="https://github.com/konvoy-kegs/konvoy/pull/4778">#4778</a> NS postingPeriod (will be rolled back), <a href="https://github.com/konvoy-kegs/konvoy/pull/4781">#4781</a> restore TransferFilter parsing (fixes <a href="https://github.com/konvoy-kegs/konvoy/issues/4780">#4780</a>), <a href="https://github.com/konvoy-kegs/konvoy/pull/4786">#4786</a> Refill input on pricing modal, <a href="https://github.com/konvoy-kegs/konvoy/pull/4784">#4784</a> completion-date typo fix.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-incident"></div>
+      <div class="timeline-time">WED 6 MAY · 20:06 AEST &middot; v1.89.14 + 47 min</div>
+      <div class="timeline-title">Sentry KONVOY-API-2V6 fires &mdash; <code>Undefined array key &quot;sortBy&quot;</code></div>
+      <div class="timeline-detail">First of three latent bugs in <code>TransferFilter::fromArray()</code> exposed by re-enabling the parsing path. Followed at 20:15 by KONVOY-API-2V7 (<code>TypeError: filter null</code>) and KONVOY-API-2V8 (<code>ValueError: BOGUS enum</code>). Tracked under <a href="https://github.com/konvoy-kegs/konvoy/issues/4793">#4793</a>.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-incident"></div>
+      <div class="timeline-time">THU 7 MAY · 07:57&ndash;08:13 AEST</div>
+      <div class="timeline-title">Sentry KONVOY-API-2V9/2VA/2VB fire &mdash; NetSuite invoice 400s</div>
+      <div class="timeline-detail">First invoice POSTs of the day hit the changed code path from PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4778">#4778</a>. Orders whose <code>completedDate</code> falls in a closed/locked NetSuite period now 400 against the NS REST API with &ldquo;Invalid Field Value 439 for postingperiod&rdquo;. Tracked under <a href="https://github.com/konvoy-kegs/konvoy/issues/4794">#4794</a>.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-revert"></div>
+      <div class="timeline-time">THU 7 MAY · LATER</div>
+      <div class="timeline-title">PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4778">#4778</a> reverted; <a href="https://github.com/konvoy-kegs/konvoy/issues/4794">#4794</a> closed as not planned</div>
+      <div class="timeline-detail">After Finance follow-up: Mariana's original concern was about NS <code>tranDate</code>, not <code>postingPeriod</code>. Finance has a known manual adjustment workflow for backdated transactions and <strong>specifically does not want Konvoy to derive <code>postingPeriod</code> from <code>completedDate</code></strong>. The original behaviour was correct. Frontend <code>completedDate</code> concern correctly retained in <a href="https://github.com/konvoy-kegs/konvoy/issues/4787">#4787</a>/<a href="https://github.com/konvoy-kegs/konvoy/issues/4788">#4788</a>.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-incident"></div>
+      <div class="timeline-time">THU 7 MAY · ~13:00&ndash;14:00 AEST</div>
+      <div class="timeline-title">Three more TransferFilter Sentry IDs first-seen &middot; KONVOY-WEB-APP-12X first-seen</div>
+      <div class="timeline-detail">KONVOY-API-2VC (<code>foreach() on string</code>), 2VD (<code>Undefined array key &quot;column&quot;</code>), 2VE (<code>Sort::__construct null</code>) &mdash; additional latent bugs in <code>TransferFilter::fromArray</code>. PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4795">#4795</a> covers all three (verified by reading the diff). KONVOY-WEB-APP-12X (<code>t.toLowerCase is not a function</code>) on <code>/oc/.../orders</code> &mdash; not yet ticketed.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-deploy"></div>
+      <div class="timeline-time">FRI 8 MAY · 02:30 AEST</div>
+      <div class="timeline-title"><span class="pill">v1.89.15</span> deployed &middot; <span class="commit">c3cc879</span></div>
+      <div class="timeline-detail">4 fixes: <a href="https://github.com/konvoy-kegs/konvoy/pull/4791">#4791</a> + <a href="https://github.com/konvoy-kegs/konvoy/pull/4800">#4800</a> preserve saved line-item pricing on edit (closes <a href="https://github.com/konvoy-kegs/konvoy/issues/4790">#4790</a> P1 silent data loss into invoices), <a href="https://github.com/konvoy-kegs/konvoy/pull/4795">#4795</a> harden TransferFilter (closes 2V6/V7/V8 + covers 2VC/VD/VE), <a href="https://github.com/konvoy-kegs/konvoy/pull/4801">#4801</a> contract-brewer freight prefill via shadow-location lookup.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-fix"></div>
+      <div class="timeline-time">FRI 8 MAY · 09:00&ndash;ish AEST &middot; NOW</div>
+      <div class="timeline-title">Postmortem prelude compiled &middot; weekend writeup pending</div>
+      <div class="timeline-detail">Active fires: <a href="https://github.com/konvoy-kegs/konvoy/issues/4775">#4775</a> hotfix Part A and KONVOY-WEB-APP-12X triage.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Per-release breakdown -->
+<h2 class="section-title">Per-Release Breakdown</h2>
+
+<div class="card" style="margin-bottom:18px">
+  <h2 style="color:var(--accent)">v1.89.11 &middot; Mon 4 May 03:56 AEST &middot; <span class="pill">cbaea13</span> &middot; The Big One</h2>
+  <p style="color:var(--muted);font-size:0.88rem;line-height:1.55">50+ items spanning FL backend foundation, MCP OAuth, OrderForm rewrite, Symfony plumbing, dependency bumps, and frontend redesigns. Of the 31 issues filed this week, ~6 trace back to code shipped here as genuine regressions.</p>
+  <table style="margin-top:12px">
+    <tr><th>Issue</th><th>Title</th><th>Sev</th><th>Caused By</th><th>Fixed In</th></tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4742">#4742</a></td>
+      <td>Transport partner field doesn&rsquo;t clear on Delivery&rarr;Pickup</td>
+      <td><span class="badge badge-p0">P0</span></td>
+      <td>PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4645">#4645</a> (transport toggle replacement)</td>
+      <td><span class="badge badge-done">v1.89.12</span></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4743">#4743</a></td>
+      <td>Refill pricing dropped from per-order pricing modal</td>
+      <td><span class="badge badge-p1">P1</span></td>
+      <td>New per-order pricing modal</td>
+      <td><span class="badge badge-done">v1.89.12</span></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4747">#4747</a></td>
+      <td>Rentals date filter stuck on &ldquo;This Month &amp; Next&rdquo;</td>
+      <td><span class="badge badge-p3">P3</span></td>
+      <td>PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4692">#4692</a> (default filters)</td>
+      <td><span class="badge badge-done">v1.89.12</span></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4735">#4735</a></td>
+      <td>TRUSTED_PROXIES env binding missing default</td>
+      <td><span class="badge badge-p2">P2</span></td>
+      <td>PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4674">#4674</a> (Symfony header constant)</td>
+      <td><span class="badge badge-done">v1.89.12</span></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4754">#4754</a></td>
+      <td>Rental Edit Pricing modal: Save silently fails when refillFee empty</td>
+      <td><span class="badge badge-p1">P1</span></td>
+      <td>Sibling defect in same modal as <a href="https://github.com/konvoy-kegs/konvoy/issues/4743">#4743</a></td>
+      <td><span class="badge badge-done">v1.89.13</span></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4780">#4780</a></td>
+      <td>Legacy <code>/api/transfers</code> ignores all filters and sort</td>
+      <td><span class="badge badge-p1">P1</span></td>
+      <td>PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4716">#4716</a> (FL-13) &mdash; incidental deletion + Symfony silent autowire</td>
+      <td><span class="badge badge-done">v1.89.14</span></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4790">#4790</a></td>
+      <td>Rental/Lease edit silently overwrites saved line-item pricing &mdash; <strong>silent data loss into invoices</strong></td>
+      <td><span class="badge badge-p1">P1</span></td>
+      <td>New <code>OrderForm.tsx</code> lost the merge guarantee the legacy form had</td>
+      <td><span class="badge badge-done">v1.89.15</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2 style="color:var(--green)">v1.89.12 &middot; Tue 5 May 01:02 &middot; <span class="pill">dfebb2f</span></h2>
+    <p style="color:var(--muted);font-size:0.86rem;line-height:1.55">Targeted regression rollup. 5 fixes, all closing the <a href="https://github.com/konvoy-kegs/konvoy/issues/4741">#4741</a> tracking issue + the env-binding follow-up. <strong>Net effect:</strong> first wave of v1.89.11 regressions cleared.</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--green)">v1.89.13 &middot; Wed 6 May 09:22 &middot; <span class="pill">deb58a9</span></h2>
+    <p style="color:var(--muted);font-size:0.86rem;line-height:1.55">8 items &mdash; 1 feature, 7 fixes including null-safety hardening, fuel surcharge, and a Sentry-driven null timestamp fix. <strong>Net effect:</strong> second wave of v1.89.11 fallout absorbed.</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--orange)">v1.89.14 &middot; Wed 6 May 19:19 &middot; <span class="pill">1b205eb</span></h2>
+    <p style="color:var(--muted);font-size:0.86rem;line-height:1.55">Same-day second deploy. 4 fixes. <strong>Two of them needed follow-up</strong>: PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4781">#4781</a> exposed 3 latent <code>TransferFilter</code> bugs (KONVOY-API-2V6/V7/V8); PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4778">#4778</a> went into the wrong NS field and was reverted after Finance clarified.</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--green)">v1.89.15 &middot; Fri 8 May 02:30 &middot; <span class="pill">c3cc879</span></h2>
+    <p style="color:var(--muted);font-size:0.86rem;line-height:1.55">4 fixes. Closed the highest-stakes regression (<a href="https://github.com/konvoy-kegs/konvoy/issues/4790">#4790</a> silent pricing loss) and the TransferFilter cascade. <strong>Net effect:</strong> week's known fires extinguished pending Loki post-deploy verification.</p>
+  </div>
+</div>
+
+<!-- The Cascade -->
+<h2 class="section-title">The Cascade Worth Talking About</h2>
+
+<div class="alert alert-orange">
+  <h2>Fix exposed pre-existing latent bugs &mdash; new errors in 47 minutes</h2>
+  <p>The single most useful pattern from this week. Fixing a v1.89.11 regression in v1.89.14 unmasked three latent crash classes in the same file, all of which had been hidden by the silent-failure mode of the original defect.</p>
+
+  <div class="timeline" style="margin-top:14px;padding-left:24px">
+    <div class="timeline-item" style="margin-bottom:10px">
+      <div class="timeline-dot dot-deploy" style="left:-24px"></div>
+      <div class="timeline-detail"><strong>v1.89.11 (Mon)</strong> &mdash; PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4716">#4716</a> silently removes <code>TransferFilter::fromArray()</code>. Endpoint returns 200 with empty filters. Latent bugs in <code>fromArray()</code> never reached because parsing didn't run.</div>
+    </div>
+    <div class="timeline-item" style="margin-bottom:10px">
+      <div class="timeline-dot dot-report" style="left:-24px"></div>
+      <div class="timeline-detail"><strong>2 days later (Wed)</strong> &mdash; Alice notices the transfers list is &ldquo;out of order&rdquo; and filters don&rsquo;t work. Filed as <a href="https://github.com/konvoy-kegs/konvoy/issues/4780">#4780</a>.</div>
+    </div>
+    <div class="timeline-item" style="margin-bottom:10px">
+      <div class="timeline-dot dot-deploy" style="left:-24px"></div>
+      <div class="timeline-detail"><strong>v1.89.14 (Wed 19:19)</strong> &mdash; PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4781">#4781</a> restores the <code>::fromArray()</code> call. Filter parsing path active again.</div>
+    </div>
+    <div class="timeline-item" style="margin-bottom:10px">
+      <div class="timeline-dot dot-incident" style="left:-24px"></div>
+      <div class="timeline-detail"><strong>v1.89.14 + 47 min (Wed 20:06)</strong> &mdash; KONVOY-API-2V6 fires (<code>Undefined array key &ldquo;sortBy&rdquo;</code>). Followed 9 minutes later by KONVOY-API-2V7 (<code>TypeError: filter null</code>) and 2V8 (<code>ValueError: BOGUS enum</code>). Tracked under <a href="https://github.com/konvoy-kegs/konvoy/issues/4793">#4793</a>.</div>
+    </div>
+    <div class="timeline-item" style="margin-bottom:0">
+      <div class="timeline-dot dot-fix" style="left:-24px"></div>
+      <div class="timeline-detail"><strong>v1.89.15 (Fri 02:30)</strong> &mdash; PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4795">#4795</a> hardens both <code>extractFilter()</code> (coerce non-array to <code>[]</code>) and <code>fromArray()</code> (<code>isset</code>+<code>is_array</code> guards, <code>tryFrom</code> for enum, null-column guard for Sort). Adds 3 functional tests. Covers 2V6/V7/V8 plus 2VC/VD/VE that fired Thu afternoon.</div>
+    </div>
+  </div>
+
+  <p style="margin-top:14px"><strong>Worth being precise about in the postmortem:</strong> the three Sentry incidents are genuinely caused by v1.89.14 (the fix unmasked them), but the underlying <em>defects</em> are pre-existing &mdash; they predate v1.89.11. This distinction matters when we frame &ldquo;what to do next time.&rdquo;</p>
+</div>
+
+<!-- Issues that weren't issues -->
+<h2 class="section-title">Issues That Looked Like the Release But Weren&rsquo;t</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2><a href="https://github.com/konvoy-kegs/konvoy/issues/4744">#4744</a> &mdash; Clone defaults to source order&rsquo;s placed date</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.55">Filed as a v1.89.11 sub-regression of <a href="https://github.com/konvoy-kegs/konvoy/issues/4741">#4741</a>. Rob&rsquo;s root-cause note flagged it explicitly:</p>
+    <blockquote style="margin:10px 0;padding:10px 14px;background:rgba(167,139,250,0.08);border-left:3px solid var(--purple);border-radius:6px;font-size:0.86rem;color:var(--text);line-height:1.55">
+      &ldquo;This may be an architectural bug that&rsquo;s been wrong for some time. The mapper code has not changed recently. PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4662">#4662</a> may have only <strong>exposed</strong> the bug rather than caused it.&rdquo;
+    </blockquote>
+    <p style="color:var(--muted);font-size:0.86rem;line-height:1.55">Open question raised at filing &mdash; <em>was clone-with-blank-date verifiably working in v1.89.10?</em> &mdash; still unanswered. Fix shipped in v1.89.12 regardless. Worth confirming with Marc/Alice in the postmortem.</p>
+  </div>
+
+  <div class="card">
+    <h2><a href="https://github.com/konvoy-kegs/konvoy/issues/4783">#4783</a> &mdash; Order completion date silently reverts to today</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.55">Filed as P1, looked like a Monday regression. <strong>Actual cause: 2.5-month-old latent typo</strong> in <code>CompleteOrderInputDto::$completeDate</code>. Frontend POSTs <code>completedDate</code>; Symfony <code>#[MapRequestPayload]</code> silently dropped the unknown key; OrderService Elvis-fallback wrote today. DTO mtime: 2026-02-27.</p>
+    <blockquote style="margin:10px 0;padding:10px 14px;background:rgba(167,139,250,0.08);border-left:3px solid var(--purple);border-radius:6px;font-size:0.86rem;color:var(--text);line-height:1.55">
+      &ldquo;This is not a regression from the v1.89.11 deploy this morning &mdash; coincidence with the timing of Marc&rsquo;s report.&rdquo;<br>
+      <span style="font-size:0.78rem;color:var(--muted)">&mdash; Rob, in the issue body</span>
+    </blockquote>
+    <p style="color:var(--muted);font-size:0.86rem;line-height:1.55">Three preventative follow-ups filed (<a href="https://github.com/konvoy-kegs/konvoy/issues/4787">#4787</a> Elvis fallback, <a href="https://github.com/konvoy-kegs/konvoy/issues/4788">#4788</a> round-trip test, <a href="https://github.com/konvoy-kegs/konvoy/issues/4789">#4789</a> <code>ALLOW_EXTRA_ATTRIBUTES = false</code>).</p>
+  </div>
+</div>
+
+<!-- The rolled-back fix -->
+<h2 class="section-title">The Fix That Was Rolled Back</h2>
+
+<div class="card" style="margin-bottom:18px">
+  <h2 style="color:var(--orange)"><a href="https://github.com/konvoy-kegs/konvoy/issues/4794">#4794</a> &middot; NetSuite postingPeriod 400s &middot; PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4778">#4778</a> reverted</h2>
+  <p style="color:var(--muted);font-size:0.88rem;line-height:1.6">Cleanest example this week of &ldquo;a fix that was an issue, not a fix.&rdquo;</p>
+
+  <ol style="margin:12px 0 12px 22px;color:var(--muted);font-size:0.88rem;line-height:1.7">
+    <li><a href="https://github.com/konvoy-kegs/konvoy/issues/4777">#4777</a> &mdash; Mariana (Finance) reports NS invoice <code>postingPeriod</code> uses server&rsquo;s current month instead of order&rsquo;s <code>completedDate</code>.</li>
+    <li>PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4778">#4778</a> in v1.89.14 changes <code>getPostingPeriod()</code> to take order&rsquo;s <code>completedDate</code>.</li>
+    <li>Thu morning: 3 Sentry incidents fire (KONVOY-API-2V9/2VA/2VB) when invoices for orders completed today fall in closed/locked NS periods.</li>
+    <li>Rob drafts PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4796">#4796</a> with a closed-period fallback.</li>
+    <li><strong>Finance follow-up later that day:</strong> Mariana&rsquo;s concern was actually about NS <code>tranDate</code>, not <code>postingPeriod</code>. Finance has a known manual adjustment workflow for backdated transactions and specifically does not want Konvoy to derive <code>postingPeriod</code> from <code>completedDate</code>. The original behaviour was correct.</li>
+    <li>PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4796">#4796</a> abandoned. PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4778">#4778</a> reverted separately. <a href="https://github.com/konvoy-kegs/konvoy/issues/4794">#4794</a> closed as not planned.</li>
+  </ol>
+
+  <blockquote style="margin:12px 0;padding:12px 16px;background:rgba(251,146,60,0.06);border-left:3px solid var(--orange);border-radius:6px;font-size:0.88rem;color:var(--text);line-height:1.55">
+    <strong>Lesson saved (Rob, in the issue close comment):</strong><br>
+    &ldquo;We should explicitly confirm with the domain owner which specific NetSuite field their concern relates to (<code>tranDate</code> vs <code>postingPeriod</code> vs <code>subsidiary</code> etc.) before changing integration code. NetSuite has many overlapping date/period/account fields and the wrong-field assumption is invisible until it&rsquo;s deployed.&rdquo;
+  </blockquote>
+
+  <p style="color:var(--muted);font-size:0.86rem;line-height:1.55;margin-top:8px">The frontend <code>completedDate</code> editability concern (Mariana&rsquo;s actual underlying worry) is correctly tracked in <a href="https://github.com/konvoy-kegs/konvoy/issues/4787">#4787</a> and <a href="https://github.com/konvoy-kegs/konvoy/issues/4788">#4788</a>.</p>
+</div>
+
+<!-- The third-party regression -->
+<h2 class="section-title">Not Konvoy at All</h2>
+
+<div class="alert alert-yellow">
+  <h2><a href="https://github.com/konvoy-kegs/konvoy/issues/4775">#4775</a> &middot; NetSuite custom-list lookup 500s &middot; OPEN P1</h2>
+  <p>Reads as a Konvoy regression in Sentry but is a NetSuite-side change. <strong>First seen 2026-05-05 20:33 UTC &mdash; Wed 6 May 06:33 AEST &mdash; before v1.89.13 deployed at 09:22.</strong></p>
+  <p style="margin-top:8px">Two plausible upstream causes: (1) <code>CUSTOMLISTKV_CUSTOMER_REGION_LIST</code> custom list was renamed/deleted in NS-OC, or (2) NetSuite has tightened SuiteQL identifier resolution (script-id support has been dropping in their releases). Either way, the Konvoy-side code at <code>Traits/Location.php:27-34</code> hasn&rsquo;t changed.</p>
+  <p style="margin-top:8px"><strong>Konvoy-side fragility worth fixing regardless:</strong> the <code>try { … } catch (NetSuiteException) { throw new NetSuiteException(...); }</code> at <code>NetSuiteService.php:101-107</code> turns an <em>optional</em> region-attribute lookup failure into a fatal 500 on the whole organisation PATCH. The success branch already has the right policy (<code>if count===0 → omit field</code>); the catch branch should mirror it. Hotfix Part A this morning unblocks Alice on prod-oc.</p>
+</div>
+
+<!-- Open questions for the postmortem -->
+<h2 class="section-title">Open Questions for the Weekend Postmortem</h2>
+
+<p style="color:var(--muted);font-size:0.88rem;line-height:1.55;margin-bottom:14px">These are the questions the postmortem itself should answer. They&rsquo;re framed as discussion prompts &mdash; not as conclusions to validate.</p>
+
+<div class="question-card">
+  <div class="q-number">QUESTION 1 &middot; SCOPE</div>
+  <h3>What is our threshold for &ldquo;a release is too big&rdquo;?</h3>
+  <p>v1.89.11 had 50+ items spanning FL backend, MCP OAuth, OrderForm rewrite, Symfony plumbing, dependency bumps, and frontend redesigns. Of the issues filed this week, only ~6 trace to it as genuine regressions &mdash; but the cascade pattern suggests review necessarily got superficial at that scope.</p>
+  <span class="q-tag">cadence</span><span class="q-tag">batching</span><span class="q-tag">PR review</span>
+</div>
+
+<div class="question-card">
+  <div class="q-number">QUESTION 2 &middot; PROCESS</div>
+  <h3>How should we treat same-day re-deploys?</h3>
+  <p>v1.89.14 deployed at 19:19 AEST. KONVOY-API-2V6 fired at 20:06 &mdash; 47 minutes later. We had no monitoring window between deploys. Should there be a 30-minute &ldquo;watch the dashboard&rdquo; hold, or a Sentry alert that fires on any new unresolved issue first-seen within 1 hour of a deploy tag?</p>
+  <span class="q-tag">deploy</span><span class="q-tag">monitoring</span><span class="q-tag">Sentry rules</span>
+</div>
+
+<div class="question-card">
+  <div class="q-number">QUESTION 3 &middot; INTEGRATION</div>
+  <h3>What&rsquo;s our process for NetSuite-touching PRs?</h3>
+  <p>The <a href="https://github.com/konvoy-kegs/konvoy/issues/4794">#4794</a> rollback was caused by ambiguity over which NS field Mariana&rsquo;s concern related to (<code>tranDate</code> vs <code>postingPeriod</code> vs <code>subsidiary</code>). Should the PR template require &ldquo;specify the NS field by exact name + which Finance role owns it&rdquo;? Should we maintain a 1-page glossary of the NS fields we touch alongside the integration code?</p>
+  <span class="q-tag">NetSuite</span><span class="q-tag">domain ownership</span><span class="q-tag">PR template</span>
+</div>
+
+<div class="question-card">
+  <div class="q-number">QUESTION 4 &middot; SILENT FAILURES</div>
+  <h3>Where else are we relying on silent-failure modes that hide defects?</h3>
+  <p>Three of this week&rsquo;s thorniest issues came from the same shape: Symfony silently auto-wired an empty <code>TransferFilter</code>; <code>#[MapRequestPayload]</code> silently dropped an unknown JSON key for 2.5 months; the new <code>OrderForm</code> silently overwrote saved overrides with location defaults. Issue <a href="https://github.com/konvoy-kegs/konvoy/issues/4789">#4789</a> (<code>ALLOW_EXTRA_ATTRIBUTES = false</code>) is one fix; what else needs the same treatment?</p>
+  <span class="q-tag">silent failure</span><span class="q-tag">defensive code</span><span class="q-tag">type safety</span>
+</div>
+
+<div class="question-card">
+  <div class="q-number">QUESTION 5 &middot; SENTRY HYGIENE</div>
+  <h3>Why are 11 of this week&rsquo;s Sentry IDs still <code>unresolved</code>?</h3>
+  <p>The defects are fixed and shipped, but the team isn&rsquo;t marking the Sentry issues resolved post-deploy. The signal is muddied: we can&rsquo;t tell which open Sentry IDs are real and which are stale. Auto-resolve via Sentry GitHub integration on commit-message <code>Fixes KONVOY-API-XXX</code>? Deploy-checklist tickbox? Both?</p>
+  <span class="q-tag">Sentry</span><span class="q-tag">workflow</span><span class="q-tag">deploy checklist</span>
+</div>
+
+<div class="question-card">
+  <div class="q-number">QUESTION 6 &middot; COVERAGE</div>
+  <h3>How did <a href="https://github.com/konvoy-kegs/konvoy/issues/4790">#4790</a> (silent pricing overwrite) reach production?</h3>
+  <p>P1 silent data loss into invoice flow. The legacy <code>OrderForm</code> had the correct merge logic; the new one regressed it. No test caught the &ldquo;saved override should beat location default&rdquo; invariant. What test would have caught it &mdash; and is it the kind of test we&rsquo;d realistically write before someone reports the bug?</p>
+  <span class="q-tag">testing</span><span class="q-tag">data integrity</span><span class="q-tag">QA</span>
+</div>
+
+<div class="question-card">
+  <div class="q-number">QUESTION 7 &middot; ATTRIBUTION</div>
+  <h3>Was <a href="https://github.com/konvoy-kegs/konvoy/issues/4744">#4744</a> (clone-date) actually a v1.89.11 regression?</h3>
+  <p>Rob&rsquo;s root-cause note flagged it as &ldquo;possibly latent &mdash; PR <a href="https://github.com/konvoy-kegs/konvoy/pull/4662">#4662</a> may have only exposed the bug rather than caused it.&rdquo; The open question to Marc/Alice was whether clone-with-blank-date was verifiably working in v1.89.10. Answer that, and we either tag this for a regression test on the <a href="https://github.com/konvoy-kegs/konvoy/pull/4662">#4662</a> path or close out the question with &ldquo;latent, fixed, not a regression.&rdquo;</p>
+  <span class="q-tag">attribution</span><span class="q-tag">retro record</span>
+</div>
+
+<!-- Action items still in flight -->
+<h2 class="section-title">Action Items Still in Flight</h2>
+
+<div class="card">
+  <table>
+    <tr><th>Priority</th><th>Action</th><th>Owner</th><th>Why</th></tr>
+    <tr>
+      <td><span class="badge badge-urgent">Now</span></td>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4775">#4775</a> Part A hotfix &mdash; downgrade NetSuite region-lookup catch to logged warning + omit optional field</td>
+      <td>Rob</td>
+      <td>Unblocks Alice on prod-oc org edits. Independent of NS-side investigation.</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-urgent">Now</span></td>
+      <td>File issue for <strong>KONVOY-WEB-APP-12X</strong> (<code>t.toLowerCase is not a function</code> on <code>/oc/.../orders</code>)</td>
+      <td>Bea</td>
+      <td>Still firing as of 11 minutes before this report. Frontend orders page error.</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-warning">Today</span></td>
+      <td>Sentry sweep: mark KONVOY-API-2V6/V7/V8/VC/VD/VE resolved (covered by <a href="https://github.com/konvoy-kegs/konvoy/pull/4795">#4795</a>); Loki spot-check first</td>
+      <td>Rob / Millicent</td>
+      <td>11 Sentry IDs from this week are stale-unresolved &mdash; muddies the signal for next week.</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-ready">Sprint 4</span></td>
+      <td>Pull <a href="https://github.com/konvoy-kegs/konvoy/issues/4789">#4789</a> forward &mdash; tighten <code>#[MapRequestPayload]</code> with <code>ALLOW_EXTRA_ATTRIBUTES = false</code> across all DTOs</td>
+      <td>Rob</td>
+      <td>Single highest-leverage prevention from this week. Would have caught <a href="https://github.com/konvoy-kegs/konvoy/issues/4783">#4783</a> in dev.</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-ready">Sprint 4</span></td>
+      <td>Audit <code>try { … } catch (NetSuiteException) { throw }</code> patterns on optional-attribute lookups</td>
+      <td>Rob</td>
+      <td>Same shape as <a href="https://github.com/konvoy-kegs/konvoy/issues/4775">#4775</a> Part A. Apply across NetSuite traits.</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-discovery">Postmortem</span></td>
+      <td>Sentry resolve-on-deploy workflow &mdash; pick GitHub-integration auto-resolve or deploy-checklist tickbox</td>
+      <td>Postmortem outcome</td>
+      <td>Ends the &ldquo;11 unresolved that are actually resolved&rdquo; drift.</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-discovery">Postmortem</span></td>
+      <td>Same-day-redeploy hold policy</td>
+      <td>Postmortem outcome</td>
+      <td>Would have caught the v1.89.14 &rarr; KONVOY-API-2V6/V7/V8 cascade before users hit it.</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-discovery">Postmortem</span></td>
+      <td>NetSuite PR template requirement &mdash; specify NS field by exact name + Finance role owner</td>
+      <td>Postmortem outcome</td>
+      <td>Would have flagged the <a href="https://github.com/konvoy-kegs/konvoy/issues/4794">#4794</a> <code>tranDate</code> vs <code>postingPeriod</code> ambiguity at PR time.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Reference -->
+<h2 class="section-title">References</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>This Week&rsquo;s Releases</h2>
+    <table>
+      <tr><th>Tag</th><th>Time (AEST)</th><th>Commit</th><th>GitHub</th></tr>
+      <tr><td><span class="pill">v1.89.11</span></td><td>Mon 4 May 03:56</td><td><span class="commit">cbaea13</span></td><td><a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.89.11">link</a></td></tr>
+      <tr><td><span class="pill">v1.89.12</span></td><td>Tue 5 May 01:02</td><td><span class="commit">dfebb2f</span></td><td><a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.89.12">link</a></td></tr>
+      <tr><td><span class="pill">v1.89.13</span></td><td>Wed 6 May 09:22</td><td><span class="commit">deb58a9</span></td><td><a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.89.13">link</a></td></tr>
+      <tr><td><span class="pill">v1.89.14</span></td><td>Wed 6 May 19:19</td><td><span class="commit">1b205eb</span></td><td><a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.89.14">link</a></td></tr>
+      <tr><td><span class="pill">v1.89.15</span></td><td>Fri 8 May 02:30</td><td><span class="commit">c3cc879</span></td><td><a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.89.15">link</a></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Companion Documents</h2>
+    <ul style="margin:8px 0 0 18px;color:var(--muted);font-size:0.88rem;line-height:1.7">
+      <li>Long-form narrative report &mdash; <code>release-review-2026-05-04-to-08.md</code> in the Sprint Planning folder</li>
+      <li>v1.89.11 regression tracking &mdash; <a href="https://github.com/konvoy-kegs/konvoy/issues/4741">#4741</a></li>
+      <li>TransferFilter cascade tracking &mdash; <a href="https://github.com/konvoy-kegs/konvoy/issues/4793">#4793</a></li>
+      <li>Rolled-back NS fix &mdash; <a href="https://github.com/konvoy-kegs/konvoy/issues/4794">#4794</a></li>
+      <li>NS region lookup (still open) &mdash; <a href="https://github.com/konvoy-kegs/konvoy/issues/4775">#4775</a></li>
+      <li>Pricing overwrite (highest-stakes fix) &mdash; <a href="https://github.com/konvoy-kegs/konvoy/issues/4790">#4790</a></li>
+      <li>Sentry alert rule referenced in issues &mdash; <code>konvoy-api / 12585216</code></li>
+    </ul>
+  </div>
+</div>
+
+<p style="color:var(--surface2);font-size:0.78rem;text-align:center;margin-top:48px">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Postmortem prelude &middot; weekend writeup pending</p>
+
+<script>
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = '#334155';
+Chart.defaults.font.family = 'Segoe UI, system-ui, sans-serif';
+
+// Cause breakdown doughnut
+new Chart(document.getElementById('causeChart').getContext('2d'), {
+  type: 'doughnut',
+  data: {
+    labels: [
+      'Caused by v1.89.11 (genuine regressions)',
+      'Cascade — fix exposed latent bugs',
+      'Looked like v1.89.11 but pre-existing',
+      'Fix rolled back — wasn\'t a real bug',
+      'Third-party (NetSuite) regression',
+      'Preventative / hardening / cleanup'
+    ],
+    datasets: [{
+      data: [6, 6, 2, 1, 1, 15],
+      backgroundColor: [
+        '#f87171', // genuine regression
+        '#fb923c', // cascade
+        '#a78bfa', // pre-existing
+        '#fbbf24', // rolled back
+        '#22d3ee', // third-party
+        '#4ade80'  // hygiene
+      ],
+      borderColor: '#1e293b',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } },
+      tooltip: { callbacks: { label: (c) => c.label + ': ' + c.raw + ' issue' + (c.raw === 1 ? '' : 's') } }
+    }
+  }
+});
+
+// Issues per release stacked bar
+new Chart(document.getElementById('releaseChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: ['v1.89.11', 'v1.89.12', 'v1.89.13', 'v1.89.14', 'v1.89.15'],
+    datasets: [
+      {
+        label: 'Items shipped (release notes)',
+        data: [50, 5, 8, 4, 4],
+        backgroundColor: '#38bdf8'
+      },
+      {
+        label: 'Issues filed against this release',
+        data: [6, 0, 1, 6, 0],
+        backgroundColor: '#f87171'
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: 'rgba(51,65,85,0.4)' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
