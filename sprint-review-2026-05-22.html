@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katch Cloud Sprint Review — Milestone 18 · May 22, 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --orange: #fb923c;
+    --red: #f87171; --purple: #a78bfa; --pink: #f472b6;
+    --blue: #60a5fa; --cyan: #22d3ee;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 24px; max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+  .grid { display: grid; gap: 20px; margin-bottom: 20px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .grid-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+  .grid-6 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; }
+  .card { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--surface2); }
+  .card h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--accent); }
+  .card h3 { font-size: 0.95rem; margin: 12px 0 8px; color: var(--muted); }
+  .stat-card { text-align: center; }
+  .stat-card .number { font-size: 2.4rem; font-weight: 700; }
+  .stat-card .label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  .stat-card .delta { font-size: 0.78rem; margin-top: 2px; }
+  .chart-container { position: relative; height: 280px; }
+  .chart-container.tall { height: 340px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 8px 10px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--surface2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 8px 10px; border-bottom: 1px solid rgba(51,65,85,0.5); vertical-align: top; }
+  tr:hover { background: rgba(56,189,248,0.05); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+  .badge-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-review { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-progress { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .badge-ready { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .badge-backlog { background: rgba(148,163,184,0.15); color: var(--muted); }
+  .badge-discovery { background: rgba(244,114,182,0.15); color: var(--pink); }
+  .badge-qa { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .badge-urgent { background: rgba(248,113,113,0.2); color: var(--red); }
+  .badge-new { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-warning { background: rgba(251,191,36,0.15); color: var(--yellow); }
+
+  .alert { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .alert-red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .alert-yellow { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); }
+  .alert-green { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.3); }
+  .alert-orange { background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.3); }
+  .alert-blue { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.3); }
+  .alert h2 { font-size: 1rem; margin-bottom: 8px; }
+  .alert-red h2 { color: var(--red) !important; }
+  .alert-yellow h2 { color: var(--yellow) !important; }
+  .alert-green h2 { color: var(--green) !important; }
+  .alert-orange h2 { color: var(--orange) !important; }
+  .alert-blue h2 { color: var(--accent) !important; }
+  .alert p, .alert li { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+  .alert ul { margin: 8px 0 0 18px; }
+
+  .section-title { font-size: 1.3rem; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--surface2); }
+
+  .person-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; color: var(--bg); }
+  .person-stats { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .person-stat { font-size: 0.82rem; color: var(--muted); }
+  .person-stat strong { color: var(--text); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .tag { font-size: 0.72rem; padding: 1px 6px; border-radius: 4px; background: var(--surface2); color: var(--muted); margin-right: 3px; }
+
+  .capacity-bar { height: 8px; border-radius: 4px; background: var(--surface2); overflow: hidden; margin: 4px 0 8px; }
+  .capacity-fill { height: 100%; border-radius: 4px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4, .grid-5, .grid-6 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Katch Cloud &mdash; Milestone 18 Review</h1>
+<p class="subtitle">Milestone 18 &middot; May 11 &ndash; 22, 2026 &middot; End-of-sprint snapshot &middot; Generated May 22, 2026</p>
+
+<!-- ============================================================ -->
+<!-- HEADLINE / NARRATIVE SUMMARY                                  -->
+<!-- ============================================================ -->
+<div class="alert alert-blue">
+  <h2>Sprint Headline &mdash; Fuel Levy out, NS reliability hardened, Rentals epic closed</h2>
+  <p>Milestone 18 closed at <strong>74% (40 of 54 items)</strong> with the Fuel Levy feature fully shipped behind a LaunchDarkly gate, the New Rental Order Form epic (#4598) closed, and a critical NetSuite invoice atomicity bug (#4852) found and fixed mid-sprint. The Review queue was held at <strong>2 items</strong> all sprint &mdash; well under the &le;5 target and a step-change from the 18-item peak of Sprint 3. The trade-off: <strong>Refills barely started</strong> &mdash; only NS-1.1 Discovery and NS-1.2 line-item work are live, and a new follow-up epic (#4853) has been spun up to drive NS invoice failure hardening into M19.</p>
+</div>
+
+<div class="alert alert-orange">
+  <h2>Unplanned mid-sprint pull &mdash; NetSuite atomicity bug (#4852)</h2>
+  <p>A P0 NetSuite invoice atomicity bug (KONVOY-API-2T6 / 2VA) was discovered mid-sprint: order completion was failing when NS rejected an invoice, leaving Katch Cloud in an inconsistent state. The fix shipped (PR #4858) plus three downstream issues this week (#4936 silent failure path, #4937 NZ state mapping, #4933 Casual exclusive rental pricing), and the broader hardening was scoped into epic <a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853</a> with 10 follow-ups. <strong>This is the conversation for retro:</strong> was this discoverable earlier with better integration testing?</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- BOARD SNAPSHOT — KPI STAT CARDS                               -->
+<!-- ============================================================ -->
+<h2 class="section-title">Board Snapshot &mdash; End of Milestone 18</h2>
+
+<div class="grid grid-6">
+  <div class="card stat-card"><div class="number" style="color:var(--muted)">0</div><div class="label">Backlog</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--pink)">4</div><div class="label">Discovery</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--purple)">4</div><div class="label">Ready</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--blue)">4</div><div class="label">In Progress</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">2</div><div class="label">Review</div><div class="delta" style="color:var(--green)">&le;5 target &mdash; hit</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">31</div><div class="label">Done (M18 board)</div></div>
+</div>
+
+<div class="grid grid-4">
+  <div class="card stat-card"><div class="number" style="color:var(--green)">40</div><div class="label">Items closed (milestone)</div><div class="delta" style="color:var(--muted)">20 issues + 20 PRs</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--accent)">74<span style="font-size:1.2rem">%</span></div><div class="label">Milestone completion</div><div class="delta" style="color:var(--muted)">40/54</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--orange)">14</div><div class="label">Carry-over items</div><div class="delta" style="color:var(--muted)">12 issues + 2 PRs &rarr; M19</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--red)">~13</div><div class="label">Unplanned NS items</div><div class="delta" style="color:var(--muted)">#4852 + #4853 epic</div></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CHARTS ROW                                                    -->
+<!-- ============================================================ -->
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Milestone 18 Status Breakdown</h2>
+    <div class="chart-container"><canvas id="statusChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Closed by Label (M18 issues + PRs)</h2>
+    <div class="chart-container"><canvas id="labelChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Closed Items by Theme</h2>
+    <div class="chart-container"><canvas id="themeChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Burn-up &mdash; Milestone 18 (Approx.)</h2>
+    <div class="chart-container"><canvas id="burnupChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WHAT SHIPPED — TEAM-LEVEL THEMES (no per-person retro)        -->
+<!-- ============================================================ -->
+<h2 class="section-title">What We Shipped &mdash; Themes</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Grouped by theme rather than by individual. The fortnight broke into four streams: Fuel Levy completion, NetSuite reliability hardening, Rentals/Orders polish, and DX/tooling investment that will compound for the rest of the quarter.</p>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Theme 1 &mdash; Fuel Levy shipped end-to-end</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The #1 business priority from CEO/COO is now live behind the <code style="background:var(--surface2);padding:1px 4px;border-radius:3px;font-size:0.78rem">rolloutKeg4506OrderDetailFuelLevy</code> LaunchDarkly flag, with a Finance-only-edit / Konvoy ANZ read-only access model and an audit trail capturing rate diffs. The customer-facing order form now shows a Fuel Levy notice, and the System Admin rate listing filters to active rates by default. Generic SuiteQL CLI (#4798/#4869) was added as supporting tooling for NS rate verification.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4834">#4834</a></td><td>FuelSurchargeRate audit trail</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4835">#4835</a></td><td>Finance-only edit + ANZ read-only</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4836">#4836</a></td><td>LD flag gate on FL display (+ PR #4837)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4868">#4868</a></td><td>FL notice on customer order form (Bea)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4878">#4878</a></td><td>Active-only filter + sidebar polish (Bea)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Theme 2 &mdash; NetSuite reliability hardening</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The fortnight's highest-impact unplanned work: a P0 atomicity bug where order completion failed if NS rejected the invoice (#4852, PR #4858), plus three cascade fixes &mdash; broken Slack alert URL and stale location filter on subsidiary override (#4936), NZ state&rarr;region map for Bay of Plenty / Northland (#4937, PR #4873), and Casual exclusive agreement rental pricing (#4933, plus customer-reported #4842, PR #4850 by Bea). A new follow-up epic <a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853</a> has been scoped to harden the full NS invoice failure path in M19.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4852">#4852</a></td><td>NS invoice atomicity bug (P0)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4936">#4936</a></td><td>Silent NS invoice failures &mdash; Slack alert + location</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4937">#4937</a></td><td>NZ state&rarr;region mapping fix</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4933">#4933</a></td><td>Casual exclusive rental fee prefill</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4842">#4842</a></td><td>Incorrect pricing (Jira-SD)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Theme 3 &mdash; Rentals epic closed + Orders polish</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Bea closed the <strong>New Rental Order Form Improvements epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/4598">#4598</a>)</strong> at 4/5 with the remaining ticket consciously deferred. Configurable Orders columns shipped with in-table drag and a customer-default fix (PR #4860). A P1 Exclusive Agreement save bug (#4839/PR #4840) where the FE was suppressing 400 overlap errors was fixed, and the Orders screen took a feedback round from Marc and Kim (#4888) plus sort/filter default refinements (#4942). Ops back-dated 16 prod-OC rentals via PLAN-15 (#4874).</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4598">#4598</a></td><td>Epic: New Rental Order Form (closed)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4593">#4593</a></td><td>Configurable columns + Customer default (Bea PR #4860)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4839">#4839</a></td><td>Exclusive Agreement save P1 fix</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4942">#4942</a></td><td>Orders sort/filter refinements (Bea)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4888">#4888</a></td><td>Marc/Kim feedback round (Bea)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Theme 4 &mdash; DX/Tooling that compounds</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Several DX investments landed that will pay back across the rest of the quarter: a <strong>prod-db-edit skill</strong> with rollback-first workflow (#4883/PR #4884), extended to a read-only <strong>prod-db-access</strong> mode (#4885); the OAuth login loop on katch-dev-oc fixed by ensuring session persistence (#4678/PR #4681); the long-running Storybook + Loki CI race eliminated (#4658/PR #4844); k6 smoke moved to local execution (PR #4851); and Bea's staging-only Report-a-bug widget (#4877/PR #4881) closes the feedback loop with internal testers.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4883">#4883</a></td><td>prod-db-edit skill</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4885">#4885</a></td><td>prod-db-access (read-only)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4678">#4678</a></td><td>OAuth login loop (dev-oc)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4658">#4658</a></td><td>Storybook + Loki CI flake</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4877">#4877</a></td><td>Staging Report-a-bug widget (Bea)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TODAY'S RELEASE                                               -->
+<!-- ============================================================ -->
+<div class="alert alert-green">
+  <h2>Today's Release &mdash; Friday 22 May</h2>
+  <p>Releasing the M18 work to prod. Headline change: <strong>Fuel Levy is live behind the LD flag</strong> (Finance gets edit, ANZ gets read-only), the configurable-columns Orders table is on, and the NS invoice atomicity fix is shipping with the cascade fixes (Slack alert, NZ region mapping, Casual exclusive rental pricing). LaunchDarkly flag rollout plan and version tag to be confirmed by Rob before push.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- ACTIVE EPICS — STATUS                                         -->
+<!-- ============================================================ -->
+<h2 class="section-title">Active Epics &mdash; Status into M19</h2>
+
+<div class="card" style="margin-bottom:20px">
+  <table>
+    <tr>
+      <th>Epic</th>
+      <th>Priority</th>
+      <th>Progress in M18</th>
+      <th>Carry into M19</th>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4493">#4493 Fuel Levy</a></td>
+      <td><span class="badge badge-done">Shipped</span></td>
+      <td>FL-5 through FL-9 closed; rate management UI live behind LD; customer notice deployed.</td>
+      <td>Phase 2 (projected cost on order creation) still open per April milestone description.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4598">#4598 New Rental Order Form</a></td>
+      <td><span class="badge badge-done">Closed</span></td>
+      <td>4 of 5 sub-issues shipped, epic closed by Bea.</td>
+      <td>None &mdash; deliberate.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853 NS Invoice Hardening</a></td>
+      <td><span class="badge badge-urgent">Urgent (new)</span></td>
+      <td>Epic created mid-sprint; 2/10 sub-issues closed (#4936, #4937).</td>
+      <td><strong>Yes &mdash; primary M19 carry.</strong> 8 sub-issues plus the parent.</td>
+    </tr>
+    <tr>
+      <td>NS Epic 1 &mdash; Refill Orders</td>
+      <td><span class="badge badge-warning">Started</span></td>
+      <td>#4309 (workflow discovery) and #4310 (REFILL line item type) opened in Discovery; no implementation.</td>
+      <td><strong>Yes &mdash; M19 stated goal.</strong></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4296">#4296 NS Epic 0 &mdash; Foundation</a></td>
+      <td><span class="badge badge-urgent">P0</span></td>
+      <td>No movement this sprint &mdash; absorbed by #4853 unplanned work.</td>
+      <td>Still in Ready. Decision needed: continue deferring or sequence after Refills discovery?</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4532">#4532 NS Security Audit</a></td>
+      <td><span class="badge badge-urgent">Compliance</span></td>
+      <td>Remains In-Progress (Rob); not the focus this sprint.</td>
+      <td>Carrying. Recommend timeboxing remaining investigation tickets to avoid sprint capture.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4377">#4377 Orders Experience</a></td>
+      <td>High</td>
+      <td>Configurable columns + sort/filter refinements landed via Bea.</td>
+      <td>Yes &mdash; remaining design-feedback items per memory note.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- REVIEW QUEUE HEALTH                                           -->
+<!-- ============================================================ -->
+<h2 class="section-title">Review Queue Health</h2>
+
+<div class="grid grid-3">
+  <div class="card stat-card">
+    <div class="number" style="color:var(--green)">2</div>
+    <div class="label">Items in Review now</div>
+    <div class="delta" style="color:var(--green)">Target &le;5 &mdash; hit</div>
+  </div>
+  <div class="card stat-card">
+    <div class="number" style="color:var(--accent)">20</div>
+    <div class="label">PRs merged this sprint</div>
+    <div class="delta" style="color:var(--muted)">In M18 milestone scope</div>
+  </div>
+  <div class="card stat-card">
+    <div class="number" style="color:var(--green)">&minus;16</div>
+    <div class="label">vs Sprint 3 peak (18)</div>
+    <div class="delta" style="color:var(--green)">Sustained discipline</div>
+  </div>
+</div>
+
+<div class="alert alert-green">
+  <h2>Review queue is the clearest win of the fortnight</h2>
+  <p>Two items in Review at sprint end: <a href="https://github.com/konvoy-kegs/konvoy/issues/4663">#4663</a> (filter unavailable SKUs in rental order form &mdash; carries to M19) and <a href="https://github.com/konvoy-kegs/konvoy/issues/4852">#4852</a> (the NS atomicity bug; <strong>note: issue is closed on milestone but the project board Status column wasn't moved &mdash; sprint hygiene cleanup</strong>). Friday review-blitz blocks plus Bea reviewing some frontend PRs has compounded into a step-change from the Sprint 3 peak of 18.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- CARRY-OVER & SCOPE-FREEZE                                     -->
+<!-- ============================================================ -->
+<h2 class="section-title">Carry-over into Milestone 19</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Carrying forward (12 open issues)</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:10px;">Grouped by intent. Refills work and NS-hardening follow-ups are the spine of M19.</p>
+    <table>
+      <tr><th>Issue</th><th>Title</th><th>Status</th></tr>
+      <tr><td colspan="3" style="color:var(--pink);font-weight:600;padding-top:14px;">Refills (M19 goal)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4309">#4309</a></td><td>[NS-1.1] Discovery: refill order workflow</td><td><span class="badge badge-discovery">Discovery</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4310">#4310</a></td><td>[NS-1.2] Un-deprecate REFILL line item type (Mill.)</td><td><span class="badge badge-discovery">Discovery</span></td></tr>
+      <tr><td colspan="3" style="color:var(--red);font-weight:600;padding-top:14px;">NS Invoice Hardening (epic #4853)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853</a></td><td>Epic parent (8 sub-issues remaining)</td><td><span class="badge badge-discovery">Discovery</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4866">#4866</a></td><td>NS admin: populate subsidiary 18 with locations</td><td><span class="badge badge-progress">In Progress</span></td></tr>
+      <tr><td colspan="3" style="color:var(--yellow);font-weight:600;padding-top:14px;">Order completion hardening (follow-up to #4852)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4787">#4787</a></td><td>Remove Elvis fallback on CompleteOrderInputDto::$completedDate</td><td><span class="badge badge-ready">Ready</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4788">#4788</a></td><td>Functional regression test for completedDate round-trip</td><td><span class="badge badge-ready">Ready</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4789">#4789</a></td><td>Tighten #[MapRequestPayload] to reject unknown JSON attrs</td><td><span class="badge badge-ready">Ready</span></td></tr>
+      <tr><td colspan="3" style="color:var(--accent);font-weight:600;padding-top:14px;">Rentals tail + DX</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4663">#4663</a></td><td>Filter unavailable SKUs in rental order form (Bea)</td><td><span class="badge badge-review">Review</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4607">#4607</a></td><td>Allow editing scheduled orders w/ no-comms warning (Bea)</td><td><span class="badge badge-discovery">Discovery</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4913">#4913</a></td><td>CI: Loki Storybooks FETCH_STORIES race (Bea)</td><td><span class="badge badge-ready">Ready</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4719">#4719</a></td><td>Archive 2 inactive LaunchDarkly flags</td><td><span class="badge badge-progress">In Progress</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4871">#4871</a></td><td>Investigate fast-xml-parser + @loaders.gl/wms bump</td><td><span class="badge badge-progress">In Progress</span></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Unplanned work pulled in</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:10px;">Items not present at sprint start. The first three are the NS atomicity cascade &mdash; reasonable to pull in as a P0. Worth asking on retro whether earlier integration testing could have caught #4852.</p>
+    <table>
+      <tr><th>Issue</th><th>Why pulled in</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4852">#4852</a></td><td>P0 NS atomicity bug discovered mid-sprint</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853</a></td><td>Epic spun up to drive #4852 follow-ups</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4936">#4936</a></td><td>Cascade from #4852 &mdash; silent invoice failures</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4937">#4937</a></td><td>Cascade from #4852 &mdash; NZ state mapping</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4933">#4933</a></td><td>Casual exclusive rental prefill bug</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4842">#4842</a></td><td>Customer-reported incorrect pricing (Jira-SD)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4839">#4839</a></td><td>Exclusive Agreement P1 save bug</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4874">#4874</a></td><td>Ops: back-dated 16 prod-OC rentals (PLAN-15)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4888">#4888</a></td><td>Orders screen feedback round (Marc/Kim)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4942">#4942</a></td><td>Orders sort/filter default refinements</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4944">#4944</a></td><td>Dev filter-preset API single-blob shape mismatch</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RETROSPECTIVE — TEAM-LEVEL ONLY                               -->
+<!-- ============================================================ -->
+<h2 class="section-title">Retrospective &mdash; Team Themes</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Three columns: what worked, what to review, and open questions for the M19 kickoff. Team-level only.</p>
+
+<div class="grid grid-3">
+  <div class="card">
+    <h2 style="color:var(--green)">What worked</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Review queue discipline.</strong> Held at 2 items the whole sprint &mdash; Friday review blocks and Bea reviewing some frontend PRs both contributed.</li>
+      <li><strong>Feature-flag shipping for Fuel Levy.</strong> LD-gated rollout means we can stage exposure to brewery customers without a code change.</li>
+      <li><strong>Bea ramped meaningfully.</strong> Five PRs merged (#4850, #4860, #4868, #4878, #4881) plus took the lead on the Orders feedback round.</li>
+      <li><strong>Tooling investment compounded.</strong> prod-db-edit/access, SuiteQL CLI, and the Report-a-bug widget will all pay back for the rest of the quarter.</li>
+      <li><strong>NS atomicity bug response.</strong> Triaged, fixed, and follow-up epic spun up inside the same sprint &mdash; that's healthy.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--yellow)">What to review</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Could #4852 have been caught earlier?</strong> The atomicity bug shipped to prod undetected. Worth asking: do we need an integration test gate for NS-touching changes?</li>
+      <li><strong>Refills barely moved.</strong> Goal 3 was "start Refills" &mdash; only Discovery is open. Was the goal realistic given concurrent FL + Rentals + the unplanned NS work?</li>
+      <li><strong>Project-board Status drift.</strong> #4852 is closed on the milestone but still in Review on the board. The sprint hygiene runbook needs to catch this.</li>
+      <li><strong>Volume of unplanned work.</strong> 11 items pulled in mid-sprint (mostly NS cascade). Reasonable for the cause, but worth quantifying against planned scope.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--accent)">Open questions for M19</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Refills ownership.</strong> Should Millicent own NS-1.x end-to-end while Rob drives the #4853 hardening epic?</li>
+      <li><strong>Batch the completedDate trio?</strong> #4787, #4788, #4789 are tightly coupled &mdash; treat as one work unit and timebox?</li>
+      <li><strong>Design-feedback backlog.</strong> The 28 unassigned UX tickets from memory still need triage. Reserve M19 capacity?</li>
+      <li><strong>NS Epic 0 (#4296) and Security Audit (#4532).</strong> Both still in Ready/In-Progress with no movement. Defer formally or sequence into M19?</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ENTERING MILESTONE 19                                         -->
+<!-- ============================================================ -->
+<h2 class="section-title">Entering Milestone 19 &mdash; May 25 to June 5, 2026</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">From the M19 milestone description: <em>"Finishing some minor items for Rentals. Starting further discovery and work required for the Refills feature."</em> Three suggested goals derived from the carry-over and the new milestone framing.</p>
+
+<div class="grid grid-3">
+  <div class="card">
+    <h2 style="color:var(--pink)">Goal 1 &mdash; Refills kick-off</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Move NS-1.1 (#4309) from Discovery to Ready with a workflow spec, and ship NS-1.2 (#4310) REFILL line item un-deprecation with verified NS mappings. Set up the next 3&ndash;4 Refills tickets so Millicent can run with backend.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--pink)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0 of 10</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--red)">Goal 2 &mdash; Close #4853 NS hardening</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">8 sub-issues remain on the NS invoice failure hardening epic. Target: close the parent epic plus all sub-issues by end of M19. Also resolve the completedDate trio (#4787/#4788/#4789) as one timeboxed work unit.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--red)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0 of 10</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--accent)">Goal 3 &mdash; Rentals tail + DX</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Land #4663 (unavailable SKUs) and #4607 (scheduled order editing). Triage the design-feedback backlog. Close the Loki Storybooks race (#4913), bump deps (#4871), and archive the inactive LD flags (#4719).</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--accent)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0 of 10</p>
+  </div>
+</div>
+
+<div class="grid grid-3">
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--accent)">R</div>
+      <div><strong>Rob</strong> &mdash; Heavy NS load entering M19</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Currently owns: #4853 epic, completedDate trio, #4866 NS admin, #4309 Refills discovery, #4532 Security Audit, plus reviewing.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:95%;background:var(--red)"></div></div>
+    <p style="font-size:0.78rem;color:var(--red)">Overloaded &mdash; recommend reassigning #4309 to Mill. for end-to-end Refills ownership</p>
+  </div>
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--purple)">M</div>
+      <div><strong>Millicent</strong> &mdash; Refills backend lead?</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Has #4310 (NS-1.2 REFILL line item) and the #4834/#4835 FL work just landed. Capacity for NS-1.1 + downstream Refills implementation.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:65%;background:var(--purple)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Headroom for Refills end-to-end ownership</p>
+  </div>
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--pink)">B</div>
+      <div><strong>Bea</strong> &mdash; Now contributing strongly</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">5 PRs merged in M18 incl. configurable columns. Carry-over: #4663 (Review), #4607 (Discovery), #4913 (CI). Plus design-feedback backlog triage.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:70%;background:var(--pink)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Solid loadout for M19</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RISKS / DEPENDENCIES TO WATCH                                 -->
+<!-- ============================================================ -->
+<h2 class="section-title">Risks &amp; Dependencies to Watch</h2>
+
+<div class="card" style="margin-bottom:20px">
+  <table>
+    <tr><th>Risk</th><th>Impact</th><th>Owner</th><th>Mitigation</th></tr>
+    <tr>
+      <td>Rob's loadout is heavy entering M19</td>
+      <td>NS hardening + Refills + Security Audit + review &mdash; sustainable 22 SP target exceeded.</td>
+      <td>Rob</td>
+      <td>Hand Refills discovery to Millicent. Timebox NS Security Audit sub-tasks. Defer #4296 Epic 0 formally.</td>
+    </tr>
+    <tr>
+      <td>Project board status drift</td>
+      <td>#4852 closed on milestone but still in Review on board &mdash; signals sprint-hygiene gaps that could grow.</td>
+      <td>Rob</td>
+      <td>Apply the sprint-hygiene runbook checklist at start of M19. Move closed items out of Review.</td>
+    </tr>
+    <tr>
+      <td>NS atomicity follow-up (#4853) is mostly undefined</td>
+      <td>Epic has 10 sub-issues but most aren't sized yet. Could expand to consume M19.</td>
+      <td>Rob</td>
+      <td>Size all #4853 sub-issues in M19 planning. Cap commitment.</td>
+    </tr>
+    <tr>
+      <td>Refills work depends on NS-1.1 discovery (#4309)</td>
+      <td>If discovery slips, Refills implementation cannot start. Goal 1 at risk.</td>
+      <td>Rob &rarr; Mill.</td>
+      <td>Reassign #4309 to Millicent so she owns the full Refills chain.</td>
+    </tr>
+    <tr>
+      <td>Design-feedback backlog unassigned (memory: 28 tickets)</td>
+      <td>UX work not progressing &mdash; eventual product debt.</td>
+      <td>Bea + Rob</td>
+      <td>Triage session early M19. Decide: defer batch, allocate Bea capacity, or close low-value items.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- ACTION ITEMS                                                  -->
+<!-- ============================================================ -->
+<h2 class="section-title">Action Items</h2>
+
+<div class="card">
+  <table>
+    <tr><th style="width:30px">&nbsp;</th><th>Action</th><th>Owner</th><th>Priority</th></tr>
+    <tr><td>&#9744;</td><td>Push today's release with Fuel Levy + NS atomicity fix; confirm LD flag rollout plan (% exposure, first cohort)</td><td>Rob</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Run the sprint-hygiene runbook against the board &mdash; move closed-on-milestone items out of Review (starting with #4852 stale entry)</td><td>Rob</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Reassign #4309 (NS-1.1 Refills discovery) to Millicent for end-to-end ownership of the Refills chain</td><td>Rob</td><td>P0</td></tr>
+    <tr><td>&#9744;</td><td>Size all 10 sub-issues of #4853 (NS invoice hardening epic) before M19 kickoff Monday</td><td>Rob</td><td>P0</td></tr>
+    <tr><td>&#9744;</td><td>Treat #4787/#4788/#4789 (completedDate trio) as a single timeboxed work unit in M19</td><td>Rob</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Retro discussion: what integration-test gate could have caught the #4852 NS atomicity bug pre-prod?</td><td>Team</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Triage the 28 design-feedback tickets &mdash; defer batch, allocate Bea capacity, or close</td><td>Bea + Rob</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Decide formally on NS Epic 0 (#4296) &mdash; defer or sequence after Refills discovery</td><td>Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Add new card to <code>index.html</code> + push <code>sprint-review-2026-05-22.html</code> to engineering-planning repo</td><td>Rob</td><td>P2</td></tr>
+  </table>
+</div>
+
+<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 18 (May 11&ndash;22, 2026) &middot; Generated May 22, 2026</p>
+
+<script>
+function showChartFailure(message) {
+  var ids = ['statusChart', 'labelChart', 'themeChart', 'burnupChart'];
+  ids.forEach(function (id) {
+    var c = document.getElementById(id);
+    if (!c) return;
+    var parent = c.parentElement;
+    parent.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">' + message + '</div>';
+  });
+}
+
+function renderCharts() {
+  if (typeof Chart === 'undefined') {
+    showChartFailure('Chart.js failed to load (CDN blocked or offline). Open in a browser with network access, or open the file via the GitHub Pages site.');
+    return;
+  }
+
+  Chart.defaults.color = '#94a3b8';
+  Chart.defaults.borderColor = 'rgba(51,65,85,0.5)';
+  Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+  function safeChart(id, config) {
+    try {
+      var el = document.getElementById(id);
+      if (!el) { console.warn('Canvas not found:', id); return; }
+      new Chart(el, config);
+    } catch (err) {
+      console.error('Chart render failed for', id, err);
+      var c = document.getElementById(id);
+      if (c && c.parentElement) {
+        c.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f87171;font-size:0.85rem;">Chart render error: ' + (err && err.message ? err.message : err) + '</div>';
+      }
+    }
+  }
+
+// ============================================================
+// Milestone 18 status breakdown (project board, end-of-sprint)
+// Done 31 / Review 2 / In Progress 4 / Ready 4 / QA 0 / Discovery 4 / Backlog 0
+// ============================================================
+safeChart('statusChart', {
+  type: 'doughnut',
+  data: {
+    labels: ['Done (31)', 'Review (2)', 'In Progress (4)', 'Ready (4)', 'QA (0)', 'Discovery (4)', 'Backlog (0)'],
+    datasets: [{
+      data: [31, 2, 4, 4, 0, 4, 0],
+      backgroundColor: ['#4ade80','#fbbf24','#60a5fa','#a78bfa','#22d3ee','#f472b6','#64748b'],
+      borderWidth: 0, hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { padding: 10, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } } }
+    }
+  }
+});
+
+// ============================================================
+// Closed by label — approximate counts from M18 milestone listing
+// ============================================================
+safeChart('labelChart', {
+  type: 'polarArea',
+  data: {
+    labels: ['back end', 'front end', 'bug/fix', 'enhancement/feature', 'infra/devops', 'netsuite', 'tech-debt', 'chore/deps'],
+    datasets: [{
+      data: [14, 10, 11, 13, 3, 5, 1, 4],
+      backgroundColor: ['#a78bfa','#f472b6','#f87171','#4ade80','#38bdf8','#fb923c','#fbbf24','#64748b'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }
+  }
+});
+
+// ============================================================
+// Closed items by narrative theme (issue + PR pairs counted together)
+// ============================================================
+safeChart('themeChart', {
+  type: 'bar',
+  data: {
+    labels: [
+      'Fuel Levy',
+      'NS reliability',
+      'Rentals & Orders',
+      'DX / tooling',
+      'Auth / infra',
+      'Other'
+    ],
+    datasets: [{
+      label: 'Items closed (incl. PRs)',
+      data: [10, 9, 11, 6, 3, 1],
+      backgroundColor: ['#4ade80','#f87171','#f472b6','#38bdf8','#a78bfa','#64748b'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
+  }
+});
+
+// ============================================================
+// Burn-up — approximate from milestone close rate
+// 10 working days, May 11 → May 22. Final closed = 40 (issues + PRs).
+// Curve is approximate; refine from Insights Burn-up chart if needed.
+// ============================================================
+safeChart('burnupChart', {
+  type: 'line',
+  data: {
+    labels: ['May 11','May 12','May 13','May 14','May 15','May 18','May 19','May 20','May 21','May 22'],
+    datasets: [
+      { label: 'Scope',     data: [43, 44, 46, 48, 50, 52, 53, 54, 54, 54], borderColor: '#64748b', backgroundColor: 'rgba(100,116,139,0.1)', tension: 0.2, fill: false, borderDash: [4,4] },
+      { label: 'Completed', data: [2, 5, 9, 14, 18, 22, 27, 31, 36, 40],    borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.15)', tension: 0.2, fill: true }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+  }
+});
+
+}  // end renderCharts
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderCharts);
+} else {
+  renderCharts();
+}
+</script>
+</body>
+</html>
