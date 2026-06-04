@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katch Cloud Sprint Review — Milestone 19 · June 5, 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --orange: #fb923c;
+    --red: #f87171; --purple: #a78bfa; --pink: #f472b6;
+    --blue: #60a5fa; --cyan: #22d3ee;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 24px; max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+  .grid { display: grid; gap: 20px; margin-bottom: 20px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .grid-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+  .grid-6 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; }
+  .card { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--surface2); }
+  .card h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--accent); }
+  .card h3 { font-size: 0.95rem; margin: 12px 0 8px; color: var(--muted); }
+  .stat-card { text-align: center; }
+  .stat-card .number { font-size: 2.4rem; font-weight: 700; }
+  .stat-card .label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  .stat-card .delta { font-size: 0.78rem; margin-top: 2px; }
+  .chart-container { position: relative; height: 280px; }
+  .chart-container.tall { height: 340px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 8px 10px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--surface2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 8px 10px; border-bottom: 1px solid rgba(51,65,85,0.5); vertical-align: top; }
+  tr:hover { background: rgba(56,189,248,0.05); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+  .badge-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-review { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-progress { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .badge-ready { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .badge-backlog { background: rgba(148,163,184,0.15); color: var(--muted); }
+  .badge-discovery { background: rgba(244,114,182,0.15); color: var(--pink); }
+  .badge-qa { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .badge-urgent { background: rgba(248,113,113,0.2); color: var(--red); }
+  .badge-new { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-warning { background: rgba(251,191,36,0.15); color: var(--yellow); }
+
+  .alert { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .alert-red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .alert-yellow { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); }
+  .alert-green { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.3); }
+  .alert-orange { background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.3); }
+  .alert-blue { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.3); }
+  .alert h2 { font-size: 1rem; margin-bottom: 8px; }
+  .alert-red h2 { color: var(--red) !important; }
+  .alert-yellow h2 { color: var(--yellow) !important; }
+  .alert-green h2 { color: var(--green) !important; }
+  .alert-orange h2 { color: var(--orange) !important; }
+  .alert-blue h2 { color: var(--accent) !important; }
+  .alert p, .alert li { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+  .alert ul { margin: 8px 0 0 18px; }
+
+  .section-title { font-size: 1.3rem; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--surface2); }
+
+  .person-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; color: var(--bg); }
+  .person-stats { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .person-stat { font-size: 0.82rem; color: var(--muted); }
+  .person-stat strong { color: var(--text); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .tag { font-size: 0.72rem; padding: 1px 6px; border-radius: 4px; background: var(--surface2); color: var(--muted); margin-right: 3px; }
+
+  .capacity-bar { height: 8px; border-radius: 4px; background: var(--surface2); overflow: hidden; margin: 4px 0 8px; }
+  .capacity-fill { height: 100%; border-radius: 4px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4, .grid-5, .grid-6 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Katch Cloud &mdash; Milestone 19 Review</h1>
+<p class="subtitle">Milestone 19 &middot; May 25 &ndash; June 5, 2026 &middot; End-of-sprint snapshot &middot; Generated June 5, 2026</p>
+
+<!-- ============================================================ -->
+<!-- HEADLINE / NARRATIVE SUMMARY                                  -->
+<!-- ============================================================ -->
+<div class="alert alert-blue">
+  <h2>Sprint Headline &mdash; NS hardening matured, Refills moved from talk to code, Orders API got faster</h2>
+  <p>Milestone 19 closed at <strong>76% (45 of 59 milestone items)</strong> &mdash; 22 issues and 23 merged PRs &mdash; landing roughly in line with M18's 82%. The fortnight delivered on its stated brief (<em>"finishing minor Rentals items, starting Refills discovery and work"</em>) and then some: the NS invoice-hardening epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853</a>) graduated from cascade fixes to its <strong>central architectural change &mdash; decoupling Katch Cloud writes from NetSuite sync (<a href="https://github.com/konvoy-kegs/konvoy/issues/5028">#5028</a>)</strong>; <strong>Refills became a real workstream</strong> with a fresh epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/4912">#4912</a>, replacing the stale #4308) and two backend/FE tickets shipped; and a small but high-leverage <strong>Orders-API performance push</strong> short-circuited order-number search onto an index range scan. The trade-off: <strong>14 items carry to M20</strong>, and the board-wide Review column has drifted back up to 18 &mdash; the clearest hygiene regression to flag this sprint.</p>
+</div>
+
+<div class="alert alert-orange">
+  <h2>Watch item &mdash; Review column has drifted to 18 board-wide (M18 held it at 2)</h2>
+  <p>The single biggest process signal this fortnight isn't in the milestone numbers &mdash; it's on the board. The <strong>Review column now holds 18 items</strong>, back to the Sprint&nbsp;3 problem range and a long way from the disciplined 2 we sustained through M18. Several are stale older items (NS invoice endpoints #4255/#4261/#4268, infra PRs in <code>kubernetes</code>/<code>terraform</code>) that look parked rather than actively reviewed. With Rob still the primary reviewer, this is the first thing the sprint-hygiene runbook should sweep on Monday. <strong>Retro question: is Review accumulating because of reviewer bandwidth, or because items are landing there "done-ish" and not being closed out?</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<!-- BOARD SNAPSHOT — KPI STAT CARDS                               -->
+<!-- ============================================================ -->
+<h2 class="section-title">Milestone 19 Snapshot</h2>
+
+<div class="grid grid-4">
+  <div class="card stat-card"><div class="number" style="color:var(--green)">45</div><div class="label">Items closed (milestone)</div><div class="delta" style="color:var(--muted)">22 issues + 23 PRs</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--accent)">76<span style="font-size:1.2rem">%</span></div><div class="label">Milestone completion</div><div class="delta" style="color:var(--muted)">45/59 &middot; M18 was 82%</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--orange)">14</div><div class="label">Carry-over to M20</div><div class="delta" style="color:var(--muted)">9 issues + 5 PRs</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--red)">18</div><div class="label">Review column (board-wide)</div><div class="delta" style="color:var(--red)">Target &le;5 &mdash; missed</div></div>
+</div>
+
+<div class="grid grid-6">
+  <div class="card stat-card"><div class="number" style="color:var(--red)">5</div><div class="label">NS hardening shipped</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--pink)">6</div><div class="label">Orders / Rentals fixes</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--cyan)">3</div><div class="label">Orders-API perf</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--accent)">3</div><div class="label">DX / CI / tooling</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">2</div><div class="label">Refills tickets</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--muted)">3</div><div class="label">Ops / prod-data</div></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CHARTS ROW                                                    -->
+<!-- ============================================================ -->
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Milestone 19 Completion</h2>
+    <div class="chart-container"><canvas id="statusChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Closed Items by Theme</h2>
+    <div class="chart-container"><canvas id="themeChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Closed by Label (M19 issues &mdash; approx.)</h2>
+    <div class="chart-container"><canvas id="labelChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Burn-up &mdash; Milestone 19 (approx.)</h2>
+    <div class="chart-container"><canvas id="burnupChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WHAT SHIPPED — TEAM-LEVEL THEMES                              -->
+<!-- ============================================================ -->
+<h2 class="section-title">What We Shipped &mdash; Themes</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Grouped by theme, not by individual. The fortnight broke into five streams: NetSuite reliability hardening (now the central decoupling work), Orders/Rentals polish &amp; bug-fixing, an Orders-API performance push, Refills kick-off, and continued DX/tooling investment.</p>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Theme 1 &mdash; NetSuite reliability: from cascade fixes to decoupling</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The <a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853</a> hardening epic matured past the M18 cascade fixes into its architectural core: <strong>Katch Cloud writes are now decoupled from NetSuite sync, with finance alerted on NS failure (<a href="https://github.com/konvoy-kegs/konvoy/issues/5028">#5028</a>)</strong> &mdash; the structural fix the M18 atomicity bug was pointing at. Alongside it, error-handling hygiene landed: leaky 409 diagnostics separated from user-facing messages (<a href="https://github.com/konvoy-kegs/konvoy/issues/5030">#5030</a>), <code>ConflictException</code> now returns a clean 409 instead of a 500 + Sentry noise (<a href="https://github.com/konvoy-kegs/konvoy/issues/4996">#4996</a>), plus two SuiteQL/subsidiary hotfixes (<a href="https://github.com/konvoy-kegs/konvoy/issues/4967">#4967</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/4956">#4956</a>).</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5028">#5028</a></td><td>Decouple KC writes from NS sync; alert finance on failure</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5030">#5030</a></td><td>Separate user-facing errors from diagnostic detail</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4996">#4996</a></td><td>ConflictException &rarr; 409 instead of 500 + Sentry noise</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4967">#4967</a></td><td>Hotfix: location-subsidiary resolution field name</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4956">#4956</a></td><td>Invoice 400s on deprecated locationSubsidiary join</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Theme 2 &mdash; Orders &amp; Rentals polish + bug-fixing</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The "finish minor Rentals items" half of the milestone brief. Six fixes shipped across the Orders/Rentals surface: a date-format inconsistency on the Rentals list (<a href="https://github.com/konvoy-kegs/konvoy/issues/5058">#5058</a>), the pricing-override editor wrongly shown to SUPPORT users (<a href="https://github.com/konvoy-kegs/konvoy/issues/5020">#5020</a>), the Customer/Relationship field locked on RECEIVED contracts (<a href="https://github.com/konvoy-kegs/konvoy/issues/5002">#5002</a>), a ContactForm crash on refresh (<a href="https://github.com/konvoy-kegs/konvoy/issues/5001">#5001</a>), the read-only delivery-location field on RECEIVED rental edits (<a href="https://github.com/konvoy-kegs/konvoy/issues/4973">#4973</a>), and a nested-<code>&lt;form&gt;</code> tech-debt cleanup in the pricing modal (<a href="https://github.com/konvoy-kegs/konvoy/issues/4770">#4770</a>).</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5058">#5058</a></td><td>Rentals: Completed Date column format consistency</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5020">#5020</a></td><td>Pricing-override editor hidden from SUPPORT users</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5002">#5002</a></td><td>OrderForm: unlock Customer field on RECEIVED contracts</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5001">#5001</a></td><td>ContactForm crash on /contacts/new refresh</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4973">#4973</a></td><td>Delivery-location field editable on RECEIVED rentals</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Theme 3 &mdash; Orders-API performance push</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">A small, compounding win on the Orders list API. Order-number search was short-circuited onto a <strong>unique-index range scan</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/4982">#4982</a>) and the optimisation was then ported into the raw-SQL path (<a href="https://github.com/konvoy-kegs/konvoy/issues/4984">#4984</a>), with a COUNT-path correctness fix in <code>optionalJoinStrings()</code> alongside (<a href="https://github.com/konvoy-kegs/konvoy/issues/4980">#4980</a>). This is the kind of latency work that pays back every time the Orders table loads.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4982">#4982</a></td><td>Short-circuit order-number search to index range scan</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4984">#4984</a></td><td>Port short-circuit into raw-SQL path</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4980">#4980</a></td><td>optionalJoinStrings() COUNT-path alignment fix</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Theme 4 &mdash; Refills kick-off + DX/tooling</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;"><strong>Refills moved from discovery into implementation.</strong> A fresh epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/4912">#4912</a>) replaced the stale #4308, and two tickets shipped: backend restriction of refill creation to operators (<a href="https://github.com/konvoy-kegs/konvoy/issues/5054">#5054</a>) and the FE order-type selector safety net (<a href="https://github.com/konvoy-kegs/konvoy/issues/4928">#4928</a>). On DX: a <strong>sentry-issue-triage skill</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/4998">#4998</a>), a SonarCloud-on-Dependabot CI unblock (<a href="https://github.com/konvoy-kegs/konvoy/issues/5015">#5015</a>), and a fix so <code>cd-dev-fe</code> registers GitHub deployments (<a href="https://github.com/konvoy-kegs/konvoy/issues/4964">#4964</a>).</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4912">#4912</a></td><td>Epic: Refills in Konvoy Cloud (replaces #4308)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5054">#5054</a></td><td>Refills BE: restrict creation to operator-only</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4928">#4928</a></td><td>Refills FE: order-type selector safety net</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4998">#4998</a></td><td>sentry-issue-triage skill</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5015">#5015</a></td><td>CI: SonarCloud scan on Dependabot PRs</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="alert alert-green">
+  <h2>Also landed &mdash; three production data fixes</h2>
+  <p>Three ops/prod-data tickets were handled inside the sprint: completed-date correction on 5 OC rentals (<a href="https://github.com/konvoy-kegs/konvoy/issues/5043">#5043</a>, Marc), a <code>to_location_uuid</code> fix on the Love Shack pickup rental (<a href="https://github.com/konvoy-kegs/konvoy/issues/4999">#4999</a>, follow-up to #4973), and a hard-delete of 4 stray Idle Hands Drinks Co. locations (<a href="https://github.com/konvoy-kegs/konvoy/issues/4993">#4993</a>). Routine, but worth noting the steady drip of manual prod-data work &mdash; a candidate for self-service tooling down the line.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- ACTIVE EPICS — STATUS                                         -->
+<!-- ============================================================ -->
+<h2 class="section-title">Active Epics &mdash; Status into M20</h2>
+
+<div class="card" style="margin-bottom:20px">
+  <table>
+    <tr>
+      <th>Epic</th>
+      <th>Priority</th>
+      <th>Progress in M19</th>
+      <th>Carry into M20</th>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853 NS Invoice Hardening</a></td>
+      <td><span class="badge badge-urgent">Urgent</span></td>
+      <td>Central decoupling work shipped (#5028) plus 4 error-handling/SuiteQL fixes. The epic delivered its highest-value piece this sprint.</td>
+      <td><strong>Yes.</strong> 3 follow-ups open: #5063 capture-mode, #5062 event-dispatch gating, #4961 region-list failure.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4912">#4912 Refills in Konvoy Cloud</a></td>
+      <td><span class="badge badge-new">New</span></td>
+      <td>Epic created mid-sprint (replaces stale #4308). 2 tickets shipped (#5054 BE, #4928 FE).</td>
+      <td><strong>Yes &mdash; primary M20 goal.</strong> #4919 (complete + NS invoice) is the next backend milestone.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4377">#4377 Orders Experience</a></td>
+      <td>High</td>
+      <td>Rentals/Orders polish continued; pricing &amp; contact-form bugs cleared.</td>
+      <td>Yes &mdash; #5061 freight-display bug + a11y #4977 outstanding.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4532">#4532 NS Security Audit</a></td>
+      <td><span class="badge badge-urgent">Compliance</span></td>
+      <td>Still In-Progress (Rob); not the focus &mdash; absorbed by #4853 work again.</td>
+      <td>Carrying. Recommend timeboxing remaining investigation tickets, as flagged in M18.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4296">#4296 NS Epic 0 &mdash; Foundation</a></td>
+      <td><span class="badge badge-urgent">P0</span></td>
+      <td>No movement &mdash; still in Ready. Now two sprints idle.</td>
+      <td>Decision overdue: formally defer, or sequence after Refills. Don't let it sit a third sprint.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4953">#4953 MuninnDB shared-memory</a></td>
+      <td><span class="badge badge-discovery">Discovery</span></td>
+      <td>New epic opened (context-engineering / DX). Speculative &mdash; no implementation yet.</td>
+      <td>Discovery only. Worth a sizing/parking decision so it doesn't quietly expand.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- REVIEW QUEUE HEALTH                                           -->
+<!-- ============================================================ -->
+<h2 class="section-title">Review Queue Health</h2>
+
+<div class="grid grid-3">
+  <div class="card stat-card">
+    <div class="number" style="color:var(--red)">18</div>
+    <div class="label">Items in Review now (board-wide)</div>
+    <div class="delta" style="color:var(--red)">Target &le;5 &mdash; missed</div>
+  </div>
+  <div class="card stat-card">
+    <div class="number" style="color:var(--accent)">23</div>
+    <div class="label">PRs merged this sprint</div>
+    <div class="delta" style="color:var(--muted)">In M19 milestone scope</div>
+  </div>
+  <div class="card stat-card">
+    <div class="number" style="color:var(--orange)">+16</div>
+    <div class="label">vs M18 end (2)</div>
+    <div class="delta" style="color:var(--orange)">Discipline slipped</div>
+  </div>
+</div>
+
+<div class="alert alert-yellow">
+  <h2>Review queue is the regression to talk about at retro</h2>
+  <p>M18's standout win &mdash; Review held at 2 all sprint &mdash; did not hold. The column is back to 18 board-wide. The composition matters: a chunk are <strong>older stale items</strong> (NS invoice endpoints <a href="https://github.com/konvoy-kegs/konvoy/issues/4255">#4255</a>/<a href="https://github.com/konvoy-kegs/konvoy/issues/4261">#4261</a>/<a href="https://github.com/konvoy-kegs/konvoy/issues/4268">#4268</a>, infra PRs <a href="https://github.com/konvoy-kegs/kubernetes/issues/435">kubernetes&nbsp;#435</a> and terraform&nbsp;#409) that read as parked, not in-flight. The fix is procedural, not heroic: run the sprint-hygiene runbook's Review sweep Monday, close or re-stage anything that isn't genuinely awaiting review, and decide whether a Friday review-blitz block goes back on the calendar.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- CARRY-OVER                                                    -->
+<!-- ============================================================ -->
+<h2 class="section-title">Carry-over into Milestone 20</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Carrying forward (9 open issues)</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:10px;">Grouped by intent. NS-hardening follow-ups and Refills backend are the spine of M20.</p>
+    <table>
+      <tr><th>Issue</th><th>Title</th><th>Type</th></tr>
+      <tr><td colspan="3" style="color:var(--red);font-weight:600;padding-top:14px;">NS Hardening follow-ups (epic #4853)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5063">#5063</a></td><td>NS capture mode silently skips payload for mapped AU/NZ states</td><td><span class="badge badge-urgent">Bug</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5062">#5062</a></td><td>[5028 follow-up] Gate OrganisationUpdatedEvent on dirty NS fields</td><td><span class="badge badge-progress">Feature</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4961">#4961</a></td><td>Org updates fail: CUSTOMLISTKV_CUSTOMER_REGION_LIST not found</td><td><span class="badge badge-urgent">Bug</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5067">#5067</a></td><td>dev-oc Prism contract-mock sidecar for offline NS testing</td><td><span class="badge badge-progress">Feature</span></td></tr>
+      <tr><td colspan="3" style="color:var(--green);font-weight:600;padding-top:14px;">Refills (M20 goal)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4919">#4919</a></td><td>Refills BE: complete endpoint finalises refill + NS invoice (Mill.)</td><td><span class="badge badge-progress">Feature</span></td></tr>
+      <tr><td colspan="3" style="color:var(--pink);font-weight:600;padding-top:14px;">Orders / Rentals tail</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5061">#5061</a></td><td>Order detail over-displays freight (FE per-line vs BE per-order)</td><td><span class="badge badge-urgent">Bug</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4977">#4977</a></td><td>a11y: arrow-key nav on OrderFormTypeSelector radio cards (Bea)</td><td><span class="badge badge-ready">Task</span></td></tr>
+      <tr><td colspan="3" style="color:var(--muted);font-weight:600;padding-top:14px;">Ops / DX</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4958">#4958</a></td><td>[prod-oc] sku_pricing rental_fee fix on rental #59857989</td><td><span class="badge badge-backlog">Chore</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4953">#4953</a></td><td>EPIC: MuninnDB shared-memory for context engineering</td><td><span class="badge badge-discovery">Feature</span></td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:0.8rem;margin-top:10px;">Plus 5 open PRs against these issues carry forward (14 milestone items total).</p>
+  </div>
+  <div class="card">
+    <h2>Reading the carry-over</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The 14 items aren't a backlog of stalled work &mdash; they're mostly <strong>fresh, late-sprint arrivals</strong>. Five of the nine open issues (#5067, #5063, #5062, #5061) were opened on <strong>June 4</strong>, the day before sprint close. That's a healthy signal in one sense (the NS decoupling work is surfacing its own well-scoped follow-ups) and a scope-freeze question in another.</p>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.7;margin-top:10px;">
+      <li><strong>NS hardening dominates</strong> &mdash; 4 of 9 carry-over issues are #4853 follow-ups. The epic is converging but not done.</li>
+      <li><strong>Refills has exactly one open backend ticket</strong> (#4919) &mdash; clean handoff point for Millicent to lead M20.</li>
+      <li><strong>#5061 freight display</strong> is the only customer-visible bug carrying &mdash; worth prioritising early.</li>
+      <li><strong>#4953 MuninnDB</strong> is speculative DX &mdash; decide whether it belongs in a delivery milestone at all.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RETROSPECTIVE — TEAM-LEVEL ONLY                               -->
+<!-- ============================================================ -->
+<h2 class="section-title">Retrospective &mdash; Team Themes</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Three columns: what worked, what to review, and open questions for the M20 kickoff. Team-level only.</p>
+
+<div class="grid grid-3">
+  <div class="card">
+    <h2 style="color:var(--green)">What worked</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>NS decoupling finally landed.</strong> #5028 is the structural fix the M18 atomicity bug was pointing at &mdash; we converted an incident into an architectural improvement.</li>
+      <li><strong>Refills became real.</strong> A clean new epic (#4912) plus two shipped tickets means M20 starts from code, not a blank discovery page.</li>
+      <li><strong>Performance work without being asked.</strong> The Orders-API short-circuit is exactly the kind of compounding, low-drama win we want more of.</li>
+      <li><strong>Steady completion under load.</strong> 76% with a heavy unplanned NS thread running is consistent with M18 &mdash; the team's throughput is predictable.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--yellow)">What to review</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Review column slid from 2 to 18.</strong> The M18 win didn't stick. Is it reviewer bandwidth (Rob is still the bottleneck) or items not being closed out?</li>
+      <li><strong>Late-sprint scope.</strong> Four carry-over issues were opened on Day 9&ndash;10. Good that we scope follow-ups well &mdash; but is the Day-8 scope freeze being honoured?</li>
+      <li><strong>NS Epic 0 (#4296) idle two sprints.</strong> A P0 that hasn't moved since M17 is either not really P0, or it's being crowded out. Decide.</li>
+      <li><strong>Epic proliferation.</strong> #4912 and #4953 both spun up this sprint. Healthy or a sign of unfocused WIP?</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--accent)">Open questions for M20</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Refills ownership.</strong> Millicent owns #4919 &mdash; confirm she runs the Refills backend end-to-end while Rob closes the #4853 tail.</li>
+      <li><strong>Review-blitz reinstated?</strong> The Friday review block correlated with M18's clean queue. Put it back on the calendar?</li>
+      <li><strong>Design-feedback backlog.</strong> Still ~28 unassigned UX tickets per the standing note. Reserve M20 capacity or formally defer.</li>
+      <li><strong>MuninnDB (#4953).</strong> Size it and decide: real M20 work, a 20%-time experiment, or parked.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ENTERING MILESTONE 20                                         -->
+<!-- ============================================================ -->
+<h2 class="section-title">Entering Milestone 20</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Three suggested goals, derived from the carry-over and the epics in flight. (Milestone 20 dates/description to be confirmed on the board at kickoff.)</p>
+
+<div class="grid grid-3">
+  <div class="card">
+    <h2 style="color:var(--green)">Goal 1 &mdash; Refills backend</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Ship #4919 (complete endpoint + NS invoice generation) and set up the next 3&ndash;4 Refills tickets under #4912. Millicent to lead end-to-end now the BE foundation exists.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--green)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--red)">Goal 2 &mdash; Close the #4853 tail</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Land the 4 NS follow-ups (#5063, #5062, #4961, #5067) and aim to close the hardening epic. The decoupling core is done; this is finishing work.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--red)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--accent)">Goal 3 &mdash; Review reset + Orders tail</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Sweep Review back under 5 via the hygiene runbook, fix the #5061 freight-display bug, land the #4977 a11y task, and make the deferral call on #4296 and #4953.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--accent)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+</div>
+
+<div class="grid grid-3">
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--accent)">R</div>
+      <div><strong>Rob</strong> &mdash; Still carrying NS + review</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Owns the #4853 follow-ups, #5061, the prod-data chore (#4958), Security Audit (#4532), MuninnDB (#4953) &mdash; plus the Review queue as sole reviewer.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:92%;background:var(--red)"></div></div>
+    <p style="font-size:0.78rem;color:var(--red)">Heavy &mdash; the Review backlog is the lever to pull; consider sharing FE reviews with Bea</p>
+  </div>
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--purple)">M</div>
+      <div><strong>Millicent</strong> &mdash; Refills backend lead</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Owns #4919 and the Refills epic backend. Shipped the operator-only restriction (#5054). Clear runway to drive Refills end-to-end in M20.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:70%;background:var(--purple)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Good loadout for Refills ownership</p>
+  </div>
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--pink)">B</div>
+      <div><strong>Bea</strong> &mdash; Orders/FE polish</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Authored the a11y task (#4977) and continues the Orders/Rentals FE surface. Candidate to take a share of frontend PR reviews to ease the Review bottleneck.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:68%;background:var(--pink)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Headroom &mdash; could absorb FE review load</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RISKS / DEPENDENCIES                                          -->
+<!-- ============================================================ -->
+<h2 class="section-title">Risks &amp; Dependencies to Watch</h2>
+
+<div class="card" style="margin-bottom:20px">
+  <table>
+    <tr><th>Risk</th><th>Impact</th><th>Owner</th><th>Mitigation</th></tr>
+    <tr>
+      <td>Review column back to 18 board-wide</td>
+      <td>Sole-reviewer bottleneck; stale items mask genuinely-ready work and erode the M18 hygiene gain.</td>
+      <td>Rob</td>
+      <td>Monday Review sweep via hygiene runbook; share FE reviews with Bea; reinstate Friday review-blitz.</td>
+    </tr>
+    <tr>
+      <td>Rob's loadout heavy again entering M20</td>
+      <td>NS tail + #5061 + Security Audit + prod-data + review &gt; sustainable ~22 SP.</td>
+      <td>Rob</td>
+      <td>Hand Refills fully to Millicent; timebox Security Audit; defer #4296 and park #4953.</td>
+    </tr>
+    <tr>
+      <td>Late-sprint scope inflow</td>
+      <td>4 carry-over issues opened Day 9&ndash;10 &mdash; tests whether the Day-8 scope freeze is real.</td>
+      <td>Team</td>
+      <td>Confirm scope-freeze adherence at retro; route post-freeze items straight to next milestone.</td>
+    </tr>
+    <tr>
+      <td>NS Epic 0 (#4296) idle 2 sprints</td>
+      <td>A nominal P0 with no movement signals mis-prioritisation or hidden blockers.</td>
+      <td>Rob</td>
+      <td>Make an explicit defer-or-sequence decision at M20 planning; don't let it sit a third sprint.</td>
+    </tr>
+    <tr>
+      <td>Design-feedback backlog unassigned (~28 tickets)</td>
+      <td>UX product debt continues to accrue with no owner.</td>
+      <td>Bea + Rob</td>
+      <td>Triage session early M20: defer batch, allocate Bea capacity, or close low-value items.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- ACTION ITEMS                                                  -->
+<!-- ============================================================ -->
+<h2 class="section-title">Action Items</h2>
+
+<div class="card">
+  <table>
+    <tr><th style="width:30px">&nbsp;</th><th>Action</th><th>Owner</th><th>Priority</th></tr>
+    <tr><td>&#9744;</td><td>Run the sprint-hygiene runbook against the board Monday &mdash; sweep Review back under 5, close/re-stage stale items (#4255/#4261/#4268, infra PRs)</td><td>Rob</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Confirm Millicent owns Refills backend end-to-end (#4919 + #4912 epic) for M20</td><td>Rob</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Schedule the 4 NS #4853 follow-ups (#5063, #5062, #4961, #5067) to close the hardening epic in M20</td><td>Rob</td><td>P0</td></tr>
+    <tr><td>&#9744;</td><td>Prioritise #5061 (freight over-display) early &mdash; only customer-visible bug carrying</td><td>Rob</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Decide whether Bea takes a share of frontend PR reviews to ease the Review bottleneck</td><td>Rob + Bea</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Retro discussion: did the Review queue slide from reviewer bandwidth or items not being closed out? Reinstate Friday review-blitz?</td><td>Team</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Size #4953 (MuninnDB) and decide: M20 work, experiment, or parked</td><td>Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Make the formal defer-or-sequence call on NS Epic 0 (#4296) &mdash; idle since M17</td><td>Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Triage the ~28 design-feedback tickets &mdash; defer batch, allocate Bea capacity, or close</td><td>Bea + Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Add new card to <code>index.html</code> + push <code>sprint-review-2026-06-05.html</code> to engineering-planning repo</td><td>Rob</td><td>P2</td></tr>
+  </table>
+</div>
+
+<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 19 (May 25 &ndash; June 5, 2026) &middot; Generated June 5, 2026</p>
+
+<script>
+function showChartFailure(message) {
+  var ids = ['statusChart', 'labelChart', 'themeChart', 'burnupChart'];
+  ids.forEach(function (id) {
+    var c = document.getElementById(id);
+    if (!c) return;
+    var parent = c.parentElement;
+    parent.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">' + message + '</div>';
+  });
+}
+
+function renderCharts() {
+  if (typeof Chart === 'undefined') {
+    showChartFailure('Chart.js failed to load (CDN blocked or offline). Open in a browser with network access, or open the file via the GitHub Pages site.');
+    return;
+  }
+
+  Chart.defaults.color = '#94a3b8';
+  Chart.defaults.borderColor = 'rgba(51,65,85,0.5)';
+  Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+  function safeChart(id, config) {
+    try {
+      var el = document.getElementById(id);
+      if (!el) { console.warn('Canvas not found:', id); return; }
+      new Chart(el, config);
+    } catch (err) {
+      console.error('Chart render failed for', id, err);
+      var c = document.getElementById(id);
+      if (c && c.parentElement) {
+        c.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f87171;font-size:0.85rem;">Chart render error: ' + (err && err.message ? err.message : err) + '</div>';
+      }
+    }
+  }
+
+// ============================================================
+// Milestone 19 completion — 45 closed of 59 (issues + PRs)
+// 14 open carry to M20.
+// ============================================================
+safeChart('statusChart', {
+  type: 'doughnut',
+  data: {
+    labels: ['Closed (45)', 'Carry to M20 (14)'],
+    datasets: [{
+      data: [45, 14],
+      backgroundColor: ['#4ade80','#fb923c'],
+      borderWidth: 0, hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 12 } } },
+      title: { display: true, text: '76% complete', color: '#f1f5f9', font: { size: 14 } }
+    }
+  }
+});
+
+// ============================================================
+// Closed items by narrative theme (22 closed issues)
+// ============================================================
+safeChart('themeChart', {
+  type: 'bar',
+  data: {
+    labels: [
+      'Orders & Rentals',
+      'NS reliability',
+      'Orders-API perf',
+      'DX / CI / tooling',
+      'Ops / prod-data',
+      'Refills'
+    ],
+    datasets: [{
+      label: 'Closed issues',
+      data: [6, 5, 3, 3, 3, 2],
+      backgroundColor: ['#f472b6','#f87171','#22d3ee','#38bdf8','#64748b','#4ade80'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
+  }
+});
+
+// ============================================================
+// Closed by label — approximate counts from M19 milestone listing
+// ============================================================
+safeChart('labelChart', {
+  type: 'polarArea',
+  data: {
+    labels: ['back end', 'front end', 'bug/fix', 'enhancement/feature', 'netsuite', 'infra/devops', 'chore/tech-debt'],
+    datasets: [{
+      data: [11, 7, 9, 8, 6, 3, 4],
+      backgroundColor: ['#a78bfa','#f472b6','#f87171','#4ade80','#fb923c','#38bdf8','#64748b'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }
+  }
+});
+
+// ============================================================
+// Burn-up — approximate. 10 working days, May 25 → Jun 5.
+// Final closed = 45 (issues + PRs). Curve approximate;
+// refine from Insights Burn-up if needed.
+// ============================================================
+safeChart('burnupChart', {
+  type: 'line',
+  data: {
+    labels: ['May 25','May 26','May 27','May 28','May 29','Jun 1','Jun 2','Jun 3','Jun 4','Jun 5'],
+    datasets: [
+      { label: 'Scope',     data: [49, 50, 51, 52, 53, 55, 56, 58, 59, 59], borderColor: '#64748b', backgroundColor: 'rgba(100,116,139,0.1)', tension: 0.2, fill: false, borderDash: [4,4] },
+      { label: 'Completed', data: [3, 7, 12, 17, 21, 26, 31, 37, 42, 45],   borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.15)', tension: 0.2, fill: true }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+  }
+});
+
+}  // end renderCharts
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderCharts);
+} else {
+  renderCharts();
+}
+</script>
+</body>
+</html>
