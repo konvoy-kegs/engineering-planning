@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katch Cloud Sprint Review — Milestone 21 · June 8–20, 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --orange: #fb923c;
+    --red: #f87171; --purple: #a78bfa; --pink: #f472b6;
+    --blue: #60a5fa; --cyan: #22d3ee;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 24px; max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+  .grid { display: grid; gap: 20px; margin-bottom: 20px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .grid-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+  .grid-6 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; }
+  .card { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--surface2); }
+  .card h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--accent); }
+  .card h3 { font-size: 0.95rem; margin: 12px 0 8px; color: var(--muted); }
+  .stat-card { text-align: center; }
+  .stat-card .number { font-size: 2.4rem; font-weight: 700; }
+  .stat-card .label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  .stat-card .delta { font-size: 0.78rem; margin-top: 2px; }
+  .chart-container { position: relative; height: 280px; }
+  .chart-container.tall { height: 340px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 8px 10px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--surface2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 8px 10px; border-bottom: 1px solid rgba(51,65,85,0.5); vertical-align: top; }
+  tr:hover { background: rgba(56,189,248,0.05); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+  .badge-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-review { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-progress { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .badge-ready { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .badge-backlog { background: rgba(148,163,184,0.15); color: var(--muted); }
+  .badge-discovery { background: rgba(244,114,182,0.15); color: var(--pink); }
+  .badge-qa { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .badge-urgent { background: rgba(248,113,113,0.2); color: var(--red); }
+  .badge-new { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-warning { background: rgba(251,191,36,0.15); color: var(--yellow); }
+
+  .alert { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .alert-red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .alert-yellow { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); }
+  .alert-green { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.3); }
+  .alert-orange { background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.3); }
+  .alert-blue { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.3); }
+  .alert h2 { font-size: 1rem; margin-bottom: 8px; }
+  .alert-red h2 { color: var(--red) !important; }
+  .alert-yellow h2 { color: var(--yellow) !important; }
+  .alert-green h2 { color: var(--green) !important; }
+  .alert-orange h2 { color: var(--orange) !important; }
+  .alert-blue h2 { color: var(--accent) !important; }
+  .alert p, .alert li { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+  .alert ul { margin: 8px 0 0 18px; }
+
+  .section-title { font-size: 1.3rem; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--surface2); }
+
+  .person-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; color: var(--bg); }
+  .person-stats { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .person-stat { font-size: 0.82rem; color: var(--muted); }
+  .person-stat strong { color: var(--text); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .tag { font-size: 0.72rem; padding: 1px 6px; border-radius: 4px; background: var(--surface2); color: var(--muted); margin-right: 3px; }
+
+  .capacity-bar { height: 8px; border-radius: 4px; background: var(--surface2); overflow: hidden; margin: 4px 0 8px; }
+  .capacity-fill { height: 100%; border-radius: 4px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4, .grid-5, .grid-6 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Katch Cloud &mdash; Milestone 21 Review</h1>
+<p class="subtitle">Milestone 21 &middot; June 8 &ndash; 20, 2026 &middot; End-of-sprint snapshot &middot; Generated June 22, 2026</p>
+
+<!-- ============================================================ -->
+<!-- HEADLINE / NARRATIVE SUMMARY                                  -->
+<!-- ============================================================ -->
+<div class="alert alert-blue">
+  <h2>Sprint Headline &mdash; Refills shipped end-to-end, exclusive-contracts work began, and search got dramatically faster</h2>
+  <p>Milestone 21 closed at <strong>95% (65 of 68 milestone items)</strong> &mdash; the strongest completion in the recent run (M18 82%, M19 76%) and only <strong>3 items carrying to M22</strong>. The fortnight delivered squarely on its three-part brief. <strong>Refills moved from workstream to shipped product</strong>: complete-order + NetSuite invoice generation (<a href="https://github.com/konvoy-kegs/konvoy/issues/4919">#4919</a>), refill volume now counts toward contract progress (<a href="https://github.com/konvoy-kegs/konvoy/issues/4922">#4922</a>), closed-period-safe invoice dating (<a href="https://github.com/konvoy-kegs/konvoy/issues/5098">#5098</a>), and a full bulk CSV/XLSX import path &mdash; backend (<a href="https://github.com/konvoy-kegs/konvoy/issues/5111">#5111</a>) and validating UI (<a href="https://github.com/konvoy-kegs/konvoy/issues/5112">#5112</a>). The <strong>"exclusive contracts for finance" workstream started and largely landed</strong> &mdash; the Extend Contract flag + UI (<a href="https://github.com/konvoy-kegs/konvoy/issues/5172">#5172</a>) and Venue Collections / VENUE_PICKUP SKU work (<a href="https://github.com/konvoy-kegs/konvoy/issues/5197">#5197</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/5201">#5201</a>) &mdash; teeing up M22's "test the exclusive-contracts feature" goal. And a sizeable <strong>unplanned win</strong> landed alongside: the Global Search Performance epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5091">#5091</a>, 6/6) replaced slow LIKE scans with FULLTEXT MATCH + resilient fan-out across orders, organisations, locations and assets.</p>
+</div>
+
+<div class="alert alert-orange">
+  <h2>Watch item &mdash; "Exclusive contracts" spans two overlapping epics, and a large perf epic arrived unplanned</h2>
+  <p>Two process signals worth a minute at retro. First, the contracts goal is split across <strong>two epics</strong> &mdash; <a href="https://github.com/konvoy-kegs/konvoy/issues/4903">#4903 Extend Contract Option</a> (flag-based end-date handling + Slack notifier) and <a href="https://github.com/konvoy-kegs/konvoy/issues/5173">#5173 Venue Collections</a> (VENUE_PICKUP SKUs + pricing) &mdash; with related work also touching Refills SKU/pricing. Before M22 testing begins, it's worth confirming which epic owns "the exclusive-contracts feature" and how the two interlock. Second, the <strong>Global Search Performance epic was substantial unplanned scope</strong> that the team chose to absorb mid-sprint. The outcome is excellent, but it's a scope-freeze data point: was it a deliberate priority call, and did it displace anything? Both are healthy questions for a 95% sprint, not problems.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- BOARD SNAPSHOT — KPI STAT CARDS                               -->
+<!-- ============================================================ -->
+<h2 class="section-title">Milestone 21 Snapshot</h2>
+
+<div class="grid grid-4">
+  <div class="card stat-card"><div class="number" style="color:var(--accent)">95<span style="font-size:1.2rem">%</span></div><div class="label">Milestone completion</div><div class="delta" style="color:var(--green)">65/68 &middot; M19 was 76%</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">65</div><div class="label">Items closed (milestone)</div><div class="delta" style="color:var(--muted)">issues + merged PRs</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--orange)">3</div><div class="label">Carry-over to M22</div><div class="delta" style="color:var(--muted)">all Venue Collections tail</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">+19</div><div class="label">Completion pts vs M19</div><div class="delta" style="color:var(--green)">76% &rarr; 95%</div></div>
+</div>
+
+<div class="grid grid-6">
+  <div class="card stat-card"><div class="number" style="color:var(--green)">~14</div><div class="label">Refills (shipped)</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--purple)">~8</div><div class="label">Contracts / Venue</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--cyan)">~9</div><div class="label">Global search perf</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--pink)">~5</div><div class="label">Rentals fixes</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--red)">~3</div><div class="label">NetSuite tail</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--accent)">~3</div><div class="label">DX / tooling</div></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CHARTS ROW                                                    -->
+<!-- ============================================================ -->
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Milestone 21 Completion</h2>
+    <div class="chart-container"><canvas id="statusChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Closed Items by Theme (approx.)</h2>
+    <div class="chart-container"><canvas id="themeChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Closed by Label (M21 &mdash; approx.)</h2>
+    <div class="chart-container"><canvas id="labelChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Burn-up &mdash; Milestone 21 (approx.)</h2>
+    <div class="chart-container"><canvas id="burnupChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WHAT SHIPPED — TEAM-LEVEL THEMES                              -->
+<!-- ============================================================ -->
+<h2 class="section-title">What We Shipped &mdash; Themes</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Grouped by theme, not by individual. The fortnight broke into four delivery streams &mdash; Refills going fully live, the start of exclusive-contracts / Venue Collections, a continuation of rentals fixes &mdash; plus one large unplanned engineering investment in global search performance, and the usual NetSuite-reliability and DX tail.</p>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Theme 1 &mdash; Refills: from workstream to live product</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The milestone's #1 brief &mdash; "complete Refills ASAP" &mdash; landed end-to-end. <strong>Complete-order now generates the NetSuite invoice (<a href="https://github.com/konvoy-kegs/konvoy/issues/4919">#4919</a>)</strong>, refill volume counts toward contract progress (<a href="https://github.com/konvoy-kegs/konvoy/issues/4922">#4922</a>), and invoice transaction date + posting period derive safely from <code>refillPeriod</code> even against closed periods (<a href="https://github.com/konvoy-kegs/konvoy/issues/5098">#5098</a>). A full <strong>bulk CSV/XLSX import path</strong> shipped &mdash; backend endpoint (<a href="https://github.com/konvoy-kegs/konvoy/issues/5111">#5111</a>) and a per-row-validating upload UI (<a href="https://github.com/konvoy-kegs/konvoy/issues/5112">#5112</a>). The stale NS-1.x discovery items (<a href="https://github.com/konvoy-kegs/konvoy/issues/4309">#4309</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/4310">#4310</a>) were formally closed as not-planned, retiring the old approach.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4919">#4919</a></td><td>Complete refill order + generate NetSuite invoice</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4922">#4922</a></td><td>Refill volume counts toward contract tracking</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5098">#5098</a></td><td>Refill invoice date + posting period (closed-period safe)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5111">#5111</a></td><td>Refills bulk import endpoint — CSV/XLSX (BE)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5112">#5112</a></td><td>Refills bulk upload UI — per-row validation (FE)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Theme 2 &mdash; Exclusive contracts &amp; Venue Collections: started, core landed</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The "start exclusive contracts for finance" brief produced shipped code, not just discovery. The <strong>Extend Contract Option</strong> approach &mdash; replacing end-date overwrite with a flag (<a href="https://github.com/konvoy-kegs/konvoy/issues/4903">#4903</a>) &mdash; landed its UI (checkbox on the form + list indicator, <a href="https://github.com/konvoy-kegs/konvoy/issues/5172">#5172</a>) and pricing-engine flag handling (<a href="https://github.com/konvoy-kegs/konvoy/issues/4907">#4907</a>). The related <strong>Venue Collections</strong> epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5173">#5173</a>) shipped VENUE_PICKUP SKUs gated behind <code>collectionsEnabled</code> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5197">#5197</a>) and per-line VENUE_PICKUP type on order create/quote (<a href="https://github.com/konvoy-kegs/konvoy/issues/5201">#5201</a>). The Venue Collections tail is the only carry-over into M22.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5172">#5172</a></td><td>Extend Contract UI — checkbox on form + list indicator</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4907">#4907</a></td><td>Extend Contract: pricing engine honours the flag</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5197">#5197</a></td><td>Gate VENUE_PICKUP SKUs behind collectionsEnabled</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5201">#5201</a></td><td>Per-line VENUE_PICKUP type on order create/quote</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4903">#4903</a></td><td>EPIC: Extend Contract Option (flag + Slack notifier)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Theme 3 &mdash; Global Search Performance epic (unplanned)</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">A complete, six-part performance epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5091">#5091</a>) closed 6/6 inside the sprint. It set up a <strong>local benchmark harness</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5103">#5103</a>), fixed the <code>/api/assets</code> slow query (<a href="https://github.com/konvoy-kegs/konvoy/issues/5104">#5104</a>), then replaced slow scans with <strong>FULLTEXT MATCH + indexed number columns</strong> on organisations (<a href="https://github.com/konvoy-kegs/konvoy/issues/5105">#5105</a>) and locations (<a href="https://github.com/konvoy-kegs/konvoy/issues/5106">#5106</a>), and finished with orders + rolling-collections search and a resilient frontend fan-out (<a href="https://github.com/konvoy-kegs/konvoy/issues/5107">#5107</a>, umbrella <a href="https://github.com/konvoy-kegs/konvoy/issues/5120">#5120</a>). High-leverage latency work that pays back on every search.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5103">#5103</a></td><td>Perf 1/6 — local benchmark harness</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5104">#5104</a></td><td>Perf 2/6 — /api/assets slow query</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5105">#5105</a></td><td>Perf 3/6 — organisations FULLTEXT MATCH + indexes</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5106">#5106</a></td><td>Perf 4/6 — locations FULLTEXT MATCH</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5107">#5107</a></td><td>Perf 6/6 — orders + resilient frontend fan-out</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Theme 4 &mdash; Rentals fixes + NetSuite reliability tail + DX</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The "keep addressing rentals" brief produced a steady stream: a real-time <strong>minimum-rentals-hit Slack notifier</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/4910">#4910</a>), lease-keg actions gated on completion state via the SWR order (<a href="https://github.com/konvoy-kegs/konvoy/issues/5087">#5087</a>), a per-line freight min badge driven from the backend quote (<a href="https://github.com/konvoy-kegs/konvoy/issues/5071">#5071</a>), and EU/NA-consistent SKU-picker fee formatting (<a href="https://github.com/konvoy-kegs/konvoy/issues/5088">#5088</a>). Two long-running <strong>NetSuite-hardening</strong> items from M19 finally closed &mdash; the region-list failure (<a href="https://github.com/konvoy-kegs/konvoy/issues/4961">#4961</a>) and the dev-oc Prism contract-mock sidecar (<a href="https://github.com/konvoy-kegs/konvoy/issues/5067">#5067</a>) &mdash; plus a shell-tooling/bashls DX improvement (<a href="https://github.com/konvoy-kegs/konvoy/issues/5085">#5085</a>) and an a11y disclosure-button refactor (<a href="https://github.com/konvoy-kegs/konvoy/issues/4736">#4736</a>).</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4910">#4910</a></td><td>Real-time minimum-rentals-hit Slack notifier</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5087">#5087</a></td><td>Gate lease-keg actions on completion state (SWR)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5071">#5071</a></td><td>Create-order: per-line freight min badge from quote</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4961">#4961</a></td><td>NS: fix CUSTOMLISTKV region-list failure (M19 tail)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5067">#5067</a></td><td>NS: dev-oc Prism contract-mock sidecar (M19 tail)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="alert alert-green">
+  <h2>Also notable &mdash; the refills/rentals data model is now coherent</h2>
+  <p>Two small-but-important items closed the loop on Refills living inside the Rentals surface: a fix so the Type filter dirties saved views and new refills are no longer mislabeled as "Rental" (<a href="https://github.com/konvoy-kegs/konvoy/issues/5130">#5130</a>), and a discovery pass verifying the Power BI reporting impact of merging refills into the rentals view (<a href="https://github.com/konvoy-kegs/konvoy/issues/4974">#4974</a>). With Refills now generating live NS invoices, getting the reporting and filtering right matters as much as the feature itself.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- ACTIVE EPICS — STATUS                                         -->
+<!-- ============================================================ -->
+<h2 class="section-title">Active Epics &mdash; Status into M22</h2>
+
+<div class="card" style="margin-bottom:20px">
+  <table>
+    <tr>
+      <th>Epic</th>
+      <th>Priority</th>
+      <th>Progress in M21</th>
+      <th>Carry into M22</th>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4912">#4912 Refills in Konvoy Cloud</a></td>
+      <td><span class="badge badge-done">Delivered</span></td>
+      <td>The headline win. Complete-order + NS invoice, contract-progress counting, closed-period-safe dating, and bulk CSV/XLSX import all shipped.</td>
+      <td>Largely done. Watch production behaviour now refills generate live invoices.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/5173">#5173 Venue Collections</a></td>
+      <td><span class="badge badge-progress">In progress</span></td>
+      <td>6/7. VENUE_PICKUP SKU gating (#5197) and per-line type (#5201) shipped.</td>
+      <td><strong>Yes &mdash; the only carry-over.</strong> FE SKU variant (#5178) + its PR (#5221) finish the epic.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4903">#4903 Extend Contract Option</a></td>
+      <td><span class="badge badge-new">Finance</span></td>
+      <td>Flag approach + UI (#5172) and pricing-engine handling (#4907) landed &mdash; the core of the exclusive-contracts feature.</td>
+      <td><strong>Yes &mdash; M22 goal is to test it.</strong> Confirm remaining sub-items and the relationship to Venue Collections.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/5091">#5091 Global Search Performance</a></td>
+      <td><span class="badge badge-done">Done 6/6</span></td>
+      <td>Closed complete inside the sprint — FULLTEXT MATCH + resilient fan-out across orders, orgs, locations, assets.</td>
+      <td>Closed. Worth a follow-up to confirm latency gains in production telemetry.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853 NS Invoice Hardening</a></td>
+      <td><span class="badge badge-urgent">Urgent</span></td>
+      <td>Two long-running tail items closed (#4961, #5067). Epic still shows open follow-ups.</td>
+      <td>Carrying (~3 open). Push to formally close the epic now the M21 tail is cleared.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- DELIVERY / REVIEW HEALTH                                      -->
+<!-- ============================================================ -->
+<h2 class="section-title">Delivery &amp; Review Health</h2>
+
+<div class="grid grid-3">
+  <div class="card stat-card">
+    <div class="number" style="color:var(--green)">95%</div>
+    <div class="label">Completion this sprint</div>
+    <div class="delta" style="color:var(--green)">Best in the last 4 milestones</div>
+  </div>
+  <div class="card stat-card">
+    <div class="number" style="color:var(--green)">3</div>
+    <div class="label">Items carrying to M22</div>
+    <div class="delta" style="color:var(--green)">vs 14 at M19 close</div>
+  </div>
+  <div class="card stat-card">
+    <div class="number" style="color:var(--accent)">6/6</div>
+    <div class="label">Unplanned perf epic landed</div>
+    <div class="delta" style="color:var(--muted)">on top of the planned brief</div>
+  </div>
+</div>
+
+<div class="alert alert-green">
+  <h2>The Review queue recovered &mdash; confirm the exact board count at kickoff</h2>
+  <p>M19's standout problem was a Review column that drifted to 18 board-wide. M21 closing at 95% with only 3 carry-over is a strong signal that review flow recovered &mdash; the sprint-hygiene runbook appears to be doing its job. One honesty note: this report is generated from the M21 milestone's issues and PRs, not a live read of the project board's Review column, so the precise board-wide Review count should be confirmed at the M22 kickoff sweep. A couple of merged PRs still showed "Review required" status at close (e.g. <a href="https://github.com/konvoy-kegs/konvoy/issues/5086">#5086</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/5120">#5120</a>) &mdash; worth a quick reconcile.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- CARRY-OVER                                                    -->
+<!-- ============================================================ -->
+<h2 class="section-title">Carry-over into Milestone 22</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Carrying forward (3 open items)</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:10px;">All three are the Venue Collections epic tail &mdash; a clean, single-thread carry-over.</p>
+    <table>
+      <tr><th>Issue</th><th>Title</th><th>State</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5173">#5173</a></td><td>EPIC: Venue Collections in Konvoy Cloud + refill SKU/pricing refinements (6/7)</td><td><span class="badge badge-progress">Epic</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5178">#5178</a></td><td>Venue Collections: FE — venue-collection SKU variant on rental order</td><td><span class="badge badge-ready">Feature</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5221">#5221</a></td><td>PR: feat [5178] venue-collection SKU variant on rental order</td><td><span class="badge badge-review">PR · 2/3</span></td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:0.8rem;margin-top:10px;">PR #5221 was opened the morning of review with checks nearly green &mdash; expect it to land Day&nbsp;1 of M22.</p>
+  </div>
+  <div class="card">
+    <h2>Reading the carry-over</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">This is the healthiest carry-over picture in months: <strong>3 items, all one epic, all near-complete.</strong> There's no stale backlog dragging across the milestone boundary &mdash; just the FE finish of Venue Collections.</p>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.7;margin-top:10px;">
+      <li><strong>Single-thread carry-over</strong> &mdash; finishing #5178/#5221 closes #5173 and clears the slate.</li>
+      <li><strong>Sets up M22's contracts testing</strong> &mdash; Venue Collections + Extend Contract are the substrate for the "test exclusive contracts" goal.</li>
+      <li><strong>No carried bugs</strong> &mdash; nothing customer-visible is carrying, unlike M19's freight-display bug.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RETROSPECTIVE — TEAM-LEVEL ONLY                               -->
+<!-- ============================================================ -->
+<h2 class="section-title">Retrospective &mdash; Team Themes</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Three columns: what worked, what to review, and open questions for the M22 kickoff. Team-level only.</p>
+
+<div class="grid grid-3">
+  <div class="card">
+    <h2 style="color:var(--green)">What worked</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Refills landed end-to-end.</strong> A multi-sprint workstream became live product &mdash; orders, invoicing, bulk import and reporting all shipped together.</li>
+      <li><strong>95% completion, 3 carry-over.</strong> The cleanest close in the recent run &mdash; the hygiene runbook is holding.</li>
+      <li><strong>Unprompted, high-leverage perf work.</strong> The 6-part search epic is exactly the compounding investment we want &mdash; and it shipped complete.</li>
+      <li><strong>Old debts cleared.</strong> Two M19 NetSuite-hardening tail items (#4961, #5067) finally closed instead of drifting another sprint.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--yellow)">What to review</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Two epics for one goal.</strong> Extend Contract (#4903) and Venue Collections (#5173) both serve "exclusive contracts." Clarify ownership and boundaries before M22 testing.</li>
+      <li><strong>Unplanned scope.</strong> The search-perf epic was a big mid-sprint add. Great outcome &mdash; but was it a deliberate priority call, and did the Day-8 freeze hold?</li>
+      <li><strong>Refills now live.</strong> With real NS invoices generating, we need eyes on production &mdash; mis-labeling (#5130) was caught late.</li>
+      <li><strong>NS hardening (#4853) still open.</strong> The tail keeps closing but the epic won't die &mdash; decide what "done" looks like.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--accent)">Open questions for M22</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>M22 is broad.</strong> The brief lists six themes (contracts testing, Booths API, DEV-OC/NS mock, AWS cost, Playwright migration, LaunchDarkly). Which three are the real priorities?</li>
+      <li><strong>Who tests exclusive contracts?</strong> Confirm an owner and a definition of "tested" for the M22 goal.</li>
+      <li><strong>Booths API integration</strong> is net-new &mdash; does it need a discovery spike before commitment?</li>
+      <li><strong>RainForest &rarr; Playwright</strong> and LaunchDarkly work are enablers, not features &mdash; reserve explicit capacity or they slip.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ENTERING MILESTONE 22                                         -->
+<!-- ============================================================ -->
+<h2 class="section-title">Entering Milestone 22 (June 22 &ndash; July 3)</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">M22 opens today at 0/5 issues. The board brief is unusually broad &mdash; six themes. Suggested framing: pick three priorities, treat the rest as enablers. (Goals below are drawn from the live M22 milestone description.)</p>
+
+<div class="grid grid-3">
+  <div class="card">
+    <h2 style="color:var(--green)">Goal 1 &mdash; Test exclusive contracts</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Finish the Venue Collections tail (#5178/#5221 &rarr; close #5173), then test the exclusive-contracts feature built across #4903 and Venue Collections. Confirm an owner and what "tested" means.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--green)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--accent)">Goal 2 &mdash; Booths API integration</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Discovery + commencement of the new Booths API integration. Net-new external integration &mdash; budget a discovery spike before committing scope, the way we should have for NS work.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--accent)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--purple)">Goal 3 &mdash; Infra &amp; test enablers</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">DEV-OC environment + NS-mock improvements, weekly AWS cost-reduction changes, RainForest&rarr;Playwright migration, and LaunchDarkly improvements for a faster release cadence. Reserve explicit capacity or these slip.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--purple)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+</div>
+
+<div class="grid grid-3">
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--accent)">R</div>
+      <div><strong>Rob</strong> &mdash; Infra, NS, reviewer</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Natural owner for the infra enablers (AWS cost, DEV-OC/NS mock, LaunchDarkly) and the NS-hardening close-out &mdash; plus primary reviewer. Watch total load against the broad M22 brief.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:85%;background:var(--orange)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Heavy &mdash; protect against the six-theme brief sprawling</p>
+  </div>
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--purple)">M</div>
+      <div><strong>Millicent</strong> &mdash; Backend / integrations</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Drove Refills backend to the finish (#4922, #5101, #5111) and the rentals notifier (#4910/#5109). Strong fit to lead Booths API discovery and the exclusive-contracts backend testing.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:72%;background:var(--purple)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Good runway for Booths API lead</p>
+  </div>
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--pink)">B</div>
+      <div><strong>Bea</strong> &mdash; Frontend</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Shipped the Extend Contract UI (#5172), bulk-upload UI (#5116) and a11y refactor (#4736). Owns the Venue Collections FE finish (#5178/#5221) and is the natural lead for the RainForest&rarr;Playwright FE test migration.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:70%;background:var(--pink)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Finish Venue Collections, then Playwright migration</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RISKS / DEPENDENCIES                                          -->
+<!-- ============================================================ -->
+<h2 class="section-title">Risks &amp; Dependencies to Watch</h2>
+
+<div class="card" style="margin-bottom:20px">
+  <table>
+    <tr><th>Risk</th><th>Impact</th><th>Owner</th><th>Mitigation</th></tr>
+    <tr>
+      <td>Refills now generating live NS invoices</td>
+      <td>Any defect now has financial / accounting impact, not just UX. Mis-labeling (#5130) was caught late in M21.</td>
+      <td>Millicent + Rob</td>
+      <td>Production monitoring on refill invoice generation; Sentry alerting; spot-check early M22 invoices against NS.</td>
+    </tr>
+    <tr>
+      <td>M22 brief spans six themes</td>
+      <td>Risk of an unfocused sprint that finishes nothing cleanly &mdash; the opposite of M21.</td>
+      <td>Rob</td>
+      <td>Pick three priorities at kickoff; treat AWS/Playwright/LaunchDarkly as enablers with reserved, capped capacity.</td>
+    </tr>
+    <tr>
+      <td>"Exclusive contracts" split across two epics</td>
+      <td>Ambiguity over what to test in M22; overlap between #4903 and #5173 / Refills SKU work.</td>
+      <td>Rob</td>
+      <td>Define the feature boundary and a single test owner before M22 testing starts.</td>
+    </tr>
+    <tr>
+      <td>Booths API is net-new external integration</td>
+      <td>Unknown surface area; NS integrations have historically expanded mid-sprint.</td>
+      <td>Millicent</td>
+      <td>Timeboxed discovery spike first; commit build scope only after.</td>
+    </tr>
+    <tr>
+      <td>NS Invoice Hardening (#4853) won't close</td>
+      <td>A perpetually-open urgent epic obscures whether the work is actually done.</td>
+      <td>Rob</td>
+      <td>Define "done" for #4853 at kickoff now the M21 tail (#4961, #5067) is cleared; close or re-scope.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- ACTION ITEMS                                                  -->
+<!-- ============================================================ -->
+<h2 class="section-title">Action Items</h2>
+
+<div class="card">
+  <table>
+    <tr><th style="width:30px">&nbsp;</th><th>Action</th><th>Owner</th><th>Priority</th></tr>
+    <tr><td>&#9744;</td><td>Land PR #5221 and close the Venue Collections FE tail (#5178 &rarr; #5173) in the first days of M22</td><td>Bea</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Pick the three real M22 priorities from the six-theme brief; mark the rest as capped enablers</td><td>Rob</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Define the "exclusive contracts" feature boundary across #4903 / #5173 and name a test owner + definition of "tested"</td><td>Rob</td><td>P0</td></tr>
+    <tr><td>&#9744;</td><td>Stand up production monitoring on live refill NS-invoice generation; spot-check early M22 invoices</td><td>Millicent + Rob</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Timebox a Booths API discovery spike before committing build scope</td><td>Millicent</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Confirm the board-wide Review column count at kickoff; reconcile merged-but-"review-required" PRs (#5086, #5120)</td><td>Rob</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Define "done" for NS Invoice Hardening (#4853) and close or re-scope it</td><td>Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Confirm the search-perf gains (#5091) in production telemetry</td><td>Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Add the M21 card to <code>index.html</code> and push <code>sprint-review-2026-06-20.html</code> to the engineering-planning repo</td><td>Rob</td><td>P2</td></tr>
+  </table>
+</div>
+
+<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 21 (June 8 &ndash; 20, 2026) &middot; Generated June 22, 2026 &middot; Theme splits and label/burn-up charts are approximate, derived from the M21 milestone issues &amp; PRs.</p>
+
+<script>
+function showChartFailure(message) {
+  var ids = ['statusChart', 'labelChart', 'themeChart', 'burnupChart'];
+  ids.forEach(function (id) {
+    var c = document.getElementById(id);
+    if (!c) return;
+    var parent = c.parentElement;
+    parent.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">' + message + '</div>';
+  });
+}
+
+function renderCharts() {
+  if (typeof Chart === 'undefined') {
+    showChartFailure('Chart.js failed to load (CDN blocked or offline). Open in a browser with network access, or open the file via the GitHub Pages site.');
+    return;
+  }
+
+  Chart.defaults.color = '#94a3b8';
+  Chart.defaults.borderColor = 'rgba(51,65,85,0.5)';
+  Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+  function safeChart(id, config) {
+    try {
+      var el = document.getElementById(id);
+      if (!el) { console.warn('Canvas not found:', id); return; }
+      new Chart(el, config);
+    } catch (err) {
+      console.error('Chart render failed for', id, err);
+      var c = document.getElementById(id);
+      if (c && c.parentElement) {
+        c.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f87171;font-size:0.85rem;">Chart render error: ' + (err && err.message ? err.message : err) + '</div>';
+      }
+    }
+  }
+
+// ============================================================
+// Milestone 21 completion — 65 closed of 68 (issues + PRs)
+// 3 open carry to M22.
+// ============================================================
+safeChart('statusChart', {
+  type: 'doughnut',
+  data: {
+    labels: ['Closed (65)', 'Carry to M22 (3)'],
+    datasets: [{
+      data: [65, 3],
+      backgroundColor: ['#4ade80','#fb923c'],
+      borderWidth: 0, hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 12 } } },
+      title: { display: true, text: '95% complete', color: '#f1f5f9', font: { size: 14 } }
+    }
+  }
+});
+
+// ============================================================
+// Closed items by narrative theme (approximate)
+// ============================================================
+safeChart('themeChart', {
+  type: 'bar',
+  data: {
+    labels: [
+      'Refills',
+      'Global search perf',
+      'Contracts & Venue',
+      'Rentals fixes',
+      'NetSuite tail',
+      'DX / tooling'
+    ],
+    datasets: [{
+      label: 'Closed items',
+      data: [14, 9, 8, 5, 3, 3],
+      backgroundColor: ['#4ade80','#22d3ee','#a78bfa','#f472b6','#f87171','#38bdf8'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
+  }
+});
+
+// ============================================================
+// Closed by label — approximate counts from M21 milestone listing
+// ============================================================
+safeChart('labelChart', {
+  type: 'polarArea',
+  data: {
+    labels: ['back end', 'front end', 'enhancement/feature', 'netsuite', 'bug/fix', 'infra/devops', 'chore/tech-debt'],
+    datasets: [{
+      data: [16, 10, 13, 7, 6, 4, 5],
+      backgroundColor: ['#a78bfa','#f472b6','#4ade80','#fb923c','#f87171','#38bdf8','#64748b'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }
+  }
+});
+
+// ============================================================
+// Burn-up — approximate. 10 working days, Jun 8 → Jun 20.
+// Final closed = 65 (issues + PRs). Curve approximate;
+// refine from Insights Burn-up if needed.
+// ============================================================
+safeChart('burnupChart', {
+  type: 'line',
+  data: {
+    labels: ['Jun 8','Jun 9','Jun 10','Jun 11','Jun 12','Jun 15','Jun 16','Jun 17','Jun 18','Jun 20'],
+    datasets: [
+      { label: 'Scope',     data: [60, 62, 63, 64, 65, 66, 67, 68, 68, 68], borderColor: '#64748b', backgroundColor: 'rgba(100,116,139,0.1)', tension: 0.2, fill: false, borderDash: [4,4] },
+      { label: 'Completed', data: [5, 11, 18, 25, 32, 40, 48, 55, 60, 65],   borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.15)', tension: 0.2, fill: true }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+  }
+});
+
+}  // end renderCharts
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderCharts);
+} else {
+  renderCharts();
+}
+</script>
+</body>
+</html>
