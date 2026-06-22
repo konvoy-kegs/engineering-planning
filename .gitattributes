@@ -1,0 +1,11 @@
+# Normalize line endings: store and check out LF, regardless of OS
+* text=auto eol=lf
+
+# Treat known binary assets as binary (never touch)
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.mp3  binary
+*.pptx binary
+*.pdf  binary
