@@ -141,7 +141,7 @@
 
 <div class="grid grid-2">
   <div class="card">
-    <h2>Closed by Label (M21 &mdash; approx.)</h2>
+    <h2>Closed by Label (M20 &mdash; approx.)</h2>
     <div class="chart-container"><canvas id="labelChart"></canvas></div>
   </div>
   <div class="card">
@@ -224,7 +224,7 @@
     <tr>
       <th>Epic</th>
       <th>Status</th>
-      <th>Progress in M21</th>
+      <th>Progress in M20</th>
       <th>Carry into M22</th>
     </tr>
     <tr>
@@ -254,7 +254,7 @@
     <tr>
       <td>Booths API integration <span class="tag">new</span></td>
       <td><span class="badge badge-backlog">Not started</span></td>
-      <td>Discovery/commencement was a stated M21 goal but produced no tracked work.</td>
+      <td>Discovery/commencement was a stated M20 goal but produced no tracked work.</td>
       <td><strong>M22 headline.</strong> Net-new external integration &mdash; start with a discovery spike.</td>
     </tr>
   </table>
@@ -285,7 +285,7 @@
 
 <div class="alert alert-yellow">
   <h2>Throughput up, carry-over up &mdash; and one issue/PR hygiene mismatch to reconcile</h2>
-  <p>The team absorbed a much larger milestone (98 vs 68) and still closed 91 &mdash; the highest absolute output of the run &mdash; so throughput clearly rose. The trade-off is that carry-over went from 3 to 7, concentrated in the Venue Collections / refill dev-test tail. One hygiene note worth a quick look: <strong><a href="https://github.com/konvoy-kegs/konvoy/issues/5227">#5227</a> (keg line items when editing a refill) shows a merged fix (PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5244">#5244</a>) but the issue is still open</strong> &mdash; either the fix was partial or it wasn't auto-closed. As with prior reports, these figures come from the M21 milestone's issues &amp; PRs, not a live read of the board's Review column, so confirm the exact board-wide Review count at the M22 kickoff sweep.</p>
+  <p>The team absorbed a much larger milestone (98 vs 68) and still closed 91 &mdash; the highest absolute output of the run &mdash; so throughput clearly rose. The trade-off is that carry-over went from 3 to 7, concentrated in the Venue Collections / refill dev-test tail. One hygiene note worth a quick look: <strong><a href="https://github.com/konvoy-kegs/konvoy/issues/5227">#5227</a> (keg line items when editing a refill) shows a merged fix (PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5244">#5244</a>) but the issue is still open</strong> &mdash; either the fix was partial or it wasn't auto-closed. As with prior reports, these figures come from the M20 milestone's issues &amp; PRs, not a live read of the board's Review column, so confirm the exact board-wide Review count at the M22 kickoff sweep.</p>
 </div>
 
 <!-- ============================================================ -->
@@ -367,7 +367,7 @@
 <div class="grid grid-3">
   <div class="card">
     <h2 style="color:var(--accent)">Goal 1 &mdash; Start the Booths API integration</h2>
-    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The single major EPIC. Net-new external integration &mdash; and NS integrations have historically expanded mid-sprint &mdash; so budget a <strong>timeboxed discovery spike</strong> and commit build scope only after. This is M21's one un-started goal, carried forward.</p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The single major EPIC. Net-new external integration &mdash; and NS integrations have historically expanded mid-sprint &mdash; so budget a <strong>timeboxed discovery spike</strong> and commit build scope only after. This is M20's one un-started goal, carried forward.</p>
     <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--accent)"></div></div>
     <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
   </div>
@@ -379,7 +379,7 @@
   </div>
   <div class="card">
     <h2 style="color:var(--green)">Goal 3 &mdash; Playwright in CI + tech-debt &amp; cost</h2>
-    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Move the RainForest&rarr;Playwright E2E suite <strong>into CI and dev-oc</strong>, and keep the cost-opt cadence running. First, close the M21 venue-collections / refills tail (#5346 and children) so it doesn't shadow the new EPIC.</p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Move the RainForest&rarr;Playwright E2E suite <strong>into CI and dev-oc</strong>, and keep the cost-opt cadence running. First, close the M20 venue-collections / refills tail (#5346 and children) so it doesn't shadow the new EPIC.</p>
     <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--green)"></div></div>
     <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
   </div>
@@ -448,7 +448,7 @@
       <td>Get Playwright into CI first; upgrade incrementally behind it; use the Dependabot-review skill.</td>
     </tr>
     <tr>
-      <td>Scope growth (M21 ran to 98 items)</td>
+      <td>Scope growth (M20 ran to 98 items)</td>
       <td>M22 is explicitly meant to be smaller &mdash; unchecked pull-in would defeat that intent.</td>
       <td>Rob</td>
       <td>Hold the Day-8 freeze; keep the tech-debt/cost work capped around the single EPIC.</td>
@@ -472,11 +472,11 @@
     <tr><td>&#9744;</td><td>Reconcile #5227 (merged PR #5244 but issue open); confirm the board-wide Review count at kickoff</td><td>Rob</td><td>P1</td></tr>
     <tr><td>&#9744;</td><td>Action the dev off-hours node scale-down decision (k8s #484) and continue the weekly cost-opt cadence</td><td>Rob</td><td>P2</td></tr>
     <tr><td>&#9744;</td><td>Decide whether the org-admin login gap (#5288) belongs in M22 or the backlog</td><td>Rob</td><td>P2</td></tr>
-    <tr><td>&#9744;</td><td>Add the M21 card to <code>index.html</code> and push <code>sprint-review-2026-07-03.html</code> to the engineering-planning repo</td><td>Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Add the M20 card to <code>index.html</code> and push <code>sprint-review-2026-07-03.html</code> to the engineering-planning repo</td><td>Rob</td><td>P2</td></tr>
   </table>
 </div>
 
-<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 20 (June 22 &ndash; July 3, 2026) &middot; Generated July 6, 2026 &middot; Theme splits and label/burn-up charts are approximate, derived from the M21 milestone issues &amp; PRs. AWS cost-reduction items are tracked in the konvoy-kegs/kubernetes repo.</p>
+<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 20 (June 22 &ndash; July 3, 2026) &middot; Generated July 6, 2026 &middot; Theme splits and label/burn-up charts are approximate, derived from the M20 milestone issues &amp; PRs. AWS cost-reduction items are tracked in the konvoy-kegs/kubernetes repo.</p>
 
 <script>
 function showChartFailure(message) {
@@ -566,7 +566,7 @@ safeChart('themeChart', {
 });
 
 // ============================================================
-// Closed by label — actual counts from M21 milestone listing.
+// Closed by label — actual counts from M20 milestone listing.
 // Issues carry multiple labels, so these sum to more than 91.
 // ============================================================
 safeChart('labelChart', {
