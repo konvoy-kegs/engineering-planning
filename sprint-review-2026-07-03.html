@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katch Cloud Sprint Review — Milestone 21 · June 22 – July 3, 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --orange: #fb923c;
+    --red: #f87171; --purple: #a78bfa; --pink: #f472b6;
+    --blue: #60a5fa; --cyan: #22d3ee;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 24px; max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+  .grid { display: grid; gap: 20px; margin-bottom: 20px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .grid-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+  .grid-6 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; }
+  .card { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--surface2); }
+  .card h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--accent); }
+  .card h3 { font-size: 0.95rem; margin: 12px 0 8px; color: var(--muted); }
+  .stat-card { text-align: center; }
+  .stat-card .number { font-size: 2.4rem; font-weight: 700; }
+  .stat-card .label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  .stat-card .delta { font-size: 0.78rem; margin-top: 2px; }
+  .chart-container { position: relative; height: 280px; }
+  .chart-container.tall { height: 340px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 8px 10px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--surface2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 8px 10px; border-bottom: 1px solid rgba(51,65,85,0.5); vertical-align: top; }
+  tr:hover { background: rgba(56,189,248,0.05); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+  .badge-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-review { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-progress { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .badge-ready { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .badge-backlog { background: rgba(148,163,184,0.15); color: var(--muted); }
+  .badge-discovery { background: rgba(244,114,182,0.15); color: var(--pink); }
+  .badge-qa { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .badge-urgent { background: rgba(248,113,113,0.2); color: var(--red); }
+  .badge-new { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-warning { background: rgba(251,191,36,0.15); color: var(--yellow); }
+
+  .alert { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .alert-red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+  .alert-yellow { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); }
+  .alert-green { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.3); }
+  .alert-orange { background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.3); }
+  .alert-blue { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.3); }
+  .alert h2 { font-size: 1rem; margin-bottom: 8px; }
+  .alert-red h2 { color: var(--red) !important; }
+  .alert-yellow h2 { color: var(--yellow) !important; }
+  .alert-green h2 { color: var(--green) !important; }
+  .alert-orange h2 { color: var(--orange) !important; }
+  .alert-blue h2 { color: var(--accent) !important; }
+  .alert p, .alert li { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+  .alert ul { margin: 8px 0 0 18px; }
+
+  .section-title { font-size: 1.3rem; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--surface2); }
+
+  .person-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; color: var(--bg); }
+  .person-stats { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .person-stat { font-size: 0.82rem; color: var(--muted); }
+  .person-stat strong { color: var(--text); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .tag { font-size: 0.72rem; padding: 1px 6px; border-radius: 4px; background: var(--surface2); color: var(--muted); margin-right: 3px; }
+
+  .capacity-bar { height: 8px; border-radius: 4px; background: var(--surface2); overflow: hidden; margin: 4px 0 8px; }
+  .capacity-fill { height: 100%; border-radius: 4px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4, .grid-5, .grid-6 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Katch Cloud &mdash; Milestone 21 Review</h1>
+<p class="subtitle">Milestone 21 &middot; June 22 &ndash; July 3, 2026 &middot; End-of-sprint snapshot &middot; Generated July 6, 2026</p>
+
+<!-- ============================================================ -->
+<!-- HEADLINE / NARRATIVE SUMMARY                                  -->
+<!-- ============================================================ -->
+<div class="alert alert-blue">
+  <h2>Sprint Headline &mdash; Exclusive-contracts testing drove Venue Collections to close; five of six themes delivered, Booths API slips to M22</h2>
+  <p>Milestone 21 closed at <strong>92% (91 of 98 milestone items)</strong> with <strong>7 items carrying to M22</strong>. On the numbers that matter for throughput this is the <strong>strongest sprint in the run</strong> &mdash; 91 items closed against the biggest scope we've carried (98, up from 68 the prior fortnight), even as the headline percentage eased from the previous sprint's 95%. The fortnight was built around a <strong>six-theme brief</strong>, and five landed. <strong>Testing the exclusive-contracts feature</strong> did exactly what it should &mdash; it pushed the Venue Collections epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5173">#5173</a>) to close and surfaced a wave of dev-test-feedback fixes. <strong>DEV-OC + NetSuite-mock correctness</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5332">#5332</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/5353">#5353</a>), the <strong>RainForest&rarr;Playwright migration</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5204">#5204</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/5232">#5232</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/5233">#5233</a>), a <strong>trunk + LaunchDarkly dark-launch release process</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5117">#5117</a>), and <strong>weekly AWS cost-reduction</strong> in the infra repo (<a href="https://github.com/konvoy-kegs/kubernetes/issues/481">cost-opt #481</a>&ndash;<a href="https://github.com/konvoy-kegs/kubernetes/issues/484">#484</a>) all shipped. The one miss: <strong>Booths API discovery produced no tracked work</strong> &mdash; it moves to M22 as the headline.</p>
+</div>
+
+<div class="alert alert-orange">
+  <h2>Watch item &mdash; the exclusive-contracts feature isn't signed off yet, and scope grew to 98</h2>
+  <p>Two things to put a minute on at retro. First, "test exclusive contracts" was the #1 goal and testing worked &mdash; but it surfaced a <strong>dev-test-feedback tail that is carrying</strong>: the polish epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5346">#5346</a>) plus real bugs including a <strong>wrong NetSuite invoice date on venue-collection completion</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5382">#5382</a>), a rental-only validation rejecting venue collections (<a href="https://github.com/konvoy-kegs/konvoy/issues/5365">#5365</a>), and a SKU backfill (<a href="https://github.com/konvoy-kegs/konvoy/issues/5318">#5318</a>). The core is in and exercised, but <strong>"tested / done" needs a definition and a sign-off owner</strong> before M22 builds on it. Second, the milestone <strong>grew from ~70 to 98 items</strong> across the fortnight &mdash; healthy in that testing found real work, but a scope-freeze data point worth checking: did the Day-8 freeze hold, or did fixes pull in uncontrolled?</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- BOARD SNAPSHOT — KPI STAT CARDS                               -->
+<!-- ============================================================ -->
+<h2 class="section-title">Milestone 21 Snapshot</h2>
+
+<div class="grid grid-4">
+  <div class="card stat-card"><div class="number" style="color:var(--accent)">92<span style="font-size:1.2rem">%</span></div><div class="label">Milestone completion</div><div class="delta" style="color:var(--muted)">91/98 &middot; prior sprint 95%</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">91</div><div class="label">Items closed (milestone)</div><div class="delta" style="color:var(--green)">highest in the run (was 65)</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--orange)">7</div><div class="label">Carry-over to M22</div><div class="delta" style="color:var(--muted)">venue-collection / refill tail</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--purple)">98</div><div class="label">Milestone scope</div><div class="delta" style="color:var(--muted)">biggest of the run (was 68)</div></div>
+</div>
+
+<div class="grid grid-6">
+  <div class="card stat-card"><div class="number" style="color:var(--purple)">~23</div><div class="label">Venue &amp; contracts</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--red)">~18</div><div class="label">DEV-OC / NetSuite</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--green)">~13</div><div class="label">Refills polish</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--cyan)">~8</div><div class="label">Playwright / E2E</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--accent)">~5</div><div class="label">LaunchDarkly / release</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--pink)">~24</div><div class="label">Access, deps &amp; DX</div></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CHARTS ROW                                                    -->
+<!-- ============================================================ -->
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Milestone 21 Completion</h2>
+    <div class="chart-container"><canvas id="statusChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Closed Items by Theme (approx.)</h2>
+    <div class="chart-container"><canvas id="themeChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Closed by Label (M21 &mdash; approx.)</h2>
+    <div class="chart-container"><canvas id="labelChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Burn-up &mdash; Milestone 21 (approx.)</h2>
+    <div class="chart-container"><canvas id="burnupChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WHAT SHIPPED — TEAM-LEVEL THEMES                              -->
+<!-- ============================================================ -->
+<h2 class="section-title">What We Shipped &mdash; Themes</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Grouped by theme, not by individual. The fortnight ran against a six-part brief. Five delivered &mdash; exclusive-contracts testing and Venue Collections, DEV-OC / NetSuite-mock correctness, the RainForest&rarr;Playwright migration, the LaunchDarkly dark-launch release process, and weekly AWS cost-reduction &mdash; plus the usual refills, access-control and dependency tail. Booths API discovery did not start and moves to M22.</p>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Theme 1 &mdash; Exclusive contracts &amp; Venue Collections: tested to close</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The milestone's #1 brief &mdash; "test the exclusive-contracts feature" &mdash; drove the <strong>Venue Collections epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5173">#5173</a>) to close</strong> (feature PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5294">#5294</a>), including the <strong>Venue Collection Fee column on market-SKU pricing</strong> for VENUE_PICKUP SKUs (<a href="https://github.com/konvoy-kegs/konvoy/issues/5245">#5245</a>) and the Extend Contract <strong>pricing-engine flag</strong> in <code>RentalPricingService</code> (<a href="https://github.com/konvoy-kegs/konvoy/issues/4905">#4905</a>). Exercising the feature end-to-end surfaced a batch of dev-test feedback, most of which was fixed in-sprint; the remainder is tracked under polish epic <a href="https://github.com/konvoy-kegs/konvoy/issues/5346">#5346</a> and carries to M22.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5173">#5173</a></td><td>EPIC: Venue Collections + refill SKU/pricing &mdash; closed</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5294">#5294</a></td><td>feat: Venue Collections in Konvoy Cloud (PR)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5245">#5245</a></td><td>Venue Collection Fee column on market-SKU pricing</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/4905">#4905</a></td><td>Extend Contract: pricing engine honours the flag</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5346">#5346</a></td><td>EPIC: dev-test feedback / release polish (carrying)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Theme 2 &mdash; DEV-OC &amp; NetSuite: the mock/sync now behaves like a real environment</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The "improve DEV-OC testing + NS mock" brief produced the reliability fixes that make dev-oc trustworthy. <strong>EventBus and NetSuite were treating dev-oc as production</strong> because they keyed off <code>APP_ENV</code> instead of the deployment tier (<a href="https://github.com/konvoy-kegs/konvoy/issues/5332">#5332</a>, fix PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5337">#5337</a>) &mdash; dev-oc was silently dropping domain events and blocking NetSuite capture. Separately, <strong>completing an order 500'd the operator when the dev-oc NS sync had no token</strong>; post-completion sync now fails soft (<a href="https://github.com/konvoy-kegs/konvoy/issues/5353">#5353</a>, test PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5367">#5367</a>). NetSuite was the single biggest label this sprint (27 closed).</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5332">#5332</a></td><td>EventBus/NS treat dev-oc as prod (APP_ENV vs tier)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5337">#5337</a></td><td>fix: stop dev-oc dropping events / blocking NS capture</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5353">#5353</a></td><td>Complete-order 500 when dev-oc NS token missing &rarr; fail soft</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5367">#5367</a></td><td>test: prevent 500 when NetSuite token is missing</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Theme 3 &mdash; Test &amp; release enablers: Playwright migration + LaunchDarkly dark-launch</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Two enabler themes landed together. The <strong>RainForest&rarr;Playwright migration</strong> moved from pilot to real coverage &mdash; the Playwright e2e suite + Rainforest pilot port (<a href="https://github.com/konvoy-kegs/konvoy/pull/5204">#5204</a>), then Phase 2 (active regression / access-control, lifecycle &amp; memberships specs, <a href="https://github.com/konvoy-kegs/konvoy/issues/5232">#5232</a> / PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5236">#5236</a>) and Phase 3 (Rentals suite, <a href="https://github.com/konvoy-kegs/konvoy/issues/5233">#5233</a>). Separately, the team <strong>adopted a trunk + LaunchDarkly dark-launch release process</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5117">#5117</a> / PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5119">#5119</a>) &mdash; region-scoped dev deploys, docs, and a release skill &mdash; the groundwork for the faster release cadence M22 wants.</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5204">#5204</a></td><td>Playwright e2e suite + Rainforest pilot port</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5232">#5232</a></td><td>E2E migration Phase 2 &mdash; regression suite</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5233">#5233</a></td><td>E2E migration Phase 3 &mdash; Rentals suite</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5117">#5117</a></td><td>Adopt trunk + LaunchDarkly dark-launch process</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Theme 4 &mdash; AWS cost-reduction (infra repo) + refills / access polish</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The "weekly AWS changes for cost reduction" brief ran as a <strong>cost-opt series in the <a href="https://github.com/konvoy-kegs/kubernetes">kubernetes</a> repo</strong>: right-size dev pod requests (<a href="https://github.com/konvoy-kegs/kubernetes/issues/481">#481</a> / PR <a href="https://github.com/konvoy-kegs/kubernetes/pull/482">#482</a>), shrink dev node groups (spot 3&rarr;1, stateful xlarge&rarr;large, <a href="https://github.com/konvoy-kegs/kubernetes/issues/483">#483</a>), and dev off-hours node scale-down (<a href="https://github.com/konvoy-kegs/kubernetes/issues/484">#484</a> &mdash; a decision still to confirm), plus per-environment <code>APP_LOCATION</code> in the Helm chart (<a href="https://github.com/konvoy-kegs/kubernetes/issues/477">#477</a>). On the app side, a steady <strong>refills / access-control tail</strong> closed: SUPPORT operators can manage org memberships (<a href="https://github.com/konvoy-kegs/konvoy/issues/5240">#5240</a> / PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5241">#5241</a>), refill period vs scheduled date (<a href="https://github.com/konvoy-kegs/konvoy/pull/5237">#5237</a>), and a refill-permissions inconsistency (<a href="https://github.com/konvoy-kegs/konvoy/issues/5184">#5184</a>).</p>
+    <table style="margin-top:10px">
+      <tr><th>Issue</th><th>Title</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/kubernetes/issues/481">k8s&nbsp;#481</a></td><td>cost-opt: right-size dev pod requests</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/kubernetes/issues/483">k8s&nbsp;#483</a></td><td>cost-opt: shrink dev node groups (spot 3&rarr;1)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/kubernetes/issues/484">k8s&nbsp;#484</a></td><td>cost-opt: dev off-hours node scale-down (decision)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5240">#5240</a></td><td>SUPPORT operators can manage org memberships</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5184">#5184</a></td><td>Refills: getRefillPermissions inconsistency</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="alert alert-green">
+  <h2>Also notable &mdash; dependency &amp; tooling hygiene kept pace</h2>
+  <p>Alongside the feature work, the team kept the maintenance surface clean: a <strong>guzzlehttp/guzzle bump 7.10.0&rarr;7.12.1</strong> (<a href="https://github.com/konvoy-kegs/konvoy/pull/5216">#5216</a>) and a new <strong>konvoy-dependabot-review skill</strong> for automated backwards-compat review of Dependabot PRs. With refills now generating live NetSuite invoices and a Symfony 8 / PHP 8.5 upgrade looming in M22, keeping dependencies current and automatically reviewed is exactly the right muscle to be building now.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- ACTIVE EPICS — STATUS                                         -->
+<!-- ============================================================ -->
+<h2 class="section-title">Active Epics &mdash; Status into M22</h2>
+
+<div class="card" style="margin-bottom:20px">
+  <table>
+    <tr>
+      <th>Epic</th>
+      <th>Status</th>
+      <th>Progress in M21</th>
+      <th>Carry into M22</th>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/5173">#5173 Venue Collections</a></td>
+      <td><span class="badge badge-done">Closed</span></td>
+      <td>Closed this sprint &mdash; VENUE_PICKUP SKUs + pricing (fee column #5245) shipped and tested via the exclusive-contracts pass.</td>
+      <td>Done. Residual dev-test fixes tracked under #5346.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/5346">#5346 Refills &amp; Venue Collections &mdash; dev-test feedback</a></td>
+      <td><span class="badge badge-progress">In progress</span></td>
+      <td>Opened to hold the polish/feedback from testing exclusive contracts; most items fixed in-sprint.</td>
+      <td><strong>Yes &mdash; the main carry thread</strong> (#5382, #5365, #5318, PR #5398).</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4903">#4903 Extend Contract Option</a></td>
+      <td><span class="badge badge-new">Finance</span></td>
+      <td>Pricing-engine flag (#4905) landed; the contract-extension path is the core of the exclusive-contracts feature.</td>
+      <td><strong>Confirm closure.</strong> Define "tested/done" and the boundary vs Venue Collections.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/konvoy-kegs/konvoy/issues/4912">#4912 Refills in Konvoy Cloud</a></td>
+      <td><span class="badge badge-progress">Live &middot; open</span></td>
+      <td>Refills now generate live NetSuite invoices; permissions/period fixes closed (#5184, #5237).</td>
+      <td>Watch production; the #5382 invoice-date bug has financial impact &mdash; fix early.</td>
+    </tr>
+    <tr>
+      <td>Booths API integration <span class="tag">new</span></td>
+      <td><span class="badge badge-backlog">Not started</span></td>
+      <td>Discovery/commencement was a stated M21 goal but produced no tracked work.</td>
+      <td><strong>M22 headline.</strong> Net-new external integration &mdash; start with a discovery spike.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- DELIVERY / REVIEW HEALTH                                      -->
+<!-- ============================================================ -->
+<h2 class="section-title">Delivery &amp; Review Health</h2>
+
+<div class="grid grid-3">
+  <div class="card stat-card">
+    <div class="number" style="color:var(--green)">91</div>
+    <div class="label">Items closed</div>
+    <div class="delta" style="color:var(--green)">most in the recent run</div>
+  </div>
+  <div class="card stat-card">
+    <div class="number" style="color:var(--yellow)">7</div>
+    <div class="label">Items carrying to M22</div>
+    <div class="delta" style="color:var(--muted)">was 3 at the prior close</div>
+  </div>
+  <div class="card stat-card">
+    <div class="number" style="color:var(--accent)">98</div>
+    <div class="label">Scope handled</div>
+    <div class="delta" style="color:var(--muted)">+44% vs the prior sprint (68)</div>
+  </div>
+</div>
+
+<div class="alert alert-yellow">
+  <h2>Throughput up, carry-over up &mdash; and one issue/PR hygiene mismatch to reconcile</h2>
+  <p>The team absorbed a much larger milestone (98 vs 68) and still closed 91 &mdash; the highest absolute output of the run &mdash; so throughput clearly rose. The trade-off is that carry-over went from 3 to 7, concentrated in the Venue Collections / refill dev-test tail. One hygiene note worth a quick look: <strong><a href="https://github.com/konvoy-kegs/konvoy/issues/5227">#5227</a> (keg line items when editing a refill) shows a merged fix (PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5244">#5244</a>) but the issue is still open</strong> &mdash; either the fix was partial or it wasn't auto-closed. As with prior reports, these figures come from the M21 milestone's issues &amp; PRs, not a live read of the board's Review column, so confirm the exact board-wide Review count at the M22 kickoff sweep.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- CARRY-OVER                                                    -->
+<!-- ============================================================ -->
+<h2 class="section-title">Carry-over into Milestone 22</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Carrying forward (7 open items)</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:10px;">Six of the seven are the Venue Collections / refills dev-test tail; one (#5288) is an unrelated org-admin gap.</p>
+    <table>
+      <tr><th>Issue</th><th>Title</th><th>State</th></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5346">#5346</a></td><td>EPIC: Refills &amp; Venue Collections &mdash; dev-test feedback / release polish</td><td><span class="badge badge-progress">Epic</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5382">#5382</a></td><td>Venue-collection completion sets the wrong NetSuite invoice date</td><td><span class="badge badge-urgent">Bug</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5365">#5365</a></td><td>Venue Collection save rejected by rental-only validations</td><td><span class="badge badge-warning">Bug</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5318">#5318</a></td><td>BE &mdash; backfill market_sku for VENUE_PICKUP SKUs (AU/NZ)</td><td><span class="badge badge-ready">Task</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5227">#5227</a></td><td>Keg line items not visible when editing a refill (fix PR #5244 merged)</td><td><span class="badge badge-warning">Bug</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5288">#5288</a></td><td>Operator-admins can't add a login to an existing customer org</td><td><span class="badge badge-ready">Feature</span></td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5398">#5398</a></td><td>PR: venue collections complete from RECEIVED + modal date/copy</td><td><span class="badge badge-review">PR open</span></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Reading the carry-over</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">This is a <strong>focused carry-over, not a stale backlog</strong> &mdash; it's the natural output of running a testing sprint against a brand-new feature. But it's larger and higher-stakes than the prior close.</p>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.7;margin-top:10px;">
+      <li><strong>One financial-impact bug.</strong> #5382 (wrong NS invoice date) should be P0 &mdash; refills/venue collections now generate real invoices.</li>
+      <li><strong>Single dominant thread.</strong> Clearing #5346 and its children signs off the exclusive-contracts feature and clears the slate.</li>
+      <li><strong>One outlier.</strong> #5288 (org-admin login) is unrelated &mdash; decide whether it belongs in M22 or the backlog.</li>
+      <li><strong>Reconcile #5227.</strong> Merged fix but open issue &mdash; verify before it counts as carry-over.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RETROSPECTIVE — TEAM-LEVEL ONLY                               -->
+<!-- ============================================================ -->
+<h2 class="section-title">Retrospective &mdash; Team Themes</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Three columns: what worked, what to review, and open questions for the M22 kickoff. Team-level only.</p>
+
+<div class="grid grid-3">
+  <div class="card">
+    <h2 style="color:var(--green)">What worked</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Highest output of the run.</strong> 91 closed on 98 scope &mdash; the team scaled throughput without dropping the percentage far.</li>
+      <li><strong>Five of six themes delivered.</strong> Contracts testing, DEV-OC/NS mock, Playwright, LaunchDarkly and AWS cost-opt all landed.</li>
+      <li><strong>Testing did its job.</strong> Exercising exclusive contracts surfaced real bugs &mdash; most fixed before close.</li>
+      <li><strong>Cost work became a cadence.</strong> The weekly cost-opt series (k8s #481&ndash;#484) is exactly the sustainable rhythm we wanted.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--yellow)">What to review</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Booths API didn't start.</strong> A stated goal with zero tracked work &mdash; was it deprioritised deliberately, or squeezed out?</li>
+      <li><strong>Carry-over doubled (3&rarr;7).</strong> Define what "exclusive contracts tested / done" means so the tail closes cleanly.</li>
+      <li><strong>Scope grew to 98.</strong> Testing pulled in fixes &mdash; did the Day-8 freeze hold?</li>
+      <li><strong>Issue/PR hygiene.</strong> #5227's merged-but-open state shouldn't recur &mdash; confirm auto-close links.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--accent)">Open questions for M22</h2>
+    <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
+      <li><strong>Booths API</strong> is now the M22 headline &mdash; does it get a timeboxed discovery spike before build commitment?</li>
+      <li><strong>Symfony 8 / PHP 8.5 prep</strong> &mdash; what's the blast radius, and is Playwright coverage ready to catch regressions?</li>
+      <li><strong>Playwright into CI + dev-oc</strong> &mdash; reserve capacity or it slips, as enablers do.</li>
+      <li><strong>Who signs off</strong> the exclusive-contracts feature as tested?</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ENTERING MILESTONE 22                                         -->
+<!-- ============================================================ -->
+<h2 class="section-title">Entering Milestone 22 (July 6 &ndash; 17)</h2>
+
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">M22 opens at 0/5 issues, due July 19. Per the live milestone brief it's a deliberately tighter sprint: <em>"a single major EPIC, a lot smaller than the last, and some tech-debt housekeeping to help KC keep moving forward and reduce costs."</em> Goals below are drawn from the M22 milestone description.</p>
+
+<div class="grid grid-3">
+  <div class="card">
+    <h2 style="color:var(--accent)">Goal 1 &mdash; Start the Booths API integration</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The single major EPIC. Net-new external integration &mdash; and NS integrations have historically expanded mid-sprint &mdash; so budget a <strong>timeboxed discovery spike</strong> and commit build scope only after. This is M21's one un-started goal, carried forward.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--accent)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--purple)">Goal 2 &mdash; Symfony 8 / PHP 8.5 prep + refactoring</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Continue refactoring and updates to prepare for <strong>Symfony 8 and PHP 8.5</strong>. Broad blast radius &mdash; sequence it behind the Playwright coverage so regressions are caught, and lean on the new Dependabot-review skill.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--purple)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+  <div class="card">
+    <h2 style="color:var(--green)">Goal 3 &mdash; Playwright in CI + tech-debt &amp; cost</h2>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">Move the RainForest&rarr;Playwright E2E suite <strong>into CI and dev-oc</strong>, and keep the cost-opt cadence running. First, close the M21 venue-collections / refills tail (#5346 and children) so it doesn't shadow the new EPIC.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:0%;background:var(--green)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Day 0</p>
+  </div>
+</div>
+
+<div class="grid grid-3">
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--accent)">R</div>
+      <div><strong>Rob</strong> &mdash; Infra, NS, reviewer</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Natural owner for the Symfony 8 / PHP 8.5 upgrade path, Booths API backend/architecture, and the continued cost-opt cadence (action the #484 off-hours decision) &mdash; plus primary reviewer. Protect against the upgrade + integration landing in the same fortnight.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:85%;background:var(--orange)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Heavy &mdash; upgrade + Booths + review</p>
+  </div>
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--purple)">M</div>
+      <div><strong>Millicent</strong> &mdash; Backend / integrations</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Drove Venue Collections and the NS/dev-oc reliability fixes (#5332, #5353). Strong fit to lead <strong>Booths API discovery</strong> and to clear the financial-impact NS tail (#5382) at the start of M22.</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:75%;background:var(--purple)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Booths API lead + NS tail</p>
+  </div>
+  <div class="card">
+    <div class="person-header">
+      <div class="avatar" style="background:var(--pink)">B</div>
+      <div><strong>Bea</strong> &mdash; Frontend</div>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:6px;">Drove the Playwright phases (#5232, #5233) and refill FE fixes. Natural lead to move <strong>Playwright into CI/dev-oc</strong> and finish the venue-collections FE tail (#5365, #5227).</p>
+    <div class="capacity-bar"><div class="capacity-fill" style="width:70%;background:var(--pink)"></div></div>
+    <p style="font-size:0.78rem;color:var(--muted)">Playwright-in-CI + FE tail</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RISKS / DEPENDENCIES                                          -->
+<!-- ============================================================ -->
+<h2 class="section-title">Risks &amp; Dependencies to Watch</h2>
+
+<div class="card" style="margin-bottom:20px">
+  <table>
+    <tr><th>Risk</th><th>Impact</th><th>Owner</th><th>Mitigation</th></tr>
+    <tr>
+      <td>Wrong NetSuite invoice date on venue-collection completion (#5382)</td>
+      <td>Refills/venue collections generate live invoices &mdash; a wrong posting date is a finance/accounting defect, not just UX.</td>
+      <td>Millicent + Rob</td>
+      <td>Treat as P0 in M22; spot-check early invoices against NetSuite; add a regression test.</td>
+    </tr>
+    <tr>
+      <td>Exclusive-contracts feature has no "done" definition</td>
+      <td>The tail (#5346) could drift; no clear sign-off before dependent work builds on it.</td>
+      <td>Rob</td>
+      <td>Name a test owner and a definition of "tested" at kickoff; close #5346 children against it.</td>
+    </tr>
+    <tr>
+      <td>Booths API is a net-new external integration</td>
+      <td>Unknown surface area; the single major EPIC of M22 &mdash; if it sprawls, the sprint stalls.</td>
+      <td>Millicent</td>
+      <td>Timeboxed discovery spike first; commit build scope only after.</td>
+    </tr>
+    <tr>
+      <td>Symfony 8 / PHP 8.5 upgrade blast radius</td>
+      <td>Runtime + framework major bumps can break widely; risky without automated coverage.</td>
+      <td>Rob</td>
+      <td>Get Playwright into CI first; upgrade incrementally behind it; use the Dependabot-review skill.</td>
+    </tr>
+    <tr>
+      <td>Scope growth (M21 ran to 98 items)</td>
+      <td>M22 is explicitly meant to be smaller &mdash; unchecked pull-in would defeat that intent.</td>
+      <td>Rob</td>
+      <td>Hold the Day-8 freeze; keep the tech-debt/cost work capped around the single EPIC.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- ACTION ITEMS                                                  -->
+<!-- ============================================================ -->
+<h2 class="section-title">Action Items</h2>
+
+<div class="card">
+  <table>
+    <tr><th style="width:30px">&nbsp;</th><th>Action</th><th>Owner</th><th>Priority</th></tr>
+    <tr><td>&#9744;</td><td>Fix the wrong NetSuite invoice date on venue-collection completion (#5382) &mdash; financial impact</td><td>Millicent + Rob</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Close the venue-collections / refills dev-test tail (#5346, #5365, #5318, #5227, PR #5398) in the first days of M22</td><td>Bea + Millicent</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Kick off Booths API with a timeboxed discovery spike before committing build scope</td><td>Millicent</td><td><span class="badge badge-urgent">P0</span></td></tr>
+    <tr><td>&#9744;</td><td>Define "exclusive contracts tested / done" and name a sign-off owner; confirm #4903 vs #5173 boundary</td><td>Rob</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Scope the Symfony 8 / PHP 8.5 upgrade; get Playwright into CI before upgrading</td><td>Rob + Bea</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Reconcile #5227 (merged PR #5244 but issue open); confirm the board-wide Review count at kickoff</td><td>Rob</td><td>P1</td></tr>
+    <tr><td>&#9744;</td><td>Action the dev off-hours node scale-down decision (k8s #484) and continue the weekly cost-opt cadence</td><td>Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Decide whether the org-admin login gap (#5288) belongs in M22 or the backlog</td><td>Rob</td><td>P2</td></tr>
+    <tr><td>&#9744;</td><td>Add the M21 card to <code>index.html</code> and push <code>sprint-review-2026-07-03.html</code> to the engineering-planning repo</td><td>Rob</td><td>P2</td></tr>
+  </table>
+</div>
+
+<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 21 (June 22 &ndash; July 3, 2026) &middot; Generated July 6, 2026 &middot; Theme splits and label/burn-up charts are approximate, derived from the M21 milestone issues &amp; PRs. AWS cost-reduction items are tracked in the konvoy-kegs/kubernetes repo.</p>
+
+<script>
+function showChartFailure(message) {
+  var ids = ['statusChart', 'labelChart', 'themeChart', 'burnupChart'];
+  ids.forEach(function (id) {
+    var c = document.getElementById(id);
+    if (!c) return;
+    var parent = c.parentElement;
+    parent.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">' + message + '</div>';
+  });
+}
+
+function renderCharts() {
+  if (typeof Chart === 'undefined') {
+    showChartFailure('Chart.js failed to load (CDN blocked or offline). Open in a browser with network access, or open the file via the GitHub Pages site.');
+    return;
+  }
+
+  Chart.defaults.color = '#94a3b8';
+  Chart.defaults.borderColor = 'rgba(51,65,85,0.5)';
+  Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+  function safeChart(id, config) {
+    try {
+      var el = document.getElementById(id);
+      if (!el) { console.warn('Canvas not found:', id); return; }
+      new Chart(el, config);
+    } catch (err) {
+      console.error('Chart render failed for', id, err);
+      var c = document.getElementById(id);
+      if (c && c.parentElement) {
+        c.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f87171;font-size:0.85rem;">Chart render error: ' + (err && err.message ? err.message : err) + '</div>';
+      }
+    }
+  }
+
+// ============================================================
+// Milestone 21 completion — 91 closed of 98 (issues + PRs)
+// 7 open carry to M22.
+// ============================================================
+safeChart('statusChart', {
+  type: 'doughnut',
+  data: {
+    labels: ['Closed (91)', 'Carry to M22 (7)'],
+    datasets: [{
+      data: [91, 7],
+      backgroundColor: ['#4ade80','#fb923c'],
+      borderWidth: 0, hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 12 } } },
+      title: { display: true, text: '92% complete', color: '#f1f5f9', font: { size: 14 } }
+    }
+  }
+});
+
+// ============================================================
+// Closed items by narrative theme (approximate, konvoy milestone)
+// ============================================================
+safeChart('themeChart', {
+  type: 'bar',
+  data: {
+    labels: [
+      'Venue Collections & contracts',
+      'DEV-OC & NetSuite',
+      'Refills polish',
+      'Playwright / E2E',
+      'Access & org admin',
+      'LaunchDarkly & release',
+      'Dependencies / chore / DX'
+    ],
+    datasets: [{
+      label: 'Closed items',
+      data: [23, 18, 13, 8, 8, 5, 16],
+      backgroundColor: ['#a78bfa','#f87171','#4ade80','#22d3ee','#60a5fa','#38bdf8','#f472b6'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
+  }
+});
+
+// ============================================================
+// Closed by label — actual counts from M21 milestone listing.
+// Issues carry multiple labels, so these sum to more than 91.
+// ============================================================
+safeChart('labelChart', {
+  type: 'polarArea',
+  data: {
+    labels: ['back end (33)', 'front end (33)', 'enhancement (30)', 'netsuite (27)', 'bug (21)', 'infra (12)', 'feature (10)', 'chore (9)'],
+    datasets: [{
+      data: [33, 33, 30, 27, 21, 12, 10, 9],
+      backgroundColor: ['#a78bfa','#f472b6','#4ade80','#fb923c','#f87171','#38bdf8','#22d3ee','#64748b'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }
+  }
+});
+
+// ============================================================
+// Burn-up — approximate. 10 working days, Jun 22 → Jul 3.
+// Scope grew ~72 → 98 as testing surfaced fixes; final closed = 91.
+// Refine from the Insights Burn-up chart if needed.
+// ============================================================
+safeChart('burnupChart', {
+  type: 'line',
+  data: {
+    labels: ['Jun 22','Jun 23','Jun 24','Jun 25','Jun 26','Jun 29','Jun 30','Jul 1','Jul 2','Jul 3'],
+    datasets: [
+      { label: 'Scope',     data: [72, 78, 84, 88, 92, 95, 97, 98, 98, 98], borderColor: '#64748b', backgroundColor: 'rgba(100,116,139,0.1)', tension: 0.2, fill: false, borderDash: [4,4] },
+      { label: 'Completed', data: [6, 15, 26, 38, 50, 62, 73, 82, 88, 91],   borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.15)', tension: 0.2, fill: true }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+  }
+});
+
+}  // end renderCharts
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderCharts);
+} else {
+  renderCharts();
+}
+</script>
+</body>
+</html>
