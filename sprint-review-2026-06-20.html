@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Katch Cloud Sprint Review — Milestone 21 · June 8–20, 2026</title>
+<title>Katch Cloud Sprint Review — Milestone 20 · June 8–20, 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
@@ -88,15 +88,15 @@
 </head>
 <body>
 
-<h1>Katch Cloud &mdash; Milestone 21 Review</h1>
-<p class="subtitle">Milestone 21 &middot; June 8 &ndash; 20, 2026 &middot; End-of-sprint snapshot &middot; Generated June 22, 2026</p>
+<h1>Katch Cloud &mdash; Milestone 20 Review</h1>
+<p class="subtitle">Milestone 20 &middot; June 8 &ndash; 20, 2026 &middot; End-of-sprint snapshot &middot; Generated June 22, 2026</p>
 
 <!-- ============================================================ -->
 <!-- HEADLINE / NARRATIVE SUMMARY                                  -->
 <!-- ============================================================ -->
 <div class="alert alert-blue">
   <h2>Sprint Headline &mdash; Refills shipped end-to-end, exclusive-contracts work began, and search got dramatically faster</h2>
-  <p>Milestone 21 closed at <strong>95% (65 of 68 milestone items)</strong> &mdash; the strongest completion in the recent run (M18 82%, M19 76%) and only <strong>3 items carrying to M22</strong>. The fortnight delivered squarely on its three-part brief. <strong>Refills moved from workstream to shipped product</strong>: complete-order + NetSuite invoice generation (<a href="https://github.com/konvoy-kegs/konvoy/issues/4919">#4919</a>), refill volume now counts toward contract progress (<a href="https://github.com/konvoy-kegs/konvoy/issues/4922">#4922</a>), closed-period-safe invoice dating (<a href="https://github.com/konvoy-kegs/konvoy/issues/5098">#5098</a>), and a full bulk CSV/XLSX import path &mdash; backend (<a href="https://github.com/konvoy-kegs/konvoy/issues/5111">#5111</a>) and validating UI (<a href="https://github.com/konvoy-kegs/konvoy/issues/5112">#5112</a>). The <strong>"exclusive contracts for finance" workstream started and largely landed</strong> &mdash; the Extend Contract flag + UI (<a href="https://github.com/konvoy-kegs/konvoy/issues/5172">#5172</a>) and Venue Collections / VENUE_PICKUP SKU work (<a href="https://github.com/konvoy-kegs/konvoy/issues/5197">#5197</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/5201">#5201</a>) &mdash; teeing up M22's "test the exclusive-contracts feature" goal. And a sizeable <strong>unplanned win</strong> landed alongside: the Global Search Performance epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5091">#5091</a>, 6/6) replaced slow LIKE scans with FULLTEXT MATCH + resilient fan-out across orders, organisations, locations and assets.</p>
+  <p>Milestone 20 closed at <strong>95% (65 of 68 milestone items)</strong> &mdash; the strongest completion in the recent run (M18 82%, M19 76%) and only <strong>3 items carrying to M22</strong>. The fortnight delivered squarely on its three-part brief. <strong>Refills moved from workstream to shipped product</strong>: complete-order + NetSuite invoice generation (<a href="https://github.com/konvoy-kegs/konvoy/issues/4919">#4919</a>), refill volume now counts toward contract progress (<a href="https://github.com/konvoy-kegs/konvoy/issues/4922">#4922</a>), closed-period-safe invoice dating (<a href="https://github.com/konvoy-kegs/konvoy/issues/5098">#5098</a>), and a full bulk CSV/XLSX import path &mdash; backend (<a href="https://github.com/konvoy-kegs/konvoy/issues/5111">#5111</a>) and validating UI (<a href="https://github.com/konvoy-kegs/konvoy/issues/5112">#5112</a>). The <strong>"exclusive contracts for finance" workstream started and largely landed</strong> &mdash; the Extend Contract flag + UI (<a href="https://github.com/konvoy-kegs/konvoy/issues/5172">#5172</a>) and Venue Collections / VENUE_PICKUP SKU work (<a href="https://github.com/konvoy-kegs/konvoy/issues/5197">#5197</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/5201">#5201</a>) &mdash; teeing up M22's "test the exclusive-contracts feature" goal. And a sizeable <strong>unplanned win</strong> landed alongside: the Global Search Performance epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5091">#5091</a>, 6/6) replaced slow LIKE scans with FULLTEXT MATCH + resilient fan-out across orders, organisations, locations and assets.</p>
 </div>
 
 <div class="alert alert-orange">
@@ -107,7 +107,7 @@
 <!-- ============================================================ -->
 <!-- BOARD SNAPSHOT — KPI STAT CARDS                               -->
 <!-- ============================================================ -->
-<h2 class="section-title">Milestone 21 Snapshot</h2>
+<h2 class="section-title">Milestone 20 Snapshot</h2>
 
 <div class="grid grid-4">
   <div class="card stat-card"><div class="number" style="color:var(--accent)">95<span style="font-size:1.2rem">%</span></div><div class="label">Milestone completion</div><div class="delta" style="color:var(--green)">65/68 &middot; M19 was 76%</div></div>
@@ -130,7 +130,7 @@
 <!-- ============================================================ -->
 <div class="grid grid-2">
   <div class="card">
-    <h2>Milestone 21 Completion</h2>
+    <h2>Milestone 20 Completion</h2>
     <div class="chart-container"><canvas id="statusChart"></canvas></div>
   </div>
   <div class="card">
@@ -145,7 +145,7 @@
     <div class="chart-container"><canvas id="labelChart"></canvas></div>
   </div>
   <div class="card">
-    <h2>Burn-up &mdash; Milestone 21 (approx.)</h2>
+    <h2>Burn-up &mdash; Milestone 20 (approx.)</h2>
     <div class="chart-container"><canvas id="burnupChart"></canvas></div>
   </div>
 </div>
@@ -474,7 +474,7 @@
   </table>
 </div>
 
-<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 21 (June 8 &ndash; 20, 2026) &middot; Generated June 22, 2026 &middot; Theme splits and label/burn-up charts are approximate, derived from the M21 milestone issues &amp; PRs.</p>
+<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 20 (June 8 &ndash; 20, 2026) &middot; Generated June 22, 2026 &middot; Theme splits and label/burn-up charts are approximate, derived from the M21 milestone issues &amp; PRs.</p>
 
 <script>
 function showChartFailure(message) {
@@ -512,7 +512,7 @@ function renderCharts() {
   }
 
 // ============================================================
-// Milestone 21 completion — 65 closed of 68 (issues + PRs)
+// Milestone 20 completion — 65 closed of 68 (issues + PRs)
 // 3 open carry to M22.
 // ============================================================
 safeChart('statusChart', {
