@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Katch Cloud Sprint Review — Milestone 21 · July 6 – 17, 2026</title>
+<title>Katch Cloud Sprint Review — Milestone 22 · July 6 – 17, 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
@@ -85,31 +85,31 @@
 </head>
 <body>
 
-<h1>Katch Cloud &mdash; Milestone 21 Review</h1>
-<p class="subtitle">Milestone 21 &middot; July 6 &ndash; 17, 2026 &middot; End-of-sprint snapshot &middot; Generated July 20, 2026 &middot; Report M21 = board milestone <a href="https://github.com/konvoy-kegs/konvoy/milestone/22">&ldquo;M22 &middot; July 06 - 17&rdquo;</a> (the board label runs one ahead of report numbering)</p>
+<h1>Katch Cloud &mdash; Milestone 22 Review</h1>
+<p class="subtitle">Milestone 22 &middot; July 6 &ndash; 17, 2026 &middot; End-of-sprint snapshot &middot; Generated July 20, 2026 &middot; Report M22 = board milestone <a href="https://github.com/konvoy-kegs/konvoy/milestone/22">&ldquo;M22 &middot; July 06 - 17&rdquo;</a></p>
 
 <!-- ============================================================ -->
 <!-- HEADLINE / NARRATIVE SUMMARY                                  -->
 <!-- ============================================================ -->
 <div class="alert alert-green">
   <h2>Sprint Headline &mdash; First 100% close of the run: 30 of 30, zero carry-over, on a deliberately right-sized scope</h2>
-  <p>Milestone 21 closed at <strong>100% (30 of 30 milestone items)</strong> &mdash; the first perfect close since Rob took the board &mdash; after M20's sprawling 98-item fortnight. The brief asked for <em>&ldquo;a single major EPIC, a lot smaller than the last, plus tech-debt housekeeping,&rdquo;</em> and the smaller-and-finish-it part worked exactly as intended. The centre of gravity became the <strong>Dev-OC feedback bridge</strong> (epic <a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a>): a staging feedback widget that turns in-app feedback into GitHub issues and Slack DMs (<a href="https://github.com/konvoy-kegs/konvoy/issues/5421">#5421</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5427">#5427</a>), then matured across the fortnight &mdash; dedicated bot token (<a href="https://github.com/konvoy-kegs/konvoy/pull/5439">#5439</a>), dedupe hardening (<a href="https://github.com/konvoy-kegs/konvoy/pull/5440">#5440</a>), public-bucket screenshots (<a href="https://github.com/konvoy-kegs/konvoy/pull/5464">#5464</a>), viewport-only capture + preview (<a href="https://github.com/konvoy-kegs/konvoy/pull/5468">#5468</a>), a shared annotation canvas with region highlight (<a href="https://github.com/konvoy-kegs/konvoy/pull/5477">#5477</a>), and the Keggy mascot button (<a href="https://github.com/konvoy-kegs/konvoy/pull/5478">#5478</a>, <a href="https://github.com/konvoy-kegs/konvoy/pull/5483">#5483</a>). Around it: a <strong>financial-correctness fix to contract-brewer freight shadow pricing</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5444">#5444</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5446">#5446</a>), a venue-collections polish tail, solid BAU reliability fixes, and a real CI/DX modernisation push (Blacksmith runners <a href="https://github.com/konvoy-kegs/konvoy/pull/5479">#5479</a>, PR notifier v2 <a href="https://github.com/konvoy-kegs/konvoy/pull/5486">#5486</a>, preflight guard <a href="https://github.com/konvoy-kegs/konvoy/pull/5222">#5222</a>). <strong>Release v1.89.27 is drafted and in review today</strong> (21 PRs).</p>
+  <p>Milestone 22 closed at <strong>100% (30 of 30 milestone items)</strong> &mdash; the first perfect close since Rob took the board &mdash; after M21's sprawling 98-item fortnight. The brief asked for <em>&ldquo;a single major EPIC, a lot smaller than the last, plus tech-debt housekeeping,&rdquo;</em> and the smaller-and-finish-it part worked exactly as intended. The centre of gravity became the <strong>Dev-OC feedback bridge</strong> (epic <a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a>): a staging feedback widget that turns in-app feedback into GitHub issues and Slack DMs (<a href="https://github.com/konvoy-kegs/konvoy/issues/5421">#5421</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5427">#5427</a>), then matured across the fortnight &mdash; dedicated bot token (<a href="https://github.com/konvoy-kegs/konvoy/pull/5439">#5439</a>), dedupe hardening (<a href="https://github.com/konvoy-kegs/konvoy/pull/5440">#5440</a>), public-bucket screenshots (<a href="https://github.com/konvoy-kegs/konvoy/pull/5464">#5464</a>), viewport-only capture + preview (<a href="https://github.com/konvoy-kegs/konvoy/pull/5468">#5468</a>), a shared annotation canvas with region highlight (<a href="https://github.com/konvoy-kegs/konvoy/pull/5477">#5477</a>), and the Keggy mascot button (<a href="https://github.com/konvoy-kegs/konvoy/pull/5478">#5478</a>, <a href="https://github.com/konvoy-kegs/konvoy/pull/5483">#5483</a>). Around it: a <strong>financial-correctness fix to contract-brewer freight shadow pricing</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5444">#5444</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5446">#5446</a>), a venue-collections polish tail, solid BAU reliability fixes, and a real CI/DX modernisation push (Blacksmith runners <a href="https://github.com/konvoy-kegs/konvoy/pull/5479">#5479</a>, PR notifier v2 <a href="https://github.com/konvoy-kegs/konvoy/pull/5486">#5486</a>, preflight guard <a href="https://github.com/konvoy-kegs/konvoy/pull/5222">#5222</a>). <strong>Release v1.89.27 is drafted and in review today</strong> (21 PRs).</p>
 </div>
 
 <div class="alert alert-orange">
   <h2>Watch item &mdash; the brief and the board told different stories, and two named goals produced no tracked work</h2>
-  <p>The board brief named the <strong>&ldquo;Super Cool Fast Keg Scanning Tool&rdquo;</strong> as the sprint's single major EPIC and <strong>&ldquo;start work on the Booths API integration&rdquo;</strong> &mdash; neither appears anywhere in the milestone's 30 closed items. The feedback-bridge epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a>, opened July 9, mid-sprint) absorbed the sprint instead &mdash; a good outcome on its own terms, but it displaced the stated plan without the brief ever being updated. <strong>Booths API has now produced zero tracked work across three consecutive sprint briefs</strong> (M19-report, M20-report, this one) and is absent from the M22 brief entirely &mdash; that needs an explicit decision: deliberately parked, or lost? Similarly, M22's brief says <em>&ldquo;completing the Symfony 8 upgrade&rdquo;</em> &mdash; but no Symfony-8 work is visible in this milestone, so confirm where that upgrade actually stands and get it tracked on the board before the sprint builds on it.</p>
+  <p>The board brief named the <strong>&ldquo;Super Cool Fast Keg Scanning Tool&rdquo;</strong> as the sprint's single major EPIC and <strong>&ldquo;start work on the Booths API integration&rdquo;</strong> &mdash; neither appears anywhere in the milestone's 30 closed items. The feedback-bridge epic (<a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a>, opened July 9, mid-sprint) absorbed the sprint instead &mdash; a good outcome on its own terms, but it displaced the stated plan without the brief ever being updated. <strong>Booths API has now produced zero tracked work across three consecutive sprint briefs</strong> (M20-report, M21-report, this one) and is absent from the M23 brief entirely &mdash; that needs an explicit decision: deliberately parked, or lost? Similarly, M23's brief says <em>&ldquo;completing the Symfony 8 upgrade&rdquo;</em> &mdash; but no Symfony-8 work is visible in this milestone, so confirm where that upgrade actually stands and get it tracked on the board before the sprint builds on it.</p>
 </div>
 
 <!-- ============================================================ -->
 <!-- BOARD SNAPSHOT — KPI STAT CARDS                               -->
 <!-- ============================================================ -->
-<h2 class="section-title">Milestone 21 Snapshot</h2>
+<h2 class="section-title">Milestone 22 Snapshot</h2>
 
 <div class="grid grid-4">
   <div class="card stat-card"><div class="number" style="color:var(--green)">100<span style="font-size:1.2rem">%</span></div><div class="label">Milestone completion</div><div class="delta" style="color:var(--muted)">30/30 &middot; prior sprint 92%</div></div>
   <div class="card stat-card"><div class="number" style="color:var(--green)">0</div><div class="label">Carry-over</div><div class="delta" style="color:var(--green)">first zero-carry close (was 7)</div></div>
-  <div class="card stat-card"><div class="number" style="color:var(--purple)">30</div><div class="label">Milestone scope</div><div class="delta" style="color:var(--muted)">right-sized after 98 in M20</div></div>
+  <div class="card stat-card"><div class="number" style="color:var(--purple)">30</div><div class="label">Milestone scope</div><div class="delta" style="color:var(--muted)">right-sized after 98 in M21</div></div>
   <div class="card stat-card"><div class="number" style="color:var(--accent)">21</div><div class="label">PRs in release v1.89.27</div><div class="delta" style="color:var(--yellow)">draft &mdash; in review today</div></div>
 </div>
 
@@ -127,7 +127,7 @@
 <!-- ============================================================ -->
 <div class="grid grid-2">
   <div class="card">
-    <h2>Milestone 21 Completion</h2>
+    <h2>Milestone 22 Completion</h2>
     <div class="chart-container"><canvas id="statusChart"></canvas></div>
   </div>
   <div class="card">
@@ -138,11 +138,11 @@
 
 <div class="grid grid-2">
   <div class="card">
-    <h2>Closed by Label (M21 &mdash; approx.)</h2>
+    <h2>Closed by Label (M22 &mdash; approx.)</h2>
     <div class="chart-container"><canvas id="labelChart"></canvas></div>
   </div>
   <div class="card">
-    <h2>Burn-up &mdash; Milestone 21 (approx.)</h2>
+    <h2>Burn-up &mdash; Milestone 22 (approx.)</h2>
     <div class="chart-container"><canvas id="burnupChart"></canvas></div>
   </div>
 </div>
@@ -157,25 +157,25 @@
 <div class="grid grid-2">
   <div class="card">
     <h2>Theme 1 &mdash; Dev-OC feedback bridge: widget &rarr; GitHub issue &rarr; Slack DM</h2>
-    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The sprint's de-facto major EPIC (<a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a>). Staging testers can now file feedback in-app and it lands as a GitHub issue plus a Slack DM to the reporter (<a href="https://github.com/konvoy-kegs/konvoy/issues/5421">#5421</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5427">#5427</a>). The fortnight then hardened and polished it end-to-end: dedicated Feedback Bot token (<a href="https://github.com/konvoy-kegs/konvoy/pull/5439">#5439</a>), dedupe race hardening (<a href="https://github.com/konvoy-kegs/konvoy/pull/5440">#5440</a>), public-bucket screenshot serving (<a href="https://github.com/konvoy-kegs/konvoy/pull/5464">#5464</a>), guaranteed viewport-only capture with enlarged preview (<a href="https://github.com/konvoy-kegs/konvoy/pull/5468">#5468</a>), a shared annotation canvas with region-highlight and highlighter tools (<a href="https://github.com/konvoy-kegs/konvoy/pull/5477">#5477</a>; canvas + hotkey in release PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5475">#5475</a>), and the Keggy mascot as the feedback button (<a href="https://github.com/konvoy-kegs/konvoy/pull/5478">#5478</a>, sizing/hit-area <a href="https://github.com/konvoy-kegs/konvoy/pull/5483">#5483</a>). The epic stays open pending dev-oc E2E smoke + Sentry monitoring (<a href="https://github.com/konvoy-kegs/konvoy/issues/5426">#5426</a>, in M22).</p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The sprint's de-facto major EPIC (<a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a>). Staging testers can now file feedback in-app and it lands as a GitHub issue plus a Slack DM to the reporter (<a href="https://github.com/konvoy-kegs/konvoy/issues/5421">#5421</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5427">#5427</a>). The fortnight then hardened and polished it end-to-end: dedicated Feedback Bot token (<a href="https://github.com/konvoy-kegs/konvoy/pull/5439">#5439</a>), dedupe race hardening (<a href="https://github.com/konvoy-kegs/konvoy/pull/5440">#5440</a>), public-bucket screenshot serving (<a href="https://github.com/konvoy-kegs/konvoy/pull/5464">#5464</a>), guaranteed viewport-only capture with enlarged preview (<a href="https://github.com/konvoy-kegs/konvoy/pull/5468">#5468</a>), a shared annotation canvas with region-highlight and highlighter tools (<a href="https://github.com/konvoy-kegs/konvoy/pull/5477">#5477</a>; canvas + hotkey in release PR <a href="https://github.com/konvoy-kegs/konvoy/pull/5475">#5475</a>), and the Keggy mascot as the feedback button (<a href="https://github.com/konvoy-kegs/konvoy/pull/5478">#5478</a>, sizing/hit-area <a href="https://github.com/konvoy-kegs/konvoy/pull/5483">#5483</a>). The epic stays open pending dev-oc E2E smoke + Sentry monitoring (<a href="https://github.com/konvoy-kegs/konvoy/issues/5426">#5426</a>, in M23).</p>
     <table style="margin-top:10px">
       <tr><th>Issue</th><th>Title</th></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5421">#5421</a></td><td>Feedback widget &rarr; GitHub issue &rarr; Slack DM bridge (backend)</td></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5468">#5468</a></td><td>Viewport-only feedback screenshot + enlarge preview</td></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5477">#5477</a></td><td>Region highlight + highlighter tools on annotation canvas</td></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5478">#5478</a></td><td>Keggy mascot replaces the orange feedback button</td></tr>
-      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a></td><td>EPIC &mdash; open pending E2E smoke + Sentry (#5426, M22)</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a></td><td>EPIC &mdash; open pending E2E smoke + Sentry (#5426, M23)</td></tr>
     </table>
   </div>
   <div class="card">
     <h2>Theme 2 &mdash; Contracts, venue collections &amp; rentals: correctness with dollars attached</h2>
-    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The most financially significant fix of the sprint: <strong>contract-brewer freight was always billing the market default</strong> because customer shadow pricing was never resolved on save (<a href="https://github.com/konvoy-kegs/konvoy/issues/5444">#5444</a>); resolution is now deterministic and server-side (<a href="https://github.com/konvoy-kegs/konvoy/pull/5446">#5446</a>). The venue-collections tail from M20 also cleared: price overrides allowed via the OrderVoter allowlist (<a href="https://github.com/konvoy-kegs/konvoy/pull/5405">#5405</a>), toggle wording + notes field (<a href="https://github.com/konvoy-kegs/konvoy/pull/5415">#5415</a>), and the rentals list got a default-preset Type de-pin with a stable sort tiebreaker (<a href="https://github.com/konvoy-kegs/konvoy/pull/5429">#5429</a>). Related in-release: skip minimum-rentals alert for zero-keg-minimum agreements (<a href="https://github.com/konvoy-kegs/konvoy/pull/5456">#5456</a>) and #contract-extensions Slack alerts linking to producer pricing (<a href="https://github.com/konvoy-kegs/konvoy/pull/5485">#5485</a>). <strong>Still open and financial: refill orders billing $0</strong> from seeded-zero refill_fee (<a href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a>, tracked into M22).</p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The most financially significant fix of the sprint: <strong>contract-brewer freight was always billing the market default</strong> because customer shadow pricing was never resolved on save (<a href="https://github.com/konvoy-kegs/konvoy/issues/5444">#5444</a>); resolution is now deterministic and server-side (<a href="https://github.com/konvoy-kegs/konvoy/pull/5446">#5446</a>). The venue-collections tail from M21 also cleared: price overrides allowed via the OrderVoter allowlist (<a href="https://github.com/konvoy-kegs/konvoy/pull/5405">#5405</a>), toggle wording + notes field (<a href="https://github.com/konvoy-kegs/konvoy/pull/5415">#5415</a>), and the rentals list got a default-preset Type de-pin with a stable sort tiebreaker (<a href="https://github.com/konvoy-kegs/konvoy/pull/5429">#5429</a>). Related in-release: skip minimum-rentals alert for zero-keg-minimum agreements (<a href="https://github.com/konvoy-kegs/konvoy/pull/5456">#5456</a>) and #contract-extensions Slack alerts linking to producer pricing (<a href="https://github.com/konvoy-kegs/konvoy/pull/5485">#5485</a>). <strong>Still open and financial: refill orders billing $0</strong> from seeded-zero refill_fee (<a href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a>, tracked into M23).</p>
     <table style="margin-top:10px">
       <tr><th>Issue</th><th>Title</th></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5444">#5444</a></td><td>Contract-brewer freight billed market default (shadow pricing)</td></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5405">#5405</a></td><td>Allow venue-collection price overrides (OrderVoter)</td></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5429">#5429</a></td><td>Rentals list &mdash; Type de-pin + stable sort tiebreaker</td></tr>
-      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a></td><td>Refill orders billing $0 (seeded-zero refill_fee) &mdash; open, M22</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a></td><td>Refill orders billing $0 (seeded-zero refill_fee) &mdash; open, M23</td></tr>
     </table>
   </div>
 </div>
@@ -183,18 +183,18 @@
 <div class="grid grid-2">
   <div class="card">
     <h2>Theme 3 &mdash; Platform reliability: quiet fixes that stop loud pages</h2>
-    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">A solid BAU-reliability run. The <strong>default-events worker no longer trips its circuit breaker on retryable DB lock-wait contention</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5441">#5441</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5442">#5442</a> &mdash; found via Sentry KONVOY-API-3HH). The sign-up form no longer hangs on an infinite spinner when token validation fails (<a href="https://github.com/konvoy-kegs/konvoy/issues/5454">#5454</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5455">#5455</a>). Fresh-DB migration replay got tolerant FK drops (<a href="https://github.com/konvoy-kegs/konvoy/pull/5473">#5473</a>) &mdash; with the deeper squash-baseline FK-name drift tracked into M22 (<a href="https://github.com/konvoy-kegs/konvoy/issues/5471">#5471</a>). In the same release: the API client stops retrying after a failed token refresh (<a href="https://github.com/konvoy-kegs/konvoy/pull/5447">#5447</a>) and a silent blank page on iOS Safari &lt;15.4 is fixed (<a href="https://github.com/konvoy-kegs/konvoy/pull/5463">#5463</a>).</p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">A solid BAU-reliability run. The <strong>default-events worker no longer trips its circuit breaker on retryable DB lock-wait contention</strong> (<a href="https://github.com/konvoy-kegs/konvoy/issues/5441">#5441</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5442">#5442</a> &mdash; found via Sentry KONVOY-API-3HH). The sign-up form no longer hangs on an infinite spinner when token validation fails (<a href="https://github.com/konvoy-kegs/konvoy/issues/5454">#5454</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5455">#5455</a>). Fresh-DB migration replay got tolerant FK drops (<a href="https://github.com/konvoy-kegs/konvoy/pull/5473">#5473</a>) &mdash; with the deeper squash-baseline FK-name drift tracked into M23 (<a href="https://github.com/konvoy-kegs/konvoy/issues/5471">#5471</a>). In the same release: the API client stops retrying after a failed token refresh (<a href="https://github.com/konvoy-kegs/konvoy/pull/5447">#5447</a>) and a silent blank page on iOS Safari &lt;15.4 is fixed (<a href="https://github.com/konvoy-kegs/konvoy/pull/5463">#5463</a>).</p>
     <table style="margin-top:10px">
       <tr><th>Issue</th><th>Title</th></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5441">#5441</a></td><td>Lock-wait timeout tripping default-events circuit breaker</td></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5454">#5454</a></td><td>Sign-up form infinite spinner on token-validation failure</td></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5473">#5473</a></td><td>Tolerant FK drops for fresh migration replay</td></tr>
-      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5471">#5471</a></td><td>Squash-baseline FK-name drift &mdash; open, M22</td></tr>
+      <tr><td><a href="https://github.com/konvoy-kegs/konvoy/issues/5471">#5471</a></td><td>Squash-baseline FK-name drift &mdash; open, M23</td></tr>
     </table>
   </div>
   <div class="card">
     <h2>Theme 4 &mdash; Test, CI &amp; release infrastructure: the enablers kept moving</h2>
-    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The Playwright migration brief advanced: <strong>RainforestQA is formally marked legacy and the Playwright E2E workflow is documented</strong> (<a href="https://github.com/konvoy-kegs/konvoy/pull/5453">#5453</a>), and E2E account seeding is now an idempotent <code>app:seed-e2e-accounts</code> command (<a href="https://github.com/konvoy-kegs/konvoy/pull/5431">#5431</a>, dev-oc stopgap <a href="https://github.com/konvoy-kegs/konvoy/issues/5432">#5432</a>) &mdash; the umbrella issue (<a href="https://github.com/konvoy-kegs/konvoy/issues/5231">#5231</a>) sits at 4/5 and carries to M22 for the CI step. CI/DX modernised: <strong>workflows migrated to Blacksmith runners</strong> (<a href="https://github.com/konvoy-kegs/konvoy/pull/5479">#5479</a>), <strong>PR notifier v2</strong> posts one threaded, update-in-place Slack message per PR (<a href="https://github.com/konvoy-kegs/konvoy/issues/5449">#5449</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5486">#5486</a>), and a <code>make preflight</code> guard blocks stale-snapshot reverts (<a href="https://github.com/konvoy-kegs/konvoy/pull/5222">#5222</a>). NetSuite chatter dropped by gating <code>OrganisationUpdatedEvent</code> on dirty NS-relevant fields (<a href="https://github.com/konvoy-kegs/konvoy/issues/5062">#5062</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5224">#5224</a>), and the mjml v5 upgrade landed safely after the Dependabot bump was caught silently dropping email branding (<a href="https://github.com/konvoy-kegs/konvoy/issues/5472">#5472</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5474">#5474</a>).</p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">The Playwright migration brief advanced: <strong>RainforestQA is formally marked legacy and the Playwright E2E workflow is documented</strong> (<a href="https://github.com/konvoy-kegs/konvoy/pull/5453">#5453</a>), and E2E account seeding is now an idempotent <code>app:seed-e2e-accounts</code> command (<a href="https://github.com/konvoy-kegs/konvoy/pull/5431">#5431</a>, dev-oc stopgap <a href="https://github.com/konvoy-kegs/konvoy/issues/5432">#5432</a>) &mdash; the umbrella issue (<a href="https://github.com/konvoy-kegs/konvoy/issues/5231">#5231</a>) sits at 4/5 and carries to M23 for the CI step. CI/DX modernised: <strong>workflows migrated to Blacksmith runners</strong> (<a href="https://github.com/konvoy-kegs/konvoy/pull/5479">#5479</a>), <strong>PR notifier v2</strong> posts one threaded, update-in-place Slack message per PR (<a href="https://github.com/konvoy-kegs/konvoy/issues/5449">#5449</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5486">#5486</a>), and a <code>make preflight</code> guard blocks stale-snapshot reverts (<a href="https://github.com/konvoy-kegs/konvoy/pull/5222">#5222</a>). NetSuite chatter dropped by gating <code>OrganisationUpdatedEvent</code> on dirty NS-relevant fields (<a href="https://github.com/konvoy-kegs/konvoy/issues/5062">#5062</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5224">#5224</a>), and the mjml v5 upgrade landed safely after the Dependabot bump was caught silently dropping email branding (<a href="https://github.com/konvoy-kegs/konvoy/issues/5472">#5472</a>/<a href="https://github.com/konvoy-kegs/konvoy/pull/5474">#5474</a>).</p>
     <table style="margin-top:10px">
       <tr><th>Issue</th><th>Title</th></tr>
       <tr><td><a href="https://github.com/konvoy-kegs/konvoy/pull/5453">#5453</a></td><td>RainforestQA legacy + Playwright E2E workflow docs</td></tr>
@@ -214,15 +214,15 @@
 <!-- ============================================================ -->
 <!-- ACTIVE EPICS — STATUS                                         -->
 <!-- ============================================================ -->
-<h2 class="section-title">Active Epics &mdash; Status into M22</h2>
+<h2 class="section-title">Active Epics &mdash; Status into M23</h2>
 
 <div class="card" style="margin-bottom:20px">
   <table>
     <tr>
       <th>Epic</th>
       <th>Status</th>
-      <th>Progress in M21</th>
-      <th>Carry into M22</th>
+      <th>Progress in M22</th>
+      <th>Carry into M23</th>
     </tr>
     <tr>
       <td><a href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422 Dev-OC feedback bridge</a></td>
@@ -240,18 +240,18 @@
       <td><a href="https://github.com/konvoy-kegs/konvoy/issues/5205">#5205 Global search orders latency</a></td>
       <td><span class="badge badge-progress">3/8</span></td>
       <td>Re-scoped as incremental optimisation + app-level observability, following M20-report's FULLTEXT work (#5091).</td>
-      <td><strong>Yes &mdash; in M22.</strong> Confirm production latency telemetry as items land.</td>
+      <td><strong>Yes &mdash; in M23.</strong> Confirm production latency telemetry as items land.</td>
     </tr>
     <tr>
       <td><a href="https://github.com/konvoy-kegs/konvoy/issues/5346">#5346 Refills &amp; VC dev-test feedback</a></td>
       <td><span class="badge badge-done">Tail cleared</span></td>
-      <td>M20's carry-over thread resolved through the venue-collections fixes (#5405, #5415) and freight pricing work.</td>
-      <td>Residual financial item split out: <strong>#5461 refill $0 billing (M22)</strong>.</td>
+      <td>M21's carry-over thread resolved through the venue-collections fixes (#5405, #5415) and freight pricing work.</td>
+      <td>Residual financial item split out: <strong>#5461 refill $0 billing (M23)</strong>.</td>
     </tr>
     <tr>
       <td>Booths API integration <span class="tag">missing</span></td>
       <td><span class="badge badge-backlog">Not started</span></td>
-      <td>Third consecutive sprint brief with zero tracked work; absent from the M22 brief.</td>
+      <td>Third consecutive sprint brief with zero tracked work; absent from the M23 brief.</td>
       <td><strong>Decision needed:</strong> park it explicitly or schedule the discovery spike.</td>
     </tr>
     <tr>
@@ -277,7 +277,7 @@
   <div class="card stat-card">
     <div class="number" style="color:var(--green)">0</div>
     <div class="label">Items carrying in-milestone</div>
-    <div class="delta" style="color:var(--muted)">M22 opens with 5 pre-seeded items</div>
+    <div class="delta" style="color:var(--muted)">M23 opens with 5 pre-seeded items</div>
   </div>
   <div class="card stat-card">
     <div class="number" style="color:var(--yellow)">3 days</div>
@@ -294,11 +294,11 @@
 <!-- ============================================================ -->
 <!-- CARRY-OVER                                                    -->
 <!-- ============================================================ -->
-<h2 class="section-title">Entering M22 &mdash; the pre-seeded queue</h2>
+<h2 class="section-title">Entering M23 &mdash; the pre-seeded queue</h2>
 
 <div class="grid grid-2">
   <div class="card">
-    <h2>M22 opens with 5 items (0/5 closed)</h2>
+    <h2>M23 opens with 5 items (0/5 closed)</h2>
     <p style="color:var(--muted);font-size:0.85rem;margin-bottom:10px;">Nothing carried over unfinished &mdash; these are deliberate placements, and two have financial or data-integrity weight.</p>
     <table>
       <tr><th>Issue</th><th>Title</th><th>State</th></tr>
@@ -311,9 +311,9 @@
   </div>
   <div class="card">
     <h2>Reading the queue</h2>
-    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">A zero-carry close means M22's queue is <strong>choices, not leftovers</strong> &mdash; which makes the kickoff conversation about what's <em>missing</em> as much as what's listed.</p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;">A zero-carry close means M23's queue is <strong>choices, not leftovers</strong> &mdash; which makes the kickoff conversation about what's <em>missing</em> as much as what's listed.</p>
     <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.7;margin-top:10px;">
-      <li><strong>#5461 is the P0.</strong> Refills billing $0 on exclusive agreements is live revenue leakage &mdash; same class as M20's invoice-date bug. Fix and backfill-check early.</li>
+      <li><strong>#5461 is the P0.</strong> Refills billing $0 on exclusive agreements is live revenue leakage &mdash; same class as M21's invoice-date bug. Fix and backfill-check early.</li>
       <li><strong>Two sign-off gates, cheap to clear.</strong> #5426 closes the feedback-bridge epic; the CI step closes Playwright #5231. Do both in week one.</li>
       <li><strong>The Symfony 8 brief has no board presence yet.</strong> &ldquo;Completing the upgrade&rdquo; needs tracked issues before it can be retro'd honestly next time.</li>
       <li><strong>Booths API isn't in the brief or the queue.</strong> Park it explicitly or bring it back &mdash; silence is the worst option.</li>
@@ -326,13 +326,13 @@
 <!-- ============================================================ -->
 <h2 class="section-title">Retrospective &mdash; Team Themes</h2>
 
-<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Three columns: what worked, what to review, and open questions for the M22 kickoff. Team-level only.</p>
+<p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Three columns: what worked, what to review, and open questions for the M23 kickoff. Team-level only.</p>
 
 <div class="grid grid-3">
   <div class="card">
     <h2 style="color:var(--green)">What worked</h2>
     <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
-      <li><strong>First 100% close, zero carry-over.</strong> Right-sizing scope to 30 after M20's 98 did exactly what it promised.</li>
+      <li><strong>First 100% close, zero carry-over.</strong> Right-sizing scope to 30 after M21's 98 did exactly what it promised.</li>
       <li><strong>The feedback bridge shipped end-to-end in one sprint</strong> &mdash; backend, screenshots, annotation tools, Keggy &mdash; and it's a tool that compounds: better staging feedback forever.</li>
       <li><strong>Financial correctness got real attention</strong> &mdash; the contract-brewer freight fix (#5444) stops silent misbilling.</li>
       <li><strong>CI/DX momentum:</strong> Blacksmith runners, PR notifier v2, preflight guard, idempotent E2E seeding &mdash; the release cadence groundwork keeps compounding.</li>
@@ -350,10 +350,10 @@
   <div class="card">
     <h2 style="color:var(--accent)">Open questions for M22</h2>
     <ul style="margin-left:18px;color:var(--muted);font-size:0.88rem;line-height:1.6;">
-      <li><strong>Where does the Symfony 8 upgrade actually stand?</strong> The M22 brief says &ldquo;completing&rdquo; it &mdash; get the remaining work on the board day one.</li>
+      <li><strong>Where does the Symfony 8 upgrade actually stand?</strong> The M23 brief says &ldquo;completing&rdquo; it &mdash; get the remaining work on the board day one.</li>
       <li><strong>Who owns #5461</strong> (refill $0 billing) and does it need a data backfill for already-invoiced orders?</li>
       <li><strong>Is PHP 8.5 discovery a timeboxed spike</strong> with a written outcome, or open-ended?</li>
-      <li><strong>When does v1.89.27 ship?</strong> Draft is in review &mdash; tag it before new M22 work muddies the diff.</li>
+      <li><strong>When does v1.89.27 ship?</strong> Draft is in review &mdash; tag it before new M23 work muddies the diff.</li>
     </ul>
   </div>
 </div>
@@ -361,7 +361,7 @@
 <!-- ============================================================ -->
 <!-- ENTERING MILESTONE 22                                         -->
 <!-- ============================================================ -->
-<h2 class="section-title">Entering Milestone 22 (July 20 &ndash; 31)</h2>
+<h2 class="section-title">Entering Milestone 23 (July 20 &ndash; 31)</h2>
 
 <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Board milestone <a href="https://github.com/konvoy-kegs/konvoy/milestone/23">&ldquo;M23 &middot; July 20 - 31&rdquo;</a>, due July 31 &mdash; opens today at 0/5. The brief is a deliberate BAU sprint: <em>&ldquo;Completing the Symfony 8 upgrade &middot; Starting the PHP 8.5 upgrade discovery &middot; Investigating changes to testing improvements with the upgraded framework.&rdquo;</em></p>
 
@@ -482,7 +482,7 @@
   </table>
 </div>
 
-<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 21 (July 6 &ndash; 17, 2026) &middot; Generated July 20, 2026 &middot; Report M21 = board milestone &ldquo;M22 &middot; July 06 - 17&rdquo;; next sprint (Jul 20 &ndash; 31) is the board's M23. Theme splits and label/burn-up charts are approximate, derived from the milestone issue/PR listing and the v1.89.27 draft release notes.</p>
+<p style="color:var(--surface2);font-size:0.8rem;margin-top:48px;text-align:center;">Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 22 (July 6 &ndash; 17, 2026) &middot; Generated July 20, 2026 &middot; Report M22 = board milestone &ldquo;M22 &middot; July 06 - 17&rdquo;; next sprint (Jul 20 &ndash; 31) is the board's M23. Theme splits and label/burn-up charts are approximate, derived from the milestone issue/PR listing and the v1.89.27 draft release notes.</p>
 
 <script>
 function showChartFailure(message) {
@@ -520,7 +520,7 @@ function renderCharts() {
   }
 
 // ============================================================
-// Milestone 21 completion — 30 closed of 30 (issues + PRs)
+// Milestone 22 completion — 30 closed of 30 (issues + PRs)
 // ============================================================
 safeChart('statusChart', {
   type: 'doughnut',
@@ -570,7 +570,7 @@ safeChart('themeChart', {
 });
 
 // ============================================================
-// Closed by label — from the M21 milestone listing.
+// Closed by label — from the M22 milestone listing.
 // Items carry multiple labels, so these sum to more than 30.
 // ============================================================
 safeChart('labelChart', {
