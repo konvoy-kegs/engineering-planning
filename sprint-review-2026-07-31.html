@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milestone 23 Review &amp; Milestone 24 Plan — Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 24px 80px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  a { color: var(--accent); }
+  a.iss { text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.5); white-space: nowrap; }
+  a.iss:hover { border-bottom-style: solid; }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  h2:first-of-type { margin-top: 0; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+
+  /* headline callout */
+  .headline { background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(74,222,128,0.06)); border: 1px solid rgba(56,189,248,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.06rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #e2f5ff; }
+
+  /* KPI cards */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 10px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); }
+  .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); }
+
+  /* effort bars */
+  .bars { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px 26px; }
+  .bar { margin-bottom: 15px; }
+  .bar:last-child { margin-bottom: 0; }
+  .bar .top { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 5px; }
+  .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 5px; background: var(--accent); }
+
+  /* theme cards */
+  .themes { display: grid; gap: 14px; }
+  .theme { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 20px 22px; }
+  .theme h3 { font-size: 1.02rem; margin-bottom: 8px; }
+  .theme p { font-size: 0.92rem; color: #cbd5e1; }
+  .theme .why { display: block; margin-top: 10px; font-size: 0.86rem; color: var(--muted); }
+  .theme .why b { color: var(--green); font-weight: 600; }
+
+  /* RDS panel */
+  .rds { background: var(--surface); border: 1px solid rgba(74,222,128,0.3); border-radius: 14px; padding: 26px 28px; }
+  .rds p + p { margin-top: 14px; }
+  .rds .money { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 22px 0; }
+  .rds .money div { background: rgba(15,23,42,0.6); border: 1px solid var(--surface2); border-radius: 10px; padding: 16px; }
+  .rds .money .v { font-size: 1.5rem; font-weight: 800; color: var(--green); }
+  .rds .money .k { font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .caveat { background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.9rem; }
+  .caveat b { color: var(--yellow); }
+
+  /* next / lists */
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 16px; background: rgba(51,65,85,0.5); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
+  td { padding: 13px 16px; border-top: 1px solid var(--surface2); vertical-align: top; }
+  td.w { width: 34%; font-weight: 600; }
+
+  .watch { display: grid; gap: 12px; }
+  .w-item { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--red); border-radius: 10px; padding: 18px 20px; }
+  .w-item.amber { border-left-color: var(--yellow); }
+  .w-item h3 { font-size: 0.98rem; margin-bottom: 6px; }
+  .w-item p { font-size: 0.9rem; color: #cbd5e1; }
+  .w-item .ask { display: block; margin-top: 9px; font-size: 0.86rem; color: var(--accent); }
+
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; }
+  .tag-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tag-carry { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tag-new { background: rgba(56,189,248,0.15); color: var(--accent); }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--surface2); color: var(--surface2); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
+    <h1>Milestone 23 Review <span>&amp;</span> Milestone 24 Plan</h1>
+    <div class="dates">Sprint ran 20 &ndash; 31 July 2026 &middot; Milestone 24 opens 3 August &middot; Team of 3 &middot; Prepared for the CEO &amp; COO</div>
+  </header>
+
+  <!-- ============ THE SHORT VERSION ============ -->
+  <div class="headline">
+    <p><strong>This was a foundations sprint, and it went well.</strong> We deliberately spent the fortnight on the
+    platform underneath Katch Cloud rather than on new customer features &mdash; and we closed 91% of it, our third
+    strong sprint in a row. The framework the whole application runs on is now current, our test suite is fully
+    automated, and the production databases moved to a supported version two days before a new AWS charge would
+    have started.</p>
+    <p><strong>The one thing that needs a decision.</strong> Everything built this sprint is merged but not yet
+    released to production &mdash; 56 changes are queued behind a release that hasn't been cut since 20 July. That
+    release is the largest of the year and needs a planned window. It is the main topic for Milestone 24.</p>
+  </div>
+
+  <!-- ============ NUMBERS ============ -->
+  <h2>The numbers</h2>
+  <p class="lede">Milestone 23 tracked 87 items on the board &mdash; 35 work tickets and 52 code changes.</p>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="n green">91%</div>
+      <div class="l">Milestone complete</div>
+      <div class="s">80 of 87 board items closed</div>
+    </div>
+    <div class="kpi">
+      <div class="n blue">30<span style="font-size:1.1rem;color:var(--muted)">/35</span></div>
+      <div class="l">Work tickets closed</div>
+      <div class="s">86% of tracked tickets</div>
+    </div>
+    <div class="kpi">
+      <div class="n purple">50</div>
+      <div class="l">Code changes merged</div>
+      <div class="s">Highest of any sprint this quarter</div>
+    </div>
+    <div class="kpi">
+      <div class="n yellow">5</div>
+      <div class="l">Tickets carried over</div>
+      <div class="s">Continuing today in M24</div>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-top:22px">For context: Milestone 21 closed at 92%, Milestone 22 at 100% on a smaller
+  scope. Milestone 23 was roughly the same size as M21 and closed at a similar rate &mdash; so output is holding
+  steady at a sustainable level for a three-person team.</p>
+
+  <!-- ============ WHERE THE EFFORT WENT ============ -->
+  <h2>Where the effort went</h2>
+  <p class="lede">Share of the 50 merged code changes, grouped by type of work. Approximate &mdash; derived from the milestone listing.</p>
+
+  <div class="bars">
+    <div class="bar">
+      <div class="top"><span>Platform &amp; framework upgrades</span><span>16</span></div>
+      <div class="track"><div class="fill" style="width:100%;background:var(--accent)"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Reliability &amp; speed fixes</span><span>8</span></div>
+      <div class="track"><div class="fill" style="width:50%;background:var(--green)"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Orders &amp; pricing (customer-facing)</span><span>8</span></div>
+      <div class="track"><div class="fill" style="width:50%;background:var(--purple)"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Housekeeping &amp; developer tooling</span><span>6</span></div>
+      <div class="track"><div class="fill" style="width:38%;background:var(--muted)"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Booths transport integration</span><span>5</span></div>
+      <div class="track"><div class="fill" style="width:31%;background:var(--yellow)"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Staff feedback tool (Keggy) polish</span><span>5</span></div>
+      <div class="track"><div class="fill" style="width:31%;background:#f472b6"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Automated testing</span><span>2</span></div>
+      <div class="track"><div class="fill" style="width:13%;background:#22d3ee"></div></div>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-top:16px">Separately, and not counted on the board above, the infrastructure
+  workstream closed <strong>20 items</strong> in the same fortnight &mdash; almost all of it the database upgrade
+  described below. That work lives in different repositories, so the board understates the sprint.</p>
+
+  <!-- ============ WHAT WE SHIPPED ============ -->
+  <h2>What we shipped</h2>
+  <p class="lede">Five things worth knowing about, in plain terms.</p>
+
+  <div class="themes">
+
+    <div class="theme">
+      <h3>1. The application framework is current again <span class="tag tag-done">Done</span></h3>
+      <p>Katch Cloud moved to Symfony 8, PHP 8.4 and Doctrine 3 &mdash; the three components the entire backend is
+      built on (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5512">konvoy #5512</a>). This had
+      been deferred for some time. Alongside it we restored our distributed tracing on the new version
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5531">#5531</a>) and fixed two problems the
+      upgrade exposed in how the database schema is read
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5471">#5471</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5620">#5620</a>).</p>
+      <span class="why"><b>Why it matters:</b> we were drifting towards unsupported versions of our core
+      dependencies. Being current means security patches keep arriving, hiring is easier, and the next upgrade
+      (PHP 8.5, now in discovery) is a small step rather than another large project.</span>
+    </div>
+
+    <div class="theme">
+      <h3>2. Manual test tooling retired &mdash; automated tests now gate every release <span class="tag tag-done">Done</span></h3>
+      <p>We finished migrating end-to-end testing from Rainforest to Playwright and switched Rainforest off
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5231">#5231</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5234">#5234</a>). Playwright is now the
+      required check before anything reaches production, and the suite also runs overnight with failures posted
+      straight to Slack.</p>
+      <span class="why"><b>Why it matters:</b> removes a third-party subscription, removes manual test
+      maintenance, and means regressions are caught before release rather than reported by staff or customers.
+      One small tidy-up task remains &mdash; archiving 35 old tests in the retired tool.</span>
+    </div>
+
+    <div class="theme">
+      <h3>3. A batch of speed and stability fixes <span class="tag tag-done">Done</span></h3>
+      <p>We removed four cases where loading organisation and customer data triggered hundreds of separate
+      database queries instead of one
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5159">#5159</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5354">#5354</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5552">#5552</a>). We also fixed a fault
+      where every database query failed if a monitoring component was unavailable
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5521">#5521</a>), stopped keg activity
+      logs getting permanently stuck mid-process
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5559">#5559</a>), and cut a stream of
+      false alerts that had been masking real ones
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5522">#5522</a>).</p>
+      <span class="why"><b>Why it matters:</b> the organisation pages get faster for everyone, and our alerting
+      becomes trustworthy again &mdash; which is what lets us find real problems quickly.</span>
+    </div>
+
+    <div class="theme">
+      <h3>4. Orders and contract-brewer pricing improvements <span class="tag tag-done">Done</span></h3>
+      <p>The customer-facing work this sprint: email status now visible directly on the Orders table and order page
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4369">#4369</a>), a Collection Request
+      detail page (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4447">#4447</a>), location
+      details in the side panel (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4427">#4427</a>),
+      and orders now prevented from mixing locations across countries
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4415">#4415</a>). On pricing, contract-brewer
+      freight is now calculated from the delivery location, so new contract-brewer customers no longer need a manual
+      account link set up by hand
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5568">#5568</a>), and Venue Collection
+      pricing became editable on casual customer agreements
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5562">#5562</a>).</p>
+      <span class="why"><b>Why it matters:</b> the freight change removes a manual onboarding step per
+      contract-brewer customer. The rest reduces the "where is my order up to?" questions that come back to the
+      operations team.</span>
+    </div>
+
+    <div class="theme">
+      <h3>5. Booths transport integration progressed <span class="tag tag-carry">Continuing</span></h3>
+      <p>Four pieces of the Booths EDI integration landed: automatic order submission when an order is scheduled,
+      a reconciler that checks Booths' response and alerts on failure, the per-location configuration screen, and
+      submission status exposed back into the order views
+      (epic <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5044">#5044</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5631">#5631</a>).</p>
+      <span class="why"><b>Why it matters:</b> this is the automated hand-off of orders to a transport provider.
+      The remaining step is <b style="color:var(--yellow)">not ours</b> &mdash; it needs Booths-side coordination
+      to complete (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5051">#5051</a>). Worth
+      knowing who is chasing that.</span>
+    </div>
+
+  </div>
+
+  <!-- ============ RDS ============ -->
+  <h2>The production database upgrade</h2>
+  <p class="lede">Unplanned, urgent, done on 2 August &mdash; and the largest single cost item of the quarter.</p>
+
+  <div class="rds">
+    <p><strong>What happened.</strong> MySQL 8.0 &mdash; the database version running every Katch Cloud production
+    region &mdash; left standard support on <strong>31 July 2026</strong>. From 1 August, AWS begins charging
+    "Extended Support" automatically, per database, per hour, for the privilege of staying on it. There is no opt-out
+    other than upgrading.</p>
+
+    <p><strong>Why it had to happen immediately.</strong> The charge started the moment support ended. Every day on
+    the old version cost real money for nothing in return, so this jumped the queue ahead of the planned September
+    schedule. All four environments &mdash; development plus the Australian, European and North American production
+    regions &mdash; were upgraded to MySQL 8.4 on 2 August. The three production regions went in a single window with
+    <strong>under three minutes of downtime each</strong>, and every pre-flight check passed first time. It landed
+    roughly <strong>seven weeks ahead of plan</strong>.</p>
+
+    <div class="money">
+      <div><div class="v">$1,904</div><div class="k">AUD / month charge avoided</div></div>
+      <div><div class="v">$1,651</div><div class="k">AUD / month already eliminated</div></div>
+      <div><div class="v">87%</div><div class="k">Of the exposure removed</div></div>
+      <div><div class="v">&lt;3 min</div><div class="k">Downtime per region</div></div>
+    </div>
+
+    <p>The remaining <strong>$253/month</strong> sits on a single leftover development database. It is being retired
+    as soon as one dependent fix lands, which is days rather than weeks. The database is now on a version supported
+    until 2032, and all health, backup and performance checks came back clean.</p>
+
+    <div class="caveat">
+      <b>An honest framing for the P&amp;L.</b> This is <b>avoided cost, not a saving</b>. It does not reduce the
+      current AWS bill &mdash; it prevents a new $1,904/month charge that would otherwise have started on 1 August
+      and continued indefinitely. Total AWS spend for July was $10,036 AUD against an April baseline of $9,451 and a
+      target of $7,200, so the headline number has not come down yet. Bringing it down depends on the remaining
+      phases of the cost programme, not on this piece of work. What this did was stop the number going up by a fifth.
+    </div>
+  </div>
+
+  <!-- ============ WHAT'S NEXT ============ -->
+  <h2>What we're working on next</h2>
+  <p class="lede">Milestone 24 runs 3 &ndash; 14 August. Theme: <strong>catch-up and clean-up</strong> &mdash; 11 items
+  planned, plus the 5 continuing from Milestone 23. A deliberately lighter feature load, chosen so we can cut the
+  overdue release safely and clear accumulated debt.</p>
+
+  <table>
+    <thead><tr><th class="w">Priority</th><th>What it is, and why now</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="w">Cut the overdue production release <span class="tag tag-new">New</span></td>
+        <td>56 merged changes have been waiting since 20 July, including the framework upgrade. This is the biggest
+        release of the year and the single most important thing in this sprint. Needs a planned window and a
+        rollback plan, not a routine Friday deploy.</td>
+      </tr>
+      <tr>
+        <td class="w">Fix refill orders billing $0</td>
+        <td>Refill orders for exclusive-agreement customers are pricing the refill line at zero &mdash; first reported
+        on a live customer order (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a>).
+        Root cause is confirmed. This is <strong>revenue leakage</strong> and it was flagged as the priority coming
+        out of Milestone 22 but not picked up in Milestone 23. It should not slip a third time.</td>
+      </tr>
+      <tr>
+        <td class="w">Feature-flag clean-up</td>
+        <td>An epic plus six tickets to remove or archive feature switches that are no longer doing anything &mdash;
+        some dating to 2023 (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5630">#5630</a>).
+        Each dead switch is a branch of untested code and a small ongoing risk. This also deletes the legacy
+        transfers and rentals routes they were guarding.</td>
+      </tr>
+      <tr>
+        <td class="w">Order search speed</td>
+        <td>Incremental optimisation and proper measurement of global order search latency
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5205">#5205</a>) &mdash; the most common
+        daily complaint from operations.</td>
+      </tr>
+      <tr>
+        <td class="w">PHP 8.5 planning</td>
+        <td>Discovery only, no upgrade this sprint. Now a small increment because Symfony 8 landed in M23.</td>
+      </tr>
+      <tr>
+        <td class="w">A false NetSuite alert <span class="tag tag-new">New</span></td>
+        <td>The "Posting Period Fallback" alert is firing on correct behaviour
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5641">#5641</a>). Small fix, but the same
+        principle as the alert-noise work in M23 &mdash; alerts nobody trusts are worse than no alerts.</td>
+      </tr>
+      <tr>
+        <td class="w">Finish the Milestone 23 tail <span class="tag tag-carry">Carried</span></td>
+        <td>Five items continuing today: the Booths integration epic
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5044">#5044</a>) and its Booths-side
+        coordination step (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5051">#5051</a>),
+        monitoring for the staff feedback tool
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5426">#5426</a>), an order pricing
+        validation fix (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5585">#5585</a>), and the
+        Rainforest archive tidy-up
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5639">#5639</a>).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============ WATCH LIST ============ -->
+  <h2>Four things to watch</h2>
+  <p class="lede">Stated plainly, with what would help.</p>
+
+  <div class="watch">
+
+    <div class="w-item">
+      <h3>1. Release debt is the biggest risk we carry</h3>
+      <p>No release has gone out since 20 July, and the infrastructure side has an equivalent gap tracked since
+      June. The longer the queue, the harder it is to tell which change caused a problem if one appears. The
+      framework upgrade being in that queue makes it higher-stakes than usual.</p>
+      <span class="ask">What would help: agreement on a release window in the first week of M24, and acceptance that
+      the sprint carries less new feature work because of it.</span>
+    </div>
+
+    <div class="w-item">
+      <h3>2. An open production fault, unrelated to the upgrade</h3>
+      <p>Four background processing components have been restarting roughly every eleven minutes across all three
+      production regions for eleven days. It was found during pre-flight checks for the database work. Customer
+      impact appears limited so far, but it is unresolved and it is noisy enough to hide other faults.</p>
+      <span class="ask">What would help: nothing from you &mdash; flagging it so it isn't a surprise if it escalates.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>3. A rollback window on the database upgrade closes 6 September</h3>
+      <p>There is no way to downgrade from MySQL 8.4. Two of the three production regions do not have a permanent
+      pre-upgrade backup, only a temporary one that expires. Making it permanent is a five-minute, zero-downtime
+      task and it is being done today.</p>
+      <span class="ask">What would help: nothing &mdash; noted for completeness because the deadline is real.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>4. Booths is waiting on Booths</h3>
+      <p>Our side of the transport integration is largely built. Completing it needs coordination from Booths that
+      is outside engineering's control, and it has been open for a while.</p>
+      <span class="ask">What would help: confirmation of who owns the Booths relationship and is chasing it, so
+      engineering isn't holding a half-finished integration indefinitely.</span>
+    </div>
+
+  </div>
+
+  <footer>
+    Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 23 review prepared 3 August 2026<br>
+    Sources: <a href="https://github.com/konvoy-kegs/konvoy/milestone/23">M23 milestone</a> &middot;
+    <a href="https://github.com/konvoy-kegs/konvoy/milestone/24">M24 milestone</a> &middot;
+    <a href="https://github.com/orgs/konvoy-kegs/projects/4">Katch Cloud board</a><br>
+    Cost figures from the MySQL 8.4 post-upgrade review (3 August 2026), measured against the AWS Cost Explorer and
+    RDS APIs. Effort splits are approximate.
+  </footer>
+
+</div>
+</body>
+</html>
