@@ -35,6 +35,12 @@
   .headline p + p { margin-top: 14px; }
   .headline strong { color: #e2f5ff; }
 
+  /* release strip */
+  .release { background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.35); border-radius: 14px; padding: 22px 26px; margin-bottom: 34px; }
+  .release .rtag { display: inline-block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--green); background: rgba(74,222,128,0.14); border-radius: 6px; padding: 4px 10px; margin-bottom: 12px; }
+  .release p { font-size: 0.94rem; color: #cbd5e1; }
+  .release .rnote { margin-top: 12px; font-size: 0.88rem; color: var(--muted); }
+
   /* KPI cards */
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 10px; }
   .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
@@ -109,20 +115,31 @@
     strong sprint in a row. The framework the whole application runs on is now current, our test suite is fully
     automated, and the production databases moved to a supported version two days before a new AWS charge would
     have started.</p>
-    <p><strong>The one thing that needs a decision.</strong> Everything built this sprint is merged but not yet
-    released to production &mdash; 56 changes are queued behind a release that hasn't been cut since 20 July. That
-    release is the largest of the year and needs a planned window. It is the main topic for Milestone 24.</p>
+    <p><strong>And it is now live.</strong> Release <strong>v1.89.28</strong> went out this morning, carrying all 56
+    changes from the sprint including the framework upgrade &mdash; the largest release of the year, and the first
+    since 20 July. The queue that was the main risk in this report when it was drafted has been cleared.</p>
+  </div>
+
+  <!-- ============ RELEASE STRIP ============ -->
+  <div class="release">
+    <div class="rtag">v1.89.28 &mdash; shipped 3 August, 2:10pm AEST</div>
+    <p>56 commits, 55 pull requests, around 300 files changed. Everything described below is now in production:
+    the Symfony 8 / PHP 8.4 / Doctrine 3 upgrade, the Node 24 runtime move, the Orders and contract-brewer pricing
+    work, the Booths integration pieces, and the full batch of speed and stability fixes. The main branch is level
+    with the release tag, so there is no longer a backlog of unreleased work on the application side.</p>
+    <p class="rnote">Because this is an unusually large release, the next few days are the sensitive window &mdash;
+    if something is going to surface, it will surface now rather than later. Nothing has so far.</p>
   </div>
 
   <!-- ============ NUMBERS ============ -->
   <h2>The numbers</h2>
-  <p class="lede">Milestone 23 tracked 87 items on the board &mdash; 35 work tickets and 52 code changes.</p>
+  <p class="lede">Milestone 23 tracked 88 items on the board &mdash; 35 work tickets and 53 code changes.</p>
 
   <div class="kpis">
     <div class="kpi">
       <div class="n green">91%</div>
       <div class="l">Milestone complete</div>
-      <div class="s">80 of 87 board items closed</div>
+      <div class="s">80 of 88 board items closed</div>
     </div>
     <div class="kpi">
       <div class="n blue">30<span style="font-size:1.1rem;color:var(--muted)">/35</span></div>
@@ -133,6 +150,11 @@
       <div class="n purple">50</div>
       <div class="l">Code changes merged</div>
       <div class="s">Highest of any sprint this quarter</div>
+    </div>
+    <div class="kpi">
+      <div class="n green">1</div>
+      <div class="l">Release shipped</div>
+      <div class="s">v1.89.28 &mdash; all 56 commits, 3 Aug</div>
     </div>
     <div class="kpi">
       <div class="n yellow">5</div>
@@ -306,17 +328,18 @@
   <!-- ============ WHAT'S NEXT ============ -->
   <h2>What we're working on next</h2>
   <p class="lede">Milestone 24 runs 3 &ndash; 14 August. Theme: <strong>catch-up and clean-up</strong> &mdash; 11 items
-  planned, plus the 5 continuing from Milestone 23. A deliberately lighter feature load, chosen so we can cut the
-  overdue release safely and clear accumulated debt.</p>
+  planned, plus the 5 continuing from Milestone 23. A deliberately lighter feature load, chosen so the big release
+  could go out safely and so we can clear accumulated debt. The release is already done &mdash; that capacity now
+  goes to the items below.</p>
 
   <table>
     <thead><tr><th class="w">Priority</th><th>What it is, and why now</th></tr></thead>
     <tbody>
       <tr>
-        <td class="w">Cut the overdue production release <span class="tag tag-new">New</span></td>
-        <td>56 merged changes have been waiting since 20 July, including the framework upgrade. This is the biggest
-        release of the year and the single most important thing in this sprint. Needs a planned window and a
-        rollback plan, not a routine Friday deploy.</td>
+        <td class="w">Watch the release land <span class="tag tag-done">Shipped</span></td>
+        <td><strong>Done on day one.</strong> v1.89.28 went out on 3 August with all 56 changes. What remains is
+        watching it: error rates, the overnight test run, and anything operations reports over the next few days.
+        A release this size is the one case where "nothing happened" takes a week to confirm.</td>
       </tr>
       <tr>
         <td class="w">Fix refill orders billing $0</td>
@@ -368,13 +391,13 @@
 
   <div class="watch">
 
-    <div class="w-item">
-      <h3>1. Release debt is the biggest risk we carry</h3>
-      <p>No release has gone out since 20 July, and the infrastructure side has an equivalent gap tracked since
-      June. The longer the queue, the harder it is to tell which change caused a problem if one appears. The
-      framework upgrade being in that queue makes it higher-stakes than usual.</p>
-      <span class="ask">What would help: agreement on a release window in the first week of M24, and acceptance that
-      the sprint carries less new feature work because of it.</span>
+    <div class="w-item amber">
+      <h3>1. Half the release debt is cleared &mdash; the infrastructure half isn't</h3>
+      <p>The application release is done: v1.89.28 shipped on 3 August and the main branch is level with it. The
+      equivalent gap on the infrastructure side is still open &mdash; the Kubernetes configuration that describes how
+      production is deployed has been out of step with the development version since June, tracked but untouched.
+      That is a slower-burning version of the same problem, and it is the reason this sprint's theme is clean-up.</p>
+      <span class="ask">What would help: nothing right now. Raising it again if it hasn't moved by the end of M24.</span>
     </div>
 
     <div class="w-item">
@@ -404,10 +427,12 @@
   </div>
 
   <footer>
-    Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 23 review prepared 3 August 2026<br>
+    Konvoy Kegs Engineering &middot; Katch Cloud &middot; Milestone 23 review prepared 3 August 2026, updated the same
+    day to reflect release v1.89.28<br>
     Sources: <a href="https://github.com/konvoy-kegs/konvoy/milestone/23">M23 milestone</a> &middot;
     <a href="https://github.com/konvoy-kegs/konvoy/milestone/24">M24 milestone</a> &middot;
-    <a href="https://github.com/orgs/konvoy-kegs/projects/4">Katch Cloud board</a><br>
+    <a href="https://github.com/orgs/konvoy-kegs/projects/4">Katch Cloud board</a> &middot;
+    <a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.89.28">release v1.89.28</a><br>
     Cost figures from the MySQL 8.4 post-upgrade review (3 August 2026), measured against the AWS Cost Explorer and
     RDS APIs. Effort splits are approximate.
   </footer>
