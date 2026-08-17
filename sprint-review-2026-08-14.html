@@ -106,7 +106,8 @@
     <p><strong>This was the catch-up sprint we planned, and it did its job.</strong> Milestone 24 was set up as
     &ldquo;catchup and cleanup&rdquo; &mdash; work through the backlog of old issues, clear out the feature-flag
     estate, and scope the next PHP upgrade. All three landed. <strong>29 issues and 34 pull requests</strong> closed
-    across the fortnight, shipped in four releases.</p>
+    across the fortnight, shipped in four releases &mdash; plus <strong>a further 37 infrastructure items</strong>
+    that ran in parallel and are counted separately, because they sit in different repositories.</p>
     <p><strong>The biggest single win was billing correctness.</strong> Five separate defects in the fuel levy were
     found and fixed &mdash; including one where the platform would <em>silently bill zero</em> if no rate was in
     effect, with no alert and no trace. That one had no visible symptom until an invoice came out wrong.</p>
@@ -250,6 +251,48 @@
 
   </div>
 
+  <!-- ============ INFRASTRUCTURE ============ -->
+  <h2>Infrastructure: exiting two AWS surcharges</h2>
+  <div class="lede">This ran in parallel with everything above and does not appear in any of the numbers on this
+  page &mdash; it lives in the <code>terraform</code> and <code>kubernetes</code> repositories, while the Milestone
+  24 counts cover the <code>konvoy</code> application repository only.</div>
+
+  <div class="rds">
+    <p><strong>A further 37 items closed during the same fortnight</strong>, across two programmes with money
+    attached. AWS applies an <em>Extended Support</em> surcharge once a database engine or Kubernetes version falls
+    out of standard support. It is automatic, open-ended, and buys nothing. No action is required to be charged;
+    action is required to avoid it &mdash; which is what made both jobs urgent rather than merely worthwhile.</p>
+
+    <div class="money">
+      <div><div class="v">$2,147</div><div class="k">AUD/mo removed &mdash; EKS</div></div>
+      <div><div class="v">$1,896</div><div class="k">AUD/mo avoided &mdash; RDS</div></div>
+      <div><div class="v">37</div><div class="k">Items closed in window</div></div>
+      <div><div class="v">16</div><div class="k">Still open</div></div>
+    </div>
+
+    <p><strong>EKS.</strong> All four clusters moved Kubernetes 1.33 &rarr; 1.34 on 8&ndash;9 August, dev first
+    behind a soak gate, then the three production regions. On 10 August the billing line was confirmed at
+    <strong>$0.00</strong> by measurement rather than projection
+    (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/594">terraform #594</a>), and the epic
+    closed the same day.</p>
+
+    <p><strong>RDS.</strong> The production database upgrade itself ran on 2 August and was covered in the last
+    report. What landed this sprint was the close-out and four fixes to the database refresh pipeline, which had
+    been quietly producing MySQL 8.0-shaped clones &mdash; a back door that would have reintroduced the old engine
+    into non-production environments.</p>
+
+    <p><strong>And a guardrail.</strong> A monthly support-lifecycle watch now tracks every cluster and database
+    engine against its support end date
+    (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/575">terraform #575</a>). It has already
+    fired once, flagging the next deadline 112 days ahead.</p>
+
+    <div class="caveat"><b>The December deadline.</b> Kubernetes 1.34 leaves standard support on
+    <b>2 December 2026</b>, and the $2,147/month surcharge returns in full unless all four clusters are on 1.35 by
+    then. The saving is banked but fixed-term. The 1.35 upgrade is currently blocked with a target of 18 November
+    &mdash; two weeks of margin against a hard billing date. Full detail, including everything still open, is on the
+    <a href="aws-extended-support-exit.html">AWS Extended Support exit page</a>.</div>
+  </div>
+
   <!-- ============ THE ISSUE LIST ============ -->
   <h2>Cleaning up the issue list</h2>
   <div class="lede">A bookkeeping change with a real effect on how these reports read.</div>
@@ -322,13 +365,23 @@
   </table>
 
   <!-- ============ WATCH ============ -->
-  <h2>Five things to watch</h2>
+  <h2>Six things to watch</h2>
   <div class="lede">Each of these needs a decision rather than an update.</div>
 
   <div class="watch">
 
     <div class="w-item">
-      <h3>1. Milestone 25 does not exist yet</h3>
+      <h3>1. The EKS saving expires on 2 December</h3>
+      <p>Kubernetes 1.34 leaves standard support that day and the <strong>$2,147 AUD/month</strong> surcharge
+      returns in full unless all four clusters are on 1.35. The upgrade
+      (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/596">terraform #596</a>) is currently
+      blocked, targeted at 18 November &mdash; two weeks of margin against a hard billing date, over a period that
+      includes end-of-year change freezes.</p>
+      <span class="ask">Decision: confirm the November target is real and protect the capacity for it now, not in October.</span>
+    </div>
+
+    <div class="w-item">
+      <h3>2. Milestone 25 does not exist yet</h3>
       <p>The sprint closes today and there is no milestone open for the next one. The three milestones currently
       open are all thematic &mdash; LaunchDarkly, End-User Documentation, Vercel &mdash; with no fortnightly container
       for general work.</p>
@@ -336,7 +389,7 @@
     </div>
 
     <div class="w-item">
-      <h3>2. The infrastructure release debt is still open</h3>
+      <h3>3. The infrastructure release debt is still open</h3>
       <p>The application side cleared with v1.89.28 and has stayed clear across four releases. The infrastructure
       reconcile (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/475">kubernetes #475</a>) has
       been open across three sprints now. It was flagged in the last report and has not moved.</p>
@@ -344,14 +397,14 @@
     </div>
 
     <div class="w-item amber">
-      <h3>3. Carry-over is the highest it has been recently</h3>
+      <h3>4. Carry-over is the highest it has been recently</h3>
       <p>24 issues carry forward. Four are epics and several are tracking items, so the true figure is nearer 17
       &mdash; but that is still high against a team of three, and some items have now survived several sprints.</p>
       <span class="ask">Decision: review the carry-over list and close or backlog anything that has been carried three times.</span>
     </div>
 
     <div class="w-item amber">
-      <h3>4. Two production faults are open and unscheduled</h3>
+      <h3>5. Two production faults are open and unscheduled</h3>
       <p>Product image responses are corrupted by a PHP deprecation notice written into the response body
       (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5747">#5747</a>), and the metrics endpoint
       returns a 500 when the Prometheus Redis store is unavailable
@@ -361,7 +414,7 @@
     </div>
 
     <div class="w-item amber">
-      <h3>5. Booths is still waiting on Booths</h3>
+      <h3>6. Booths is still waiting on Booths</h3>
       <p>Unchanged from the last two reports. Phase 0 is coordination on the Booths side
       (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5051">#5051</a>) and the dependent decisions
       (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5688">#5688</a>,
