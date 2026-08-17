@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milestone 24 Review &amp; Milestone 25 Plan — Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 24px 80px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  a { color: var(--accent); }
+  a.iss { text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.5); white-space: nowrap; }
+  a.iss:hover { border-bottom-style: solid; }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  h2:first-of-type { margin-top: 0; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+
+  .headline { background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(74,222,128,0.06)); border: 1px solid rgba(56,189,248,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.06rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #e2f5ff; }
+
+  .release { background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.35); border-radius: 14px; padding: 22px 26px; margin-bottom: 34px; }
+  .release .rtag { display: inline-block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--green); background: rgba(74,222,128,0.14); border-radius: 6px; padding: 4px 10px; margin-bottom: 12px; }
+  .release p { font-size: 0.94rem; color: #cbd5e1; }
+  .release .rnote { margin-top: 12px; font-size: 0.88rem; color: var(--muted); }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 10px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); }
+  .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); }
+
+  .bars { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px 26px; }
+  .bar { margin-bottom: 15px; }
+  .bar:last-child { margin-bottom: 0; }
+  .bar .top { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 5px; }
+  .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 5px; background: var(--accent); }
+
+  .themes { display: grid; gap: 14px; }
+  .theme { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 20px 22px; }
+  .theme h3 { font-size: 1.02rem; margin-bottom: 8px; }
+  .theme p { font-size: 0.92rem; color: #cbd5e1; }
+  .theme .why { display: block; margin-top: 10px; font-size: 0.86rem; color: var(--muted); }
+  .theme .why b { color: var(--green); font-weight: 600; }
+
+  .rds { background: var(--surface); border: 1px solid rgba(167,139,250,0.35); border-radius: 14px; padding: 26px 28px; }
+  .rds p + p { margin-top: 14px; }
+  .rds .money { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 22px 0; }
+  .rds .money div { background: rgba(15,23,42,0.6); border: 1px solid var(--surface2); border-radius: 10px; padding: 16px; }
+  .rds .money .v { font-size: 1.5rem; font-weight: 800; color: var(--purple); }
+  .rds .money .k { font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .caveat { background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.9rem; }
+  .caveat b { color: var(--yellow); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 16px; background: rgba(51,65,85,0.5); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
+  td { padding: 13px 16px; border-top: 1px solid var(--surface2); vertical-align: top; }
+  td.w { width: 34%; font-weight: 600; }
+
+  .watch { display: grid; gap: 12px; }
+  .w-item { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--red); border-radius: 10px; padding: 18px 20px; }
+  .w-item.amber { border-left-color: var(--yellow); }
+  .w-item h3 { font-size: 0.98rem; margin-bottom: 6px; }
+  .w-item p { font-size: 0.9rem; color: #cbd5e1; }
+  .w-item .ask { display: block; margin-top: 9px; font-size: 0.86rem; color: var(--accent); }
+
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; }
+  .tag-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tag-carry { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tag-new { background: rgba(56,189,248,0.15); color: var(--accent); }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--surface2); color: var(--surface2); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
+    <h1>Milestone 24 Review <span>&amp;</span> Milestone 25 Plan</h1>
+    <div class="dates">Sprint ran 3 &ndash; 14 August 2026 &middot; Milestone 24 closes 17 August &middot; Team of 3 &middot; Prepared for the CEO &amp; COO</div>
+  </header>
+
+  <!-- ============ THE SHORT VERSION ============ -->
+  <div class="headline">
+    <p><strong>This was the catch-up sprint we planned, and it did its job.</strong> Milestone 24 was set up as
+    &ldquo;catchup and cleanup&rdquo; &mdash; work through the backlog of old issues, clear out the feature-flag
+    estate, and scope the next PHP upgrade. All three landed. <strong>29 issues and 34 pull requests</strong> closed
+    across the fortnight, shipped in four releases.</p>
+    <p><strong>The biggest single win was billing correctness.</strong> Five separate defects in the fuel levy were
+    found and fixed &mdash; including one where the platform would <em>silently bill zero</em> if no rate was in
+    effect, with no alert and no trace. That one had no visible symptom until an invoice came out wrong.</p>
+    <p><strong>The honest caveat:</strong> the headline completion figure looks weaker than last sprint (69% against
+    Milestone 23&rsquo;s 100%), but the two are not measuring the same thing. Milestone 24&rsquo;s remaining 28 items
+    include four long-running epics and several tracking issues that were never fortnight-sized work. That
+    bookkeeping problem is being fixed this week &mdash; see <em>Cleaning up the issue list</em> below.</p>
+  </div>
+
+  <div class="release">
+    <div class="rtag">Shipped</div>
+    <p>Four releases went out during the sprint &mdash; <strong>v1.89.28</strong> (3 Aug), <strong>v1.89.29</strong>
+    (6 Aug), <strong>v1.89.30</strong> (10 Aug) and <strong>v1.89.31</strong> (16 Aug). The release cadence that was
+    flagged as a risk in the last two reports is now steady: four releases in a fortnight, against a single release
+    across the whole of the preceding month.</p>
+    <p class="rnote">The application side of the release debt is cleared. The infrastructure side is not &mdash;
+    <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/475">kubernetes #475</a> (develop &rarr; main
+    reconcile) is still open and still overdue.</p>
+  </div>
+
+  <!-- ============ NUMBERS ============ -->
+  <h2>The numbers</h2>
+  <div class="lede">Milestone 24, measured on its closing date. Counts include both issues and pull requests, which is
+  how GitHub reports a milestone.</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n green">63</div><div class="l">Items closed</div><div class="s">of 91 in the milestone &mdash; 69%</div></div>
+    <div class="kpi"><div class="n blue">29</div><div class="l">Issues shipped</div><div class="s">discrete pieces of work</div></div>
+    <div class="kpi"><div class="n purple">34</div><div class="l">Pull requests merged</div><div class="s">across 4 releases</div></div>
+    <div class="kpi"><div class="n yellow">24</div><div class="l">Issues carried forward</div><div class="s">4 are epics, not tasks</div></div>
+  </div>
+
+  <!-- ============ EFFORT ============ -->
+  <h2>Where the effort went</h2>
+  <div class="lede">The 29 issues closed this sprint, grouped by what they were actually about. Groupings are
+  approximate and derived from the milestone listing.</div>
+
+  <div class="bars">
+    <div class="bar"><div class="top"><span>Fuel levy &amp; billing correctness</span><span>5</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+    <div class="bar"><div class="top"><span>Access control, sessions &amp; security</span><span>4</span></div><div class="track"><div class="fill" style="width:80%"></div></div></div>
+    <div class="bar"><div class="top"><span>LaunchDarkly flag cleanup</span><span>4</span></div><div class="track"><div class="fill" style="width:80%"></div></div></div>
+    <div class="bar"><div class="top"><span>Orders &amp; refills correctness</span><span>4</span></div><div class="track"><div class="fill" style="width:80%"></div></div></div>
+    <div class="bar"><div class="top"><span>Test &amp; CI infrastructure</span><span>3</span></div><div class="track"><div class="fill" style="width:60%"></div></div></div>
+    <div class="bar"><div class="top"><span>Repository &amp; developer hygiene</span><span>3</span></div><div class="track"><div class="fill" style="width:60%"></div></div></div>
+    <div class="bar"><div class="top"><span>Vercel setup audit</span><span>2</span></div><div class="track"><div class="fill" style="width:40%"></div></div></div>
+    <div class="bar"><div class="top"><span>Feedback bridge (Keggy)</span><span>2</span></div><div class="track"><div class="fill" style="width:40%"></div></div></div>
+    <div class="bar"><div class="top"><span>API contracts &amp; documentation</span><span>2</span></div><div class="track"><div class="fill" style="width:40%"></div></div></div>
+  </div>
+
+  <!-- ============ WHAT SHIPPED ============ -->
+  <h2>What we shipped</h2>
+  <div class="lede">Six themes, each with what it means in practice.</div>
+
+  <div class="themes">
+
+    <div class="theme">
+      <h3>1. The fuel levy now bills correctly, and finance can see it <span class="tag tag-done">Done</span></h3>
+      <p>Five defects, found together and fixed together. The platform could <strong>silently bill zero</strong> when
+      no rate was in effect, with no alert and no trace
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5795">#5795</a>). Rate uniqueness for national
+      rates could not be enforced, so duplicates were possible
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5794">#5794</a>). The admin page hid
+      future-dated and superseded rates, making scheduled changes invisible to the people managing them
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5793">#5793</a>). NetSuite invoice lines
+      carried no description, so finance could not tell what the levy line was
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5798">#5798</a>). And the AU/NZ rate history
+      in production was restored after in-place edits had overwritten it
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5786">#5786</a>).</p>
+      <span class="why"><b>Why it matters:</b> this is money going out on customer invoices. A silent zero has no
+      symptom &mdash; nothing breaks, nothing alerts, the invoice is simply wrong. It is now alerted and traceable.</span>
+    </div>
+
+    <div class="theme">
+      <h3>2. A security hole in account deletion, closed <span class="tag tag-done">Done</span></h3>
+      <p>Soft-deleted users kept working API access when their token carried a UUID subject
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5714">#5714</a>) &mdash; meaning a
+      deactivated account could still reach the API. Alongside it: signing into a second account no longer leaves the
+      previous user&rsquo;s identity in place, the app stops telling people &ldquo;something went wrong&rdquo; when
+      their session has simply ended
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5712">#5712</a>), and a 401 now records what
+      the API actually said, so the next one is diagnosable
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5723">#5723</a>).</p>
+      <span class="why"><b>Why it matters:</b> when we deactivate a user &mdash; a departing staff member, a closed
+      customer account &mdash; access needs to actually stop. It now does.</span>
+    </div>
+
+    <div class="theme">
+      <h3>3. The feature-flag estate cleaned out <span class="tag tag-done">Done</span></h3>
+      <p>A stated goal of the sprint. Seven LaunchDarkly flags with zero code references were archived
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5624">#5624</a>), the 2023-vintage KEG-2601
+      flag pair on the cycles page was removed outright
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5625">#5625</a>), and the documentation that
+      described the old behaviour was corrected in two places
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5629">#5629</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5731">#5731</a>). The remaining flag work is
+      now grouped under its own milestone, <em>LaunchDarkly Feature Flags</em>, with six open items.</p>
+      <span class="why"><b>Why it matters:</b> every stale flag is a branch of code that might run and nobody
+      remembers why. Fewer flags means faster, safer releases &mdash; which is the point of the exercise.</span>
+    </div>
+
+    <div class="theme">
+      <h3>4. Orders and refills correctness <span class="tag tag-done">Done</span></h3>
+      <p>Two API endpoints disagreed about whether an empty completion date was valid
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5694">#5694</a>); a required field on
+      retrospective orders was being accepted and then ignored
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5693">#5693</a>); the Edit Order screen
+      offered a refill pricing change the API then refused with a 403
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5711">#5711</a>). Bulk refills upload gained
+      multi-SKU External ID grouping and an optional Venue column
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5717">#5717</a>), and the assets map stopped
+      running a full-fleet count on every single visit to populate one tooltip
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5735">#5735</a>).</p>
+      <span class="why"><b>Why it matters:</b> these are the small contradictions that generate support tickets &mdash;
+      a button that shouldn&rsquo;t be there, a field that quietly does nothing.</span>
+    </div>
+
+    <div class="theme">
+      <h3>5. Test and developer infrastructure <span class="tag tag-done">Done</span></h3>
+      <p>The automated end-to-end suite now runs nightly, producing a soak signal rather than only firing on demand
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5611">#5611</a>). The Rainforest test
+      inventory was captured before that account was cancelled
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5617">#5617</a>) &mdash; a small piece of
+      work that prevents permanently losing what those tests covered. Repository hygiene cleared two committed build
+      artefacts (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5728">#5728</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5737">#5737</a>) and a standard editor setup
+      was added for developers (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5763">#5763</a>).</p>
+      <span class="why"><b>Why it matters:</b> the migration off paid manual testing completes only when the
+      replacement runs unattended and we can prove it caught something.</span>
+    </div>
+
+    <div class="theme">
+      <h3>6. The next platform upgrade is fully scoped <span class="tag tag-done">Planned</span></h3>
+      <p>The third stated goal. The PHP 8.5 upgrade
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5665">#5665</a>) has been broken down from an
+      idea into <strong>10 sized tickets</strong> &mdash; version pins and CI, trait binding order, float rounding,
+      deprecation sweep, test-double replacement, container tooling, and the NetSuite URL handling change. Nothing has
+      been built yet; the point of the exercise was to make the work knowable before committing to it.</p>
+      <span class="why"><b>Why it matters:</b> last year&rsquo;s framework upgrade ran long because it was scoped as
+      it went. This one is costed up front, so it can be scheduled against real capacity.</span>
+    </div>
+
+  </div>
+
+  <!-- ============ THE ISSUE LIST ============ -->
+  <h2>Cleaning up the issue list</h2>
+  <div class="lede">A bookkeeping change with a real effect on how these reports read.</div>
+
+  <div class="rds">
+    <p>Milestone 24 shows <strong>28 items still open</strong>. That number is misleading, and it is worth explaining
+    once because it will keep distorting the completion figure otherwise.</p>
+    <p>Four of those open items are <strong>epics</strong> &mdash; containers holding a dozen or more child tickets
+    each. An epic sitting in a fortnight&rsquo;s milestone can never close within that fortnight, so it counts against
+    us every sprint it survives. Several more are long-lived tracking and question items in the same position.</p>
+
+    <div class="money">
+      <div><div class="v">91</div><div class="k">Items in the milestone</div></div>
+      <div><div class="v">38</div><div class="k">Were pull requests</div></div>
+      <div><div class="v">4</div><div class="k">Were epics</div></div>
+      <div><div class="v">29</div><div class="k">Genuine issues shipped</div></div>
+    </div>
+
+    <p>The fix, started this week, is to give each large epic <strong>its own milestone</strong> so its children group
+    together and stop competing with fortnight-sized work in the sprint list. Two are done &mdash;
+    <em>Konvoy End-User Documentation</em> (12 issues) and the Vercel setup audit &mdash; alongside the
+    <em>LaunchDarkly Feature Flags</em> milestone already in place. The PHP 8.5 epic is the obvious next candidate:
+    all 10 of its tickets currently sit in no milestone at all.</p>
+
+    <div class="caveat"><b>Note for comparison:</b> because of this, Milestone 24&rsquo;s 69% and Milestone
+    23&rsquo;s 100% are not directly comparable. From Milestone 25 onward the sprint milestones should contain only
+    fortnight-sized work, and the percentage becomes meaningful again.</div>
+  </div>
+
+  <!-- ============ NEXT ============ -->
+  <h2>What we&rsquo;re working on next</h2>
+  <div class="lede">Milestone 25 has not been opened yet &mdash; this is the candidate list, drawn from carry-over and
+  the newly grouped epics.</div>
+
+  <table>
+    <tr><th>Area</th><th>What and why</th></tr>
+    <tr>
+      <td class="w">Finish the fuel levy tail</td>
+      <td>One item remains (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5827">#5827</a>): enabling
+      line-level descriptions on the NetSuite form so the rate reaches the invoice. It needs a NetSuite-side
+      configuration change, not code.</td>
+    </tr>
+    <tr>
+      <td class="w">PHP 8.5 upgrade</td>
+      <td>Ten scoped tickets ready to schedule. Decide this sprint whether it starts now or waits &mdash; the scoping
+      is done either way, and it does not expire.</td>
+    </tr>
+    <tr>
+      <td class="w">End-user documentation epic</td>
+      <td>Twelve issues, now in their own milestone due 31 August. Includes four blocking defects that a real
+      walkthrough of the product exposed &mdash; among them Collections being invisible to operator Managers and Users.</td>
+    </tr>
+    <tr>
+      <td class="w">LaunchDarkly, remaining</td>
+      <td>Six open items in the dedicated milestone, due 31 August. Continues the release-cadence work.</td>
+    </tr>
+    <tr>
+      <td class="w">Vercel setup audit</td>
+      <td>Three of five remaining: Content-Security-Policy
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5686">#5686</a>), the analytics token audit
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5726">#5726</a>) and post-merge follow-ups
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5755">#5755</a>).</td>
+    </tr>
+    <tr>
+      <td class="w">NetSuite error noise</td>
+      <td>Every non-2xx NetSuite response currently raises two separate alerts for one failure
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5745">#5745</a>). Alert noise is how real
+      problems get missed.</td>
+    </tr>
+  </table>
+
+  <!-- ============ WATCH ============ -->
+  <h2>Five things to watch</h2>
+  <div class="lede">Each of these needs a decision rather than an update.</div>
+
+  <div class="watch">
+
+    <div class="w-item">
+      <h3>1. Milestone 25 does not exist yet</h3>
+      <p>The sprint closes today and there is no milestone open for the next one. The three milestones currently
+      open are all thematic &mdash; LaunchDarkly, End-User Documentation, Vercel &mdash; with no fortnightly container
+      for general work.</p>
+      <span class="ask">Decision: open Milestone 25 with dates before the next sprint starts, and agree its three themes.</span>
+    </div>
+
+    <div class="w-item">
+      <h3>2. The infrastructure release debt is still open</h3>
+      <p>The application side cleared with v1.89.28 and has stayed clear across four releases. The infrastructure
+      reconcile (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/475">kubernetes #475</a>) has
+      been open across three sprints now. It was flagged in the last report and has not moved.</p>
+      <span class="ask">Decision: schedule it into Milestone 25 explicitly, or accept it as ongoing and stop reporting it as a risk.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>3. Carry-over is the highest it has been recently</h3>
+      <p>24 issues carry forward. Four are epics and several are tracking items, so the true figure is nearer 17
+      &mdash; but that is still high against a team of three, and some items have now survived several sprints.</p>
+      <span class="ask">Decision: review the carry-over list and close or backlog anything that has been carried three times.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>4. Two production faults are open and unscheduled</h3>
+      <p>Product image responses are corrupted by a PHP deprecation notice written into the response body
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5747">#5747</a>), and the metrics endpoint
+      returns a 500 when the Prometheus Redis store is unavailable
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5758">#5758</a>). Both are live; neither is
+      assigned to a milestone.</p>
+      <span class="ask">Decision: these should go into Milestone 25 at the top, not carry again.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>5. Booths is still waiting on Booths</h3>
+      <p>Unchanged from the last two reports. Phase 0 is coordination on the Booths side
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5051">#5051</a>) and the dependent decisions
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5688">#5688</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5707">#5707</a>) cannot be made without it.</p>
+      <span class="ask">Decision: set a date by which we escalate commercially, or park the epic and stop carrying it.</span>
+    </div>
+
+  </div>
+
+  <footer>
+    Konvoy Kegs Engineering &middot; Milestone 24 review, prepared 17 August 2026 &middot;
+    Figures taken from the
+    <a href="https://github.com/konvoy-kegs/konvoy/milestone/24">Milestone 24 issue list</a> on its closing date.
+    Theme groupings are approximate.
+  </footer>
+
+</div>
+</body>
+</html>
