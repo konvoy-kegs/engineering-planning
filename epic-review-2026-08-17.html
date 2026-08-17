@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epic Review &mdash; Meeting Pack, 17 August 2026 &mdash; Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 24px 80px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  a { color: var(--accent); }
+  a.iss { text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.5); white-space: nowrap; }
+  a.iss:hover { border-bottom-style: solid; }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+
+  .part { margin-top: 64px; padding-top: 30px; border-top: 2px solid var(--surface2); }
+  .part .ptag { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); background: rgba(56,189,248,0.12); border-radius: 6px; padding: 5px 12px; margin-bottom: 14px; }
+  .part h2 { margin-top: 0; font-size: 1.6rem; }
+
+  .headline { background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(74,222,128,0.06)); border: 1px solid rgba(56,189,248,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.06rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #e2f5ff; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 26px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); }
+  .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); } .n.red { color: var(--red); }
+
+  .bars { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px 26px; }
+  .bar { margin-bottom: 15px; }
+  .bar:last-child { margin-bottom: 0; }
+  .bar .top { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 5px; }
+  .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 5px; background: var(--accent); }
+  .fill.red { background: var(--red); } .fill.yellow { background: var(--yellow); }
+  .fill.purple { background: var(--purple); } .fill.green { background: var(--green); }
+
+  .decisions { display: grid; gap: 14px; }
+  .dec { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--purple); border-radius: 10px; padding: 20px 22px; }
+  .dec .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .dec h3 { font-size: 1.02rem; }
+  .dec .age { font-size: 0.76rem; color: var(--yellow); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .dec p { font-size: 0.92rem; color: #cbd5e1; }
+  .dec .ask { display: block; margin-top: 11px; font-size: 0.88rem; color: var(--accent); }
+  .dec .ask b { color: var(--accent); font-weight: 700; }
+  .dec.hot { border-left-color: var(--red); }
+  .dec.hot .age { color: var(--red); }
+
+  .clocks { display: grid; gap: 12px; }
+  .clock { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.35); border-radius: 10px; padding: 18px 20px; display: grid; grid-template-columns: 96px 1fr; gap: 18px; align-items: start; }
+  .clock .when { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--red); line-height: 1.35; padding-top: 2px; }
+  .clock.amber { background: rgba(251,191,36,0.07); border-color: rgba(251,191,36,0.35); }
+  .clock.amber .when { color: var(--yellow); }
+  .clock h3 { font-size: 0.98rem; margin-bottom: 5px; }
+  .clock p { font-size: 0.9rem; color: #cbd5e1; }
+
+  .themes { display: grid; gap: 14px; }
+  .theme { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 20px 22px; }
+  .theme h3 { font-size: 1.02rem; margin-bottom: 8px; }
+  .theme p { font-size: 0.92rem; color: #cbd5e1; }
+  .theme p + p { margin-top: 10px; }
+  .theme .why { display: block; margin-top: 10px; font-size: 0.86rem; color: var(--muted); }
+  .theme .why b { color: var(--green); font-weight: 600; }
+  .theme.t2 { border-left-color: var(--yellow); }
+  .theme.t3 { border-left-color: var(--purple); }
+  .theme.t4 { border-left-color: var(--surface2); }
+
+  .caveat { background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.9rem; color: #cbd5e1; }
+  .caveat b { color: var(--yellow); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 16px; background: rgba(51,65,85,0.5); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
+  td { padding: 13px 16px; border-top: 1px solid var(--surface2); vertical-align: top; }
+  td.w { width: 30%; font-weight: 600; }
+  td.sz { width: 12%; color: var(--muted); white-space: nowrap; }
+
+  ul { margin: 10px 0 0 20px; }
+  li { font-size: 0.92rem; color: #cbd5e1; margin-bottom: 7px; }
+  li:last-child { margin-bottom: 0; }
+
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; }
+  .tag-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tag-block { background: rgba(248,113,113,0.15); color: var(--red); }
+  .tag-carry { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tag-dec { background: rgba(167,139,250,0.18); color: var(--purple); }
+  .tag-new { background: rgba(56,189,248,0.15); color: var(--accent); }
+
+  .agenda { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 8px 26px 22px; }
+  .agenda .row { display: grid; grid-template-columns: 74px 1fr; gap: 18px; padding: 14px 0; border-top: 1px solid var(--surface2); align-items: start; }
+  .agenda .row:first-child { border-top: none; }
+  .agenda .mins { font-size: 0.82rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; padding-top: 1px; }
+  .agenda .what { font-size: 0.92rem; color: #cbd5e1; }
+  .agenda .what b { color: var(--text); }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--surface2); color: var(--surface2); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
+    <h1>Epic Review <span>&mdash;</span> Meeting Pack</h1>
+    <div class="dates">Monday 17 August 2026 &middot; Every open epic in <code>konvoy-kegs/konvoy</code>, ranked by real code activity &middot; Evidence taken from native sub-issue trackers, <code>git log</code> on <code>main</code> HEAD <code>b444580a1</code>, and direct file reads &middot; Part 1 for the CEO &amp; COO, Part 2 for the engineering session</div>
+  </header>
+
+  <!-- ============ THE ONE THING ============ -->
+  <div class="headline">
+    <p><strong>The binding constraint on this backlog is not engineering capacity. It is decisions.</strong> Ten open
+    items across the seven live epics are waiting on a call that only you or Finance can make &mdash; the oldest has
+    been outstanding since <strong>3 August</strong>. A further six pull requests are coded, self-reviewed and green,
+    and are blocked on nothing but someone pressing review.</p>
+    <p><strong>Two items have a date attached and one of them expires this week.</strong> A leaked sign-up-link token
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5726">#5726</a>) stays valid until
+    <strong>19 August</strong>, and the NetSuite line-description config
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5827">#5827</a>) had a
+    <strong>Monday-17-August expectation that passes today</strong>, with three named reporters watching.</p>
+    <p><strong>One known-live defect is the exact mechanism of a past incident.</strong>
+    <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4865">#4865</a> &mdash; a hardcoded AU/ACT
+    location fallback in the NetSuite invoice path &mdash; is still in the code and still fires. It is roughly one
+    day of work and has been open since May.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n purple">10</div><div class="l">Items on your desk</div><div class="s">across 6 distinct decisions</div></div>
+    <div class="kpi"><div class="n red">14</div><div class="l">Days &mdash; oldest wait</div><div class="s">#5630 flag ship/kill, since 3 Aug</div></div>
+    <div class="kpi"><div class="n yellow">2</div><div class="l">Days to token expiry</div><div class="s">#5726 closes 19 August</div></div>
+    <div class="kpi"><div class="n green">6</div><div class="l">PRs mergeable now</div><div class="s">blocked only on review or rebase</div></div>
+  </div>
+
+  <h2>What is actually holding the shortlist</h2>
+  <div class="lede">All 36 open items across the seven shortlisted epics, categorised by the thing that has to happen
+  first. Only the last band is engineering throughput.</div>
+
+  <div class="bars">
+    <div class="bar">
+      <div class="top"><span>Waiting on a decision (yours or Finance&rsquo;s)</span><span>10 items</span></div>
+      <div class="track"><div class="fill purple" style="width:27.8%"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Waiting on someone outside the team</span><span>5 items</span></div>
+      <div class="track"><div class="fill red" style="width:13.9%"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Waiting on review or a rebase &mdash; code is written</span><span>6 items</span></div>
+      <div class="track"><div class="fill yellow" style="width:16.7%"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top"><span>Waiting on engineering time</span><span>15 items</span></div>
+      <div class="track"><div class="fill green" style="width:41.6%"></div></div>
+    </div>
+  </div>
+  <div class="caveat"><b>Read this honestly.</b> The categorisation is mine and some items could sit in two bands
+  &mdash; <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5819">#5819</a>, for example, needs both a
+  response-shape decision and a day of work. But the shape holds: <b>58% of the open backlog on the epics we are
+  actually working is blocked on something other than writing code.</b></div>
+
+  <!-- ============ PART 1 — EXEC ============ -->
+  <div class="part">
+    <div class="ptag">Part 1 &middot; For the CEO &amp; COO</div>
+    <h2>The business read</h2>
+    <div class="lede">Four things worth your attention, in the order they cost money.</div>
+
+    <div class="themes">
+      <div class="theme">
+        <h3>Fuel levy is a revenue-recognition path, and it failed silently three days ago</h3>
+        <p>The fuel levy has been a real line on AU and NZ invoices since <strong>3 May</strong>, replacing a manual
+        finance step performed on every invoice since March. On <strong>14 August</strong> a rate-administration
+        incident pushed four AU rate rows to a future date, leaving a window in which AU deliveries billed
+        <strong>zero fuel levy</strong>. It was found because an operator noticed the admin page had gone blank
+        &mdash; not by an alert.</p>
+        <p>Five of the eight resulting engineering fixes are already merged. What remains includes
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5799">#5799</a>, which reproduces the same
+        silent-failure pattern the moment the first person is granted the new admin access, and an open Finance
+        question about which July AU rate was authoritative.</p>
+        <span class="why"><b>Why it matters:</b> this is the only workstream on the board where a defect changes what
+        a customer is charged. Every other epic costs time; this one can cost revenue or trigger a credit note.</span>
+      </div>
+
+      <div class="theme">
+        <h3>Writing the user documentation found twelve product defects</h3>
+        <p>An engineer wrote the end-user guide by walking the product as a customer would. Doing that surfaced twelve
+        defects &mdash; including <strong>New Collection Save doing nothing at all</strong>, in every environment, with
+        no error message, when the chosen location has no coordinates. Also: Collections is hidden from operator
+        Managers and Users by a navigation rule even though the backend already permits them, and an API endpoint
+        returns every market, operator identity and SKU price to any logged-in user.</p>
+        <p><strong>Four of those fixes are already written and waiting for review.</strong> Nothing technical is
+        stopping them.</p>
+        <span class="why"><b>Why it matters:</b> the documentation was the deliverable and the defects were the
+        by-product &mdash; but the by-product is worth more. It is also a cheap, repeatable way to find this class of
+        bug, and worth funding again.</span>
+      </div>
+
+      <div class="theme t2">
+        <h3>Security housekeeping with a date on it</h3>
+        <p>Security headers and telemetry redaction went live on <strong>16 August</strong> in v1.89.31 and are
+        verified in production. Two things are outstanding: a <strong>leaked sign-up-link token that remains valid
+        until 19 August</strong> and needs invalidating this week, and a Content Security Policy that is fully
+        specified but not started &mdash; the last real gap in that audit.</p>
+        <span class="why"><b>Why it matters:</b> the token has a fixed expiry, so the cost of missing it is not
+        recoverable by working harder next week. Roughly one to two days of work closes the whole area.</span>
+      </div>
+
+      <div class="theme t3">
+        <h3>Two upgrade programmes are stalled on things we do not control</h3>
+        <p>The PHP 8.5 upgrade has been audited to an exceptional standard &mdash; 42 breaking-change patterns and 41
+        adoption patterns, down to file and line. It is <strong>100% blocked</strong> on a base container image in the
+        infrastructure repository that has had no activity since it was filed and has no apparent owner. Nothing on
+        the application side can start. Separately, the Booths Transport integration &mdash; which removes an operator
+        re-keying every collection by hand &mdash; is nine-elevenths built but waiting on Booths to reply and on one
+        configuration value from Marc and Alice.</p>
+        <span class="why"><b>Why it matters:</b> in both cases the correct action is chasing a person, not assigning
+        an engineer. Work already done is quietly depreciating while we wait &mdash; the Booths branch is now 39
+        commits behind and its test mocks predate a library migration.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DECISIONS ============ -->
+  <div class="part">
+    <div class="ptag">Part 2 &middot; Decisions</div>
+    <h2>Decide today</h2>
+    <div class="lede">Each of these unblocks work that is otherwise finished or trivial. Ordered by what they release.</div>
+
+    <div class="decisions">
+      <div class="dec hot">
+        <div class="head">
+          <h3>Feature flags: ship or kill, four flags <span class="tag tag-dec">Decision</span></h3>
+          <span class="age">Outstanding 14 days</span>
+        </div>
+        <p>Epic <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5630">#5630</a>. 18 of 19 console
+        flags are archived and the hook is down to 10 members. Every remaining code-removal child is waiting on you:
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5626">#5626</a> (four flags, also gated on
+        <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/629">terraform #629</a>),
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5627">#5627</a> (transfers ramp),
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5628">#5628</a> (rentals ramp &mdash; highest
+        leverage, also blocks <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5064">#5064</a>) and
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5692">#5692</a> (fuel-levy order detail).</p>
+        <p>The audit&rsquo;s real finding is larger than the cleanup: several &ldquo;rollout&rdquo; flags have been
+        open <strong>one to three years</strong>, never above single-digit production targeting, with no product owner
+        tracking a ship decision. <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5692">#5692</a> is
+        the failure mode recurring right now &mdash; orphaned from two issues that were closed without removing
+        the flag.</p>
+        <span class="ask"><b>The ask:</b> four yes/no calls, one per flag. This is the epic that needs you rather than
+        an engineer &mdash; and worth agreeing a standing rule so a fifth flag does not join the list.</span>
+      </div>
+
+      <div class="dec hot">
+        <div class="head">
+          <h3>Which July AU fuel rate was authoritative <span class="tag tag-dec">Finance</span></h3>
+          <span class="age">Blocks reconciliation</span>
+        </div>
+        <p><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5796">#5796</a>. Three candidate values
+        are in play for July AU &mdash; <strong>4.10%, 6.30% or 10.80%</strong>. Until Finance picks one, invoices
+        raised in that window cannot be reconciled and the 14 August incident cannot be fully closed out.</p>
+        <span class="ask"><b>The ask:</b> get Finance to name the rate today. Everything else on the fuel-levy epic is
+        small engineering work; this is the only item that cannot start without an external answer.</span>
+      </div>
+
+      <div class="dec">
+        <div class="head">
+          <h3>Release the four review-blocked pull requests <span class="tag tag-block">Process</span></h3>
+          <span class="age">Open since 16 Aug</span>
+        </div>
+        <p>PRs <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5830">#5830</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5831">#5831</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5832">#5832</a> and
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5833">#5833</a> are coded, self-reviewed and
+        Sonar-green, sitting at <code>REVIEW_REQUIRED</code>. They carry the Collections save failure, the raw-JSON
+        error rendering and the Collections navigation gate. Roughly two days of process, no code.</p>
+        <p>One sub-decision comes with them: <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5830">PR
+        #5830</a> <strong>cannot go green before merge</strong> &mdash; the authenticated Playwright suite runs against
+        deployed <code>main</code>, not a PR preview, so a navigation-visibility fix is structurally red until it
+        deploys.</p>
+        <span class="ask"><b>The ask:</b> assign the reviews, and decide whether #5830&rsquo;s red run is accepted as
+        expected or whether we fix the guard first.</span>
+      </div>
+
+      <div class="dec">
+        <div class="head">
+          <h3>Fund two days to close the search-latency measurement loop <span class="tag tag-dec">Decision</span></h3>
+          <span class="age">Gates an XL</span>
+        </div>
+        <p>Epic <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5205">#5205</a>. Phases 1 and 2
+        shipped and the first two metrics merged, but M3 was re-scoped into P2 and then never implemented, the Grafana
+        panels are written but unapplied, and the metrics scrape is unconfirmed. So the epic&rsquo;s founding question
+        &mdash; <em>did the work actually fix latency</em> &mdash; is still unanswered, and
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5208">#5208</a> (a denormalised search
+        table, XL) can neither be approved nor rejected on evidence.</p>
+        <span class="ask"><b>The ask:</b> approve one to two days to capture the benchmark. Deciding an XL without it
+        is a coin flip either way.</span>
+      </div>
+
+      <div class="dec">
+        <div class="head">
+          <h3>SonarQube replacement: go or shelve <span class="tag tag-dec">Cost</span></h3>
+          <span class="age">1.5&ndash;2.5 weeks</span>
+        </div>
+        <p><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5768">#5768</a>. The plan is fully
+        specified and independently re-verified against <code>main</code>, with zero implementation on all seven
+        children. The case for it: Sonar <strong>gates nothing today</strong> &mdash; there are no required status
+        checks on <code>main</code> &mdash; and it duplicates PHPStan, ESLint and three AI reviewers.</p>
+        <span class="ask"><b>The ask:</b> a pure cost and tech-debt call. Note that
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5769">#5769</a> (a coverage floor) has
+        standalone value even if the rest is shelved.</span>
+      </div>
+
+      <div class="dec">
+        <div class="head">
+          <h3>Three smaller product calls <span class="tag tag-dec">Product</span></h3>
+          <span class="age">Each blocks one child</span>
+        </div>
+        <p><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5818">#5818</a> &mdash; dispatch
+        <code>OrderPlacedEvent</code> on collection create, or delete the dead code arm.
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5825">#5825</a> &mdash; how much of the
+        remaining user-guide set we commit to (large, currently unscoped).
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4509">#4509</a> &mdash; whether the admin
+        order form shows the levy before submit via the pricing model or a resolve-endpoint call.</p>
+        <span class="ask"><b>The ask:</b> ten minutes at the end of the engineering session; none of these need
+        preparation.</span>
+      </div>
+    </div>
+
+    <h2>Chase, don&rsquo;t assign</h2>
+    <div class="lede">Five items where the correct next action is a message to a named person, not a ticket.</div>
+
+    <table>
+      <tr><th>What</th><th>Who</th><th>Blocks</th></tr>
+      <tr>
+        <td class="w"><code>php:8.5</code> base image with required extensions</td>
+        <td>Owner unknown &mdash; <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/510">kubernetes #510</a>, zero activity since filing</td>
+        <td>100% of <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5665">#5665</a> PHP 8.5. Nothing konvoy-side is independently unblockable.</td>
+      </tr>
+      <tr>
+        <td class="w"><code>BOOTHS_FREIGHT_PAYER</code> value</td>
+        <td>Marc / Alice</td>
+        <td>The stated go-live blocker for <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5044">#5044</a> Booths EDI</td>
+      </tr>
+      <tr>
+        <td class="w">Booths&rsquo; reply: keys, mapping, status vocabulary</td>
+        <td>Booths &mdash; <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5051">#5051</a></td>
+        <td>Rollout sequencing for the same epic</td>
+      </tr>
+      <tr>
+        <td class="w"><code>NETSUITE_TBA</code> token for dev-oc</td>
+        <td>Internal &mdash; external NetSuite dependency</td>
+        <td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5827">#5827</a>, whose date passes today, three named reporters</td>
+      </tr>
+      <tr>
+        <td class="w">Vercel dashboard access</td>
+        <td>Whoever holds the account</td>
+        <td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5755">#5755</a>, two housekeeping checks</td>
+      </tr>
+    </table>
+
+    <h2>On the clock</h2>
+    <div class="lede">Items where waiting changes the outcome, not just the date.</div>
+
+    <div class="clocks">
+      <div class="clock">
+        <div class="when">19 Aug<br>2 days</div>
+        <div>
+          <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5726">#5726</a> &mdash; leaked sign-up-link token stays valid until Wednesday</h3>
+          <p>Needs invalidating plus a Vercel data-deletion request. A hard expiry: this is not recoverable by
+          scheduling it next sprint.</p>
+        </div>
+      </div>
+      <div class="clock">
+        <div class="when">Today<br>passed</div>
+        <div>
+          <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5827">#5827</a> &mdash; NetSuite line-description config, Monday-17-August expectation</h3>
+          <p>Three named reporters. The work itself is small and lives in the NetSuite UI rather than in code &mdash;
+          it is blocked on the dev-oc <code>NETSUITE_TBA</code> token. Worth a holding reply today regardless.</p>
+        </div>
+      </div>
+      <div class="clock amber">
+        <div class="when">On grant</div>
+        <div>
+          <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5799">#5799</a> &mdash; fires the moment the first admin access is granted</h3>
+          <p>The frontend gates on <code>MAINTAINER</code> while the backend write gate is organisation
+          <code>ADMIN</code>. The first person granted access under
+          <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5787">#5787</a> gets a 403 &mdash; the
+          same silent-failure shape as the incident. Small fix; sequence it ahead of the grant.</p>
+        </div>
+      </div>
+      <div class="clock amber">
+        <div class="when">Since<br>6 Aug</div>
+        <div>
+          <h3><a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/511">kubernetes #511</a> &mdash; Booths reconcile cron disabled, manual restore required</h3>
+          <p>Turned off on 6 August and it will not come back on its own. Easy to forget until the Booths rollout
+          needs it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PART 3 — ENGINEERING ============ -->
+  <div class="part">
+    <div class="ptag">Part 3 &middot; For the engineering session</div>
+    <h2>Tier 1 &mdash; actively worked, last four days</h2>
+    <div class="lede">Ranked by real code activity &mdash; merged PRs and commits on <code>main</code> or an epic
+    branch &mdash; not by issue <code>updatedAt</code>.</div>
+
+    <div class="themes">
+      <div class="theme">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4493">#4493</a> &mdash; Fuel levy line item on orders</h3>
+        <p><strong>What it is.</strong> Fuel levy as a real order line: freight &times; operator/market rate (AU 6.57%,
+        NZ 11.68% as of today), resolved in Katch Cloud, snapshotted on the order, pushed to NetSuite invoice item
+        1489 through the existing <code>transformItems()</code> loop. Backend rate entity, resolution and snapshot in
+        <code>api/src/Entity/Pricing/FuelSurchargeRate.php</code> and
+        <code>api/src/Service/Pricing/FuelSurchargeService.php</code>; admin rate CRUD; customer-portal and
+        order-detail display; and since mid-August, NetSuite invoice line descriptions and coverage-gap alerting.</p>
+        <p><strong>State.</strong> Phase 1 shipped to production 2026-05-03 (v1.89.11, <code>cbaea1346</code>). The
+        14 August rate-admin incident (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5786">#5786</a>)
+        produced six staging-feedback tickets and eight engineering issues; five are merged
+        (<code>90945a76d</code>, <code>8936383f0</code>, <code>b444580a1</code>, <code>e709a4b2c</code>,
+        <code>f25209cd4</code>). <code>main</code> HEAD is a fuel-levy commit.</p>
+        <span class="why"><b>Stale documentation:</b> the epic body&rsquo;s rate table still says AU 6% / NZ 9%, and
+        its checklist has <b>no entries at all</b> for the ~15 August issues. Reading only the epic implies the feature
+        has been stable since May.</span>
+      </div>
+    </div>
+
+    <table style="margin-top:14px">
+      <tr><th>Remaining on #4493</th><th>Issue</th><th>Size</th></tr>
+      <tr><td class="w">Align FE <code>MAINTAINER</code> gate with BE org-<code>ADMIN</code> write gate</td><td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5799">#5799</a></td><td class="sz">S</td></tr>
+      <tr><td class="w"><code>setMaxResults(0)</code> &rarr; <code>LIMIT 0</code> in <code>FuelSurchargeRateRepository::findByOperator</code></td><td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5806">#5806</a></td><td class="sz">S</td></tr>
+      <tr><td class="w">NetSuite customForm 154 line-description config (NS UI, not code)</td><td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5827">#5827</a></td><td class="sz">S + external</td></tr>
+      <tr><td class="w">Which July AU rate is authoritative &mdash; 4.10 / 6.30 / 10.80%</td><td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5796">#5796</a></td><td class="sz">Decision</td></tr>
+      <tr><td class="w">Admin order-form levy display before submit</td><td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4509">#4509</a></td><td class="sz">S + decision</td></tr>
+      <tr><td class="w">Reply to open staging-feedback questions</td><td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5800">#5800</a>, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5804">#5804</a></td><td class="sz">S</td></tr>
+      <tr><td class="w">Phase 2 postcode&rarr;region discovery; NS&harr;KC invoice sync discovery</td><td><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4500">#4500</a>, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4510">#4510</a></td><td class="sz">Unscoped</td></tr>
+    </table>
+
+    <div class="themes" style="margin-top:22px">
+      <div class="theme">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5812">#5812</a> &mdash; End-user documentation, and the defects it surfaced</h3>
+        <p><strong>What it is.</strong> <code>docs/user-guide/</code> written from an actual walkthrough, plus a local
+        doc seed (<code>make seed-docs</code>,
+        <code>api/src/DataFixtures/Docs/DocsFixtures.php</code>) because base <code>make seed</code> produces no
+        loggable-in user. Writing the Collections guide surfaced 12 defects, each filed as an independently shippable
+        child.</p>
+        <p><strong>The defects are the value.</strong>
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5815">#5815</a> New Collection Save silently
+        does nothing when the chosen location has no coordinates &mdash; every environment, no error, no console
+        output. <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5816">#5816</a> nested form errors
+        render as raw JSON. <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5814">#5814</a>
+        Collections hidden from operator Managers/Users by the Logistics nav gate although the backend already
+        permits it. <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5819">#5819</a>
+        <code>GET /api/markets</code> returns every market, operator identity and SKU pricing to any authenticated
+        user &mdash; the only security-labelled item here.
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5821">#5821</a> base <code>make seed</code>
+        cannot produce a login.</p>
+        <p><strong>Current state.</strong> 2 of 14 closed
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5808">#5808</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5813">#5813</a> via PR
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5826">#5826</a>, <code>4e023163d</code>).
+        Four fixes coded, self-reviewed, Sonar-green and unmerged &mdash; PRs
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5830">#5830</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5831">#5831</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5832">#5832</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5833">#5833</a>, all
+        <code>REVIEW_REQUIRED</code>/<code>BLOCKED</code>, opened 2026-08-16T11:16. Seven children have no PR at
+        all: <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5818">#5818</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5819">#5819</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5820">#5820</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5821">#5821</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5823">#5823</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5824">#5824</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5825">#5825</a>.</p>
+        <span class="why"><b>Discussion point:</b> PR #5830 cannot go green pre-merge &mdash; the authenticated
+        Playwright suite runs against deployed <code>main</code>, not a PR preview, so a nav-visibility fix is
+        structurally red until it deploys. Accept as expected red, or fix the guard?</span>
+      </div>
+
+      <div class="theme">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5630">#5630</a> &mdash; LaunchDarkly flag lifecycle cleanup <span class="tag tag-dec">Blocked on you</span></h3>
+        <p><strong>What it is.</strong> Archive zero-reference flags (console-only, no code), then delete
+        <code>FlagSet</code> members and gated code for flags already at 100% in production, plus one backend deletion
+        (legacy <code>/api/transfers</code>) and doc corrections. LaunchDarkly is frontend-only here; backend gates are
+        environment booleans.</p>
+        <p><strong>State.</strong> 18 of 19 console flags archived;
+        <code>app/src/hooks/useAppFlags/useAppFlags.ts</code> is down to 10 members from 11 at filing
+        (<code>rolloutKeg2601FeLocationBreakdownOnAssetCycleSelector</code> removed by PR
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5789">#5789</a>). Shippable right now: PR
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5790">#5790</a> (needs rebase on #5789) and PR
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5810">#5810</a>.</p>
+        <span class="why"><b>Watch:</b> <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5627">#5627</a>
+        carries an ungated <code>getTransfers</code> caller at
+        <code>app/src/.../Organisation.tsx:874</code> that would 404 the moment the backend endpoint is deleted
+        &mdash; sequence the frontend removal first.</span>
+      </div>
+    </div>
+
+    <h2>Tier 2 &mdash; recently paused, cheap to close out</h2>
+    <div class="lede">Four epics that are closer to done than their issue state suggests.</div>
+
+    <div class="themes">
+      <div class="theme t2">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5754">#5754</a> &mdash; Vercel setup audit <span class="tag tag-done">Partly live</span></h3>
+        <p>Headers and telemetry redaction merged 2026-08-11 (PRs
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5685">#5685</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5660">#5660</a>) and are <strong>live</strong>
+        &mdash; verified against <code>app.konvoy.cloud</code>: <code>permissions-policy</code>,
+        <code>referrer-policy</code> and HSTS <code>includeSubDomains</code> present,
+        <code>x-xss-protection</code> gone, redaction hook in the bundle. The epic&rsquo;s own &ldquo;none of it is in
+        production&rdquo; comment is stale &mdash; v1.89.31 shipped it on 16 August. Remaining:
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5726">#5726</a> (hard 19 August deadline),
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5755">#5755</a> (needs dashboard access),
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5686">#5686</a> CSP &mdash; shovel-ready,
+        unstarted, and the only real remaining security gap. About 1&ndash;2 days.</p>
+      </div>
+
+      <div class="theme t2">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5205">#5205</a> &mdash; Global search latency and observability</h3>
+        <p>P1 (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5206">#5206</a>, fan-out 3&rarr;1) and
+        P2 (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5207">#5207</a>, lean
+        <code>/api/orders-all/search</code>) shipped; M1 and M2 metrics merged in PR
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5213">#5213</a>. But M3 was re-scoped into P2
+        and never implemented &mdash; its metric names do not exist in <code>api/src</code> &mdash; M4 Grafana panels
+        are written but unapplied, and the Alloy scrape
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5214">#5214</a> /
+        <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/479">terraform #479</a>) is unconfirmed.
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5210">#5210</a> is closed in code but open in
+        GitHub.</p>
+        <span class="why"><b>Why it matters:</b> the epic&rsquo;s founding question &mdash; did P1+P2 actually fix
+        latency &mdash; is unanswered, so P3
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5208">#5208</a>, denormalised
+        <code>order_search</code> table, XL) cannot be approved or rejected on evidence.</span>
+      </div>
+
+      <div class="theme t2">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5044">#5044</a> &mdash; Booths Transport EDI integration <span class="tag tag-carry">Branch drift</span></h3>
+        <p>9 of 11 children merged <strong>to <code>epic/5044-booths-transport-edi-integration</code>, not
+        <code>main</code></strong> &mdash; the branch is 39 commits behind and its <code>.mock.ts</code> files predate
+        the msw v1&rarr;v2 migration. The payoff is removing Alice&rsquo;s manual re-keying of every Booths collection.
+        Blocked on the <code>BOOTHS_FREIGHT_PAYER</code> value (Marc/Alice) and on Booths replying with keys, mapping
+        and status vocabulary (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5051">#5051</a>).</p>
+        <p>Open code: <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5687">#5687</a> orders-list
+        status filter (S), <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5707">#5707</a> audit-log
+        the SUPPORT re-submit (S &mdash; that write access is merged and currently unaudited), the merge to
+        <code>main</code> (M), re-enabling <code>cj-app-booths-reconcile-status</code>
+        (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/511">kubernetes #511</a>), then
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5052">#5052</a> rollout (L,
+        calendar-gated).</p>
+      </div>
+
+      <div class="theme t2">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853</a> &mdash; Harden NetSuite invoice failure handling <span class="tag tag-block">Live defect</span></h3>
+        <p>Track A (stop submitting invoices NetSuite will reject) mostly shipped via
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4873">#4873</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4939">#4939</a> and
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4957">#4957</a> &mdash; subsidiary-aware
+        lookup is live at <code>api/src/Service/NetSuite/Traits/Location.php:32-96</code>.</p>
+        <p><strong>But <code>Invoice.php:113-116</code> still contains the hardcoded <code>location.id=41</code> AU/ACT
+        fallback (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4865">#4865</a>) &mdash; the exact
+        mechanism of the original incident &mdash; and it still fires</strong> for any address whose state fails to
+        map, because the fail-fast added in #4957 only triggers when the state <em>did</em> map.
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4863">#4863</a>&rsquo;s missing warning log
+        for unmapped states never shipped either.</p>
+        <p>Track B is untouched:
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4854">#4854</a> persist failure state,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4855">#4855</a> async Messenger + DLQ,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4856">#4856</a> HTTP/UI warnings,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4867">#4867</a> Loki alert. Until it lands,
+        <strong>a missed Slack ping is still a missed invoice</strong>. Last epic-linked merge was 2026-05-25.</p>
+        <span class="why"><b>Sizing:</b> #4865 + #4863 together are 1&ndash;2 days. Track B is 1&ndash;2 weeks.</span>
+      </div>
+    </div>
+
+    <h2>Tier 3 &mdash; planning only</h2>
+
+    <div class="themes">
+      <div class="theme t3">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5768">#5768</a> &mdash; SonarQube replacement <span class="tag tag-new">Created 13 Aug</span></h3>
+        <p>Plan fully specified and independently re-verified against <code>main</code>:
+        <code>api/phpstan.neon.dist:6</code> still at <code>level: 5</code>, no coverage thresholds in
+        <code>app/vite.config.ts</code>, no sonarjs/semgrep/jscpd anywhere, both Sonar CI steps live. Zero
+        implementation on all seven children. Strict order:
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5769">#5769</a> &rarr;
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5770">#5770</a> &rarr;
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5771">#5771</a> &rarr;
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5772">#5772</a> &rarr;
+        {<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5773">#5773</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5774">#5774</a>} &rarr;
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5775">#5775</a>. 1.5&ndash;2.5 weeks.</p>
+      </div>
+
+      <div class="theme t3">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5665">#5665</a> &mdash; PHP 8.5 upgrade <span class="tag tag-block">100% blocked</span></h3>
+        <p>Exceptionally thorough audit &mdash; 42 BC-break patterns and 41 adoption patterns at file and line level.
+        Entirely blocked on <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/510">kubernetes
+        #510</a>, the <code>php:8.5</code> base image with all required extensions, which has zero activity since
+        filing and no apparent owner. Nothing konvoy-side is independently unblockable.</p>
+        <span class="why"><b>Worth extracting now:</b>
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5673">#5673</a> &mdash; 20 test callsites in
+        <code>CycleServiceTest</code> and <code>MovementEventServiceTest</code> discard meaningful
+        <code>check*()</code> return values, i.e. weaker coverage than it looks. The correct next action on the epic
+        itself is chasing kubernetes #510&rsquo;s owner, not starting a child.</span>
+      </div>
+    </div>
+
+    <h2>Tier 4 &mdash; bookkeeping and dormant</h2>
+
+    <div class="themes">
+      <div class="theme t4">
+        <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a> &mdash; Dev-OC feedback bridge <span class="tag tag-done">Effectively done</span></h3>
+        <p>Live and producing real triaged reports
+        (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5757">#5757</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5764">#5764</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5765">#5765</a> with working screenshots and
+        bidirectional Slack&harr;GitHub sync). Only
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5424">#5424</a> (config checkboxes long
+        since true) and <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5426">#5426</a> (48h Sentry
+        soak, window elapsed) remain &mdash; under an hour of closure comments. Its body ticks #5424 as done while
+        GitHub shows it reopened.</p>
+      </div>
+
+      <div class="theme t4">
+        <h3>Dormant NetSuite epics &mdash; and the live issues hiding outside them</h3>
+        <p><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4624">#4624</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4322">#4322</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4315">#4315</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4331">#4331</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4337">#4337</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4327">#4327</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4304">#4304</a>,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4340">#4340</a> &mdash; all zero children
+        closed, no activity since about April.</p>
+        <p><strong>The actual NetSuite work sits outside any epic:</strong>
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5744">#5744</a> sign-up bank details 400
+        from UK localization; <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5745">#5745</a> double
+        Sentry per failure; <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5782">#5782</a>
+        <code>/api/netsuite/callback</code> publicly reachable and overwrites the production OAuth token;
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5779">#5779</a> capture-mode guard fails open
+        when <code>APP_LOCATION</code> is unset;
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5412">#5412</a>.</p>
+        <span class="why"><b>Suggestion for the session:</b> #5782 and #5779 read as higher priority than anything in
+        the eight dormant epics. Consider triaging them into Tier 1 rather than leaving them unparented.</span>
+      </div>
+
+      <div class="theme t4">
+        <h3>Dormant product buckets &mdash; two are closeable today</h3>
+        <p>No sub-issues, no activity since April:
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4471">#4471</a> Stocktake,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4470">#4470</a> Collections Reporting,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4468">#4468</a> Self Service,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4472">#4472</a> Combined
+        Transfers+Collections, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4469">#4469</a>
+        Platform Health BAU, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4467">#4467</a> Support
+        Desk cleanup, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4442">#4442</a>
+        Order/Collections email monitoring,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4466">#4466</a> slow
+        <code>GET /api/assets</code>, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5555">#5555</a>
+        Organisation/Membership N+1s.</p>
+        <p>Two can be closed now: <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4606">#4606</a>
+        (3 of 3 children closed) and
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4953">#4953</a> MuninnDB (decision record
+        preserved in PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5780">#5780</a>).</p>
+      </div>
+    </div>
+
+    <h2>Ranked shortlist &mdash; latest worked on</h2>
+    <table>
+      <tr><th>#</th><th>Epic</th><th>Why it ranks here</th></tr>
+      <tr><td class="sz">1</td><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4493">#4493</a> Fuel Levy</td><td><code>main</code> HEAD is a fuel-levy commit; three open code items, two of them S.</td></tr>
+      <tr><td class="sz">2</td><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5812">#5812</a> User docs + defects</td><td>Four merge-ready PRs blocked only on review.</td></tr>
+      <tr><td class="sz">3</td><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5630">#5630</a> LaunchDarkly cleanup</td><td>Two PRs shippable; four children blocked on your decision.</td></tr>
+      <tr><td class="sz">4</td><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5754">#5754</a> Vercel audit</td><td>#5726 expires 19 August; CSP unstarted.</td></tr>
+      <tr><td class="sz">5</td><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5205">#5205</a> Search latency</td><td>Close the measurement loop or the whole epic&rsquo;s premise stays unproven.</td></tr>
+      <tr><td class="sz">6</td><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5044">#5044</a> Booths EDI</td><td>Branch drift is compounding; needs the FreightPayer answer.</td></tr>
+      <tr><td class="sz">7</td><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4853">#4853</a> NetSuite hardening</td><td>#4865 is a known-live defect, one day of work.</td></tr>
+    </table>
+  </div>
+
+  <!-- ============ AGENDA ============ -->
+  <div class="part">
+    <div class="ptag">Suggested running order</div>
+    <h2>If you only have 45 minutes</h2>
+    <div class="lede">Sequenced so the decisions land before the discussion expands to fill the time.</div>
+
+    <div class="agenda">
+      <div class="row"><div class="mins">0&ndash;5</div><div class="what"><b>The two clocks.</b> #5726 expires Wednesday; #5827&rsquo;s date passes today. Agree an owner for each before anything else is discussed.</div></div>
+      <div class="row"><div class="mins">5&ndash;15</div><div class="what"><b>The four flag calls.</b> #5626, #5627, #5628, #5692 &mdash; ship or kill, one at a time. Then agree the standing rule that prevents a fifth.</div></div>
+      <div class="row"><div class="mins">15&ndash;22</div><div class="what"><b>Unblock the review queue.</b> Assign the four PRs; settle whether #5830&rsquo;s structurally-red Playwright run is accepted.</div></div>
+      <div class="row"><div class="mins">22&ndash;30</div><div class="what"><b>Fuel levy.</b> Chase Finance on the July AU rate; sequence #5799 ahead of the #5787 access grant.</div></div>
+      <div class="row"><div class="mins">30&ndash;38</div><div class="what"><b>Two investment calls.</b> Two days to close the search measurement loop (#5205), and go or shelve on the SonarQube replacement (#5768).</div></div>
+      <div class="row"><div class="mins">38&ndash;45</div><div class="what"><b>Chase list and triage.</b> Owners for kubernetes #510 and the Booths FreightPayer value; decide whether #5782 and #5779 get promoted out of the unparented NetSuite pile.</div></div>
+    </div>
+
+    <h2>Evidence caveats</h2>
+    <ul>
+      <li>Two scouts (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5665">#5665</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5422">#5422</a>) hit
+      <code>401 Bad credentials</code> on the GitHub MCP tools and fell back to cached
+      <code>issue://</code>/<code>pr://</code> readers &mdash; their issue and PR states are cached reads, not live
+      API. Everything else was confirmed via <code>gh</code>, <code>git log</code> and file reads on
+      <code>b444580a1</code>.</li>
+      <li>Sub-issue counts differ between native trackers and epic-body checklists in #4493, #5812, #5044, #5422 and
+      #5630 &mdash; <strong>the bodies undercount merged work in every case</strong>. Treat the native tracker as the
+      source of truth, and budget an hour this week to correct the five epic bodies.</li>
+      <li>Fuel-levy rates quoted (AU 6.57%, NZ 11.68%) are as at 17 August 2026 and change; the epic body&rsquo;s
+      table is stale and should not be used.</li>
+    </ul>
+  </div>
+
+  <footer>
+    Konvoy Kegs Engineering &middot; Katch Cloud &middot; Prepared 17 August 2026 &middot;
+    <a href="index.html">All planning documents</a>
+  </footer>
+
+</div>
+</body>
+</html>
