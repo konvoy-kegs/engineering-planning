@@ -128,9 +128,10 @@
   <!-- ============ THE ONE THING ============ -->
   <div class="headline">
     <p><strong>The binding constraint on this backlog is not engineering capacity. It is decisions.</strong> Ten open
-    items across the seven live epics are waiting on a call that only you or Finance can make &mdash; the oldest has
-    been outstanding since <strong>3 August</strong>. A further six pull requests are coded, self-reviewed and green,
-    and are blocked on nothing but someone pressing review.</p>
+    items across the live epics are waiting on a call that only you or Finance can make &mdash; the oldest has
+    been outstanding since <strong>3 August</strong>. A further <strong>four pull requests are coded, self-reviewed
+    and Sonar-green</strong> and blocked on nothing but someone pressing review, with two more shippable behind a
+    rebase.</p>
     <p><strong>Two items have a date attached and one of them expires this week.</strong> A leaked sign-up-link token
     (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5726">#5726</a>) stays valid until
     <strong>19 August</strong>, and the NetSuite line-description config
@@ -145,13 +146,14 @@
   <div class="kpis">
     <div class="kpi"><div class="n purple">10</div><div class="l">Items on your desk</div><div class="s">across 6 distinct decisions</div></div>
     <div class="kpi"><div class="n red">14</div><div class="l">Days &mdash; oldest wait</div><div class="s">#5630 flag ship/kill, since 3 Aug</div></div>
-    <div class="kpi"><div class="n yellow">2</div><div class="l">Days to token expiry</div><div class="s">#5726 closes 19 August</div></div>
-    <div class="kpi"><div class="n green">6</div><div class="l">PRs mergeable now</div><div class="s">blocked only on review or rebase</div></div>
+    <div class="kpi"><div class="n yellow">2</div><div class="l">Days to token expiry</div><div class="s">#5726 token valid until 19 Aug</div></div>
+    <div class="kpi"><div class="n green">6</div><div class="l">PRs mergeable now</div><div class="s">4 review-ready, 2 behind a rebase</div></div>
   </div>
 
-  <h2>What is actually holding the shortlist</h2>
-  <div class="lede">All 36 open items across the seven shortlisted epics, categorised by the thing that has to happen
-  first. Only the last band is engineering throughput.</div>
+  <h2>What is actually holding the backlog</h2>
+  <div class="lede">The 36 open items named in this review &mdash; Tiers 1 to 3, excluding NetSuite Track B, the
+  dormant epics and unscoped discovery &mdash; categorised by the thing that has to happen first. Only the last band
+  is engineering throughput.</div>
 
   <div class="bars">
     <div class="bar">
@@ -168,13 +170,17 @@
     </div>
     <div class="bar">
       <div class="top"><span>Waiting on engineering time</span><span>15 items</span></div>
-      <div class="track"><div class="fill green" style="width:41.6%"></div></div>
+      <div class="track"><div class="fill green" style="width:41.7%"></div></div>
     </div>
   </div>
-  <div class="caveat"><b>Read this honestly.</b> The categorisation is mine and some items could sit in two bands
-  &mdash; <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5819">#5819</a>, for example, needs both a
-  response-shape decision and a day of work. But the shape holds: <b>58% of the open backlog on the epics we are
-  actually working is blocked on something other than writing code.</b></div>
+  <div class="caveat"><b>Read this honestly.</b> The categorisation and the enumeration are both mine, not the
+  source report&rsquo;s, and some items could sit in two bands &mdash;
+  <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5819">#5819</a>, for example, needs both a
+  response-shape decision and a day of work. Two bands also reach into Tier 3
+  (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5768">#5768</a> and
+  <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/510">kubernetes #510</a>). But the shape
+  holds: <b>58% of the open backlog on the epics we are actually working is blocked on something other than writing
+  code.</b></div>
 
   <!-- ============ PART 1 — EXEC ============ -->
   <div class="part">
@@ -194,8 +200,8 @@
         <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5799">#5799</a>, which reproduces the same
         silent-failure pattern the moment the first person is granted the new admin access, and an open Finance
         question about which July AU rate was authoritative.</p>
-        <span class="why"><b>Why it matters:</b> this is the only workstream on the board where a defect changes what
-        a customer is charged. Every other epic costs time; this one can cost revenue or trigger a credit note.</span>
+        <span class="why"><b>Why it matters:</b> the report calls this a revenue-recognition path with live reporters
+        waiting. Most epics on the board cost time when they slip; this one changes what a customer is charged.</span>
       </div>
 
       <div class="theme">
@@ -208,8 +214,8 @@
         <p><strong>Four of those fixes are already written and waiting for review.</strong> Nothing technical is
         stopping them.</p>
         <span class="why"><b>Why it matters:</b> the documentation was the deliverable and the defects were the
-        by-product &mdash; but the by-product is worth more. It is also a cheap, repeatable way to find this class of
-        bug, and worth funding again.</span>
+        by-product &mdash; but the by-product is worth more. Worth asking whether we run the same exercise on another
+        area of the product.</span>
       </div>
 
       <div class="theme t2">
@@ -218,7 +224,7 @@
         verified in production. Two things are outstanding: a <strong>leaked sign-up-link token that remains valid
         until 19 August</strong> and needs invalidating this week, and a Content Security Policy that is fully
         specified but not started &mdash; the last real gap in that audit.</p>
-        <span class="why"><b>Why it matters:</b> the token has a fixed expiry, so the cost of missing it is not
+        <span class="why"><b>Why it matters:</b> the token has a fixed date on it, so the cost of missing it is not
         recoverable by working harder next week. Roughly one to two days of work closes the whole area.</span>
       </div>
 
@@ -228,8 +234,8 @@
         adoption patterns, down to file and line. It is <strong>100% blocked</strong> on a base container image in the
         infrastructure repository that has had no activity since it was filed and has no apparent owner. Nothing on
         the application side can start. Separately, the Booths Transport integration &mdash; which removes an operator
-        re-keying every collection by hand &mdash; is nine-elevenths built but waiting on Booths to reply and on one
-        configuration value from Marc and Alice.</p>
+        re-keying every <em>Booths</em> collection by hand &mdash; is nine of eleven children built but waiting on
+        Booths to reply and on one configuration value from Marc and Alice.</p>
         <span class="why"><b>Why it matters:</b> in both cases the correct action is chasing a person, not assigning
         an engineer. Work already done is quietly depreciating while we wait &mdash; the Booths branch is now 39
         commits behind and its test mocks predate a library migration.</span>
@@ -246,7 +252,7 @@
     <div class="decisions">
       <div class="dec hot">
         <div class="head">
-          <h3>Feature flags: ship or kill, four flags <span class="tag tag-dec">Decision</span></h3>
+          <h3>Feature flags: ship or kill, four calls <span class="tag tag-dec">Decision</span></h3>
           <span class="age">Outstanding 14 days</span>
         </div>
         <p>Epic <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5630">#5630</a>. 18 of 19 console
@@ -262,20 +268,21 @@
         tracking a ship decision. <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5692">#5692</a> is
         the failure mode recurring right now &mdash; orphaned from two issues that were closed without removing
         the flag.</p>
-        <span class="ask"><b>The ask:</b> four yes/no calls, one per flag. This is the epic that needs you rather than
-        an engineer &mdash; and worth agreeing a standing rule so a fifth flag does not join the list.</span>
+        <span class="ask"><b>The ask:</b> four yes/no calls, one per child &mdash; #5626 alone covers four flags. The
+        source report&rsquo;s words: this is the epic that needs <em>you</em>, not an agent.</span>
       </div>
 
       <div class="dec hot">
         <div class="head">
           <h3>Which July AU fuel rate was authoritative <span class="tag tag-dec">Finance</span></h3>
-          <span class="age">Blocks reconciliation</span>
+          <span class="age">Finance call</span>
         </div>
         <p><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5796">#5796</a>. Three candidate values
-        are in play for July AU &mdash; <strong>4.10%, 6.30% or 10.80%</strong>. Until Finance picks one, invoices
-        raised in that window cannot be reconciled and the 14 August incident cannot be fully closed out.</p>
-        <span class="ask"><b>The ask:</b> get Finance to name the rate today. Everything else on the fuel-levy epic is
-        small engineering work; this is the only item that cannot start without an external answer.</span>
+        are in play for July AU &mdash; <strong>4.10%, 6.30% or 10.80%</strong>. The report classes this as a Finance
+        decision, not engineering work; it is the only open item on the fuel-levy epic that no engineer can
+        progress.</p>
+        <span class="ask"><b>The ask:</b> get Finance to name the rate. Everything else remaining on #4493 is small
+        engineering work or an external NetSuite dependency.</span>
       </div>
 
       <div class="dec">
@@ -288,7 +295,10 @@
         <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5832">#5832</a> and
         <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5833">#5833</a> are coded, self-reviewed and
         Sonar-green, sitting at <code>REVIEW_REQUIRED</code>. They carry the Collections save failure, the raw-JSON
-        error rendering and the Collections navigation gate. Roughly two days of process, no code.</p>
+        error rendering and the Collections navigation gate. Roughly two days of process, no code. Two further PRs on
+        the flag epic are shippable alongside them &mdash;
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5790">#5790</a> needs a rebase first,
+        <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5810">#5810</a> does not.</p>
         <p>One sub-decision comes with them: <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5830">PR
         #5830</a> <strong>cannot go green before merge</strong> &mdash; the authenticated Playwright suite runs against
         deployed <code>main</code>, not a PR preview, so a navigation-visibility fix is structurally red until it
@@ -426,7 +436,7 @@
       <div class="theme">
         <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4493">#4493</a> &mdash; Fuel levy line item on orders</h3>
         <p><strong>What it is.</strong> Fuel levy as a real order line: freight &times; operator/market rate (AU 6.57%,
-        NZ 11.68% as of today), resolved in Katch Cloud, snapshotted on the order, pushed to NetSuite invoice item
+        NZ 11.68% as of today), resolved in KC, snapshotted on the order, pushed to NetSuite invoice item
         1489 through the existing <code>transformItems()</code> loop. Backend rate entity, resolution and snapshot in
         <code>api/src/Entity/Pricing/FuelSurchargeRate.php</code> and
         <code>api/src/Service/Pricing/FuelSurchargeService.php</code>; admin rate CRUD; customer-portal and
@@ -702,7 +712,7 @@
 
     <div class="agenda">
       <div class="row"><div class="mins">0&ndash;5</div><div class="what"><b>The two clocks.</b> #5726 expires Wednesday; #5827&rsquo;s date passes today. Agree an owner for each before anything else is discussed.</div></div>
-      <div class="row"><div class="mins">5&ndash;15</div><div class="what"><b>The four flag calls.</b> #5626, #5627, #5628, #5692 &mdash; ship or kill, one at a time. Then agree the standing rule that prevents a fifth.</div></div>
+      <div class="row"><div class="mins">5&ndash;15</div><div class="what"><b>The four flag calls.</b> #5626, #5627, #5628, #5692 &mdash; ship or kill, one at a time. The audit found flags open 1&ndash;3 years with no owner tracking a ship decision; worth deciding whether that gets a standing rule.</div></div>
       <div class="row"><div class="mins">15&ndash;22</div><div class="what"><b>Unblock the review queue.</b> Assign the four PRs; settle whether #5830&rsquo;s structurally-red Playwright run is accepted.</div></div>
       <div class="row"><div class="mins">22&ndash;30</div><div class="what"><b>Fuel levy.</b> Chase Finance on the July AU rate; sequence #5799 ahead of the #5787 access grant.</div></div>
       <div class="row"><div class="mins">30&ndash;38</div><div class="what"><b>Two investment calls.</b> Two days to close the search measurement loop (#5205), and go or shelve on the SonarQube replacement (#5768).</div></div>
@@ -719,7 +729,7 @@
       <code>b444580a1</code>.</li>
       <li>Sub-issue counts differ between native trackers and epic-body checklists in #4493, #5812, #5044, #5422 and
       #5630 &mdash; <strong>the bodies undercount merged work in every case</strong>. Treat the native tracker as the
-      source of truth, and budget an hour this week to correct the five epic bodies.</li>
+      source of truth. The five epic bodies need correcting.</li>
       <li>Fuel-levy rates quoted (AU 6.57%, NZ 11.68%) are as at 17 August 2026 and change; the epic body&rsquo;s
       table is stale and should not be used.</li>
     </ul>
