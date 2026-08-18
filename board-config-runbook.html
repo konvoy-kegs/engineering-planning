@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Configuration Runbook — Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171;
+    --purple: #a78bfa; --blue: #60a5fa; --pink: #f472b6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.55; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 96px; }
+
+  /* Header */
+  header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+  .brand { font-size: 1.9rem; font-weight: 800; }
+  .brand span { color: var(--accent); }
+  .breadcrumb { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .meta { text-align: right; color: var(--muted); font-size: 0.85rem; }
+  .meta strong { color: var(--text); }
+
+  /* Hero / intro card */
+  .hero { background: linear-gradient(135deg, var(--surface), var(--surface2)); border: 1px solid var(--surface2); border-radius: 14px; padding: 24px 28px; margin-bottom: 24px; }
+  .hero h1 { font-size: 1.5rem; margin-bottom: 8px; }
+  .hero p { color: var(--muted); max-width: 760px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 0; border-bottom: 1px solid var(--surface2); flex-wrap: wrap; }
+  .tab { background: transparent; color: var(--muted); border: none; padding: 12px 20px; font-size: 0.95rem; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; font-family: inherit; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab .count { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--surface); color: var(--muted); font-size: 0.72rem; font-weight: 600; }
+  .tab.active .count { background: var(--accent); color: var(--bg); }
+  .tab.done .count { background: var(--green); color: var(--bg); }
+
+  /* Panels */
+  .panel { display: none; padding-top: 24px; }
+  .panel.active { display: block; }
+  .panel-intro { color: var(--muted); margin-bottom: 24px; padding: 14px 18px; border-left: 3px solid var(--accent); background: rgba(56,189,248,0.08); border-radius: 0 8px 8px 0; }
+  .panel-intro strong { color: var(--text); }
+
+  /* Sections */
+  .section { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; margin-bottom: 14px; overflow: hidden; }
+  .section-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; cursor: pointer; user-select: none; }
+  .section-head:hover { background: rgba(56,189,248,0.04); }
+  .section-head h3 { font-size: 1.05rem; display: flex; align-items: center; gap: 10px; }
+  .section-head .toggle { color: var(--muted); transition: transform 0.2s; }
+  .section.collapsed .section-head .toggle { transform: rotate(-90deg); }
+  .section.collapsed .section-body { display: none; }
+  .section-body { padding: 0 20px 20px; }
+
+  .tag { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.4px; }
+  .tag-keep { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tag-delegate { background: rgba(167,139,250,0.18); color: var(--purple); }
+
+  /* Checklist items */
+  .check { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--surface2); }
+  .check:last-child { border-bottom: none; }
+  .check input[type="checkbox"] { margin-top: 4px; width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--accent); cursor: pointer; }
+  .check-body { flex: 1; }
+  .check.done .check-body { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--surface2); }
+  .check code { background: var(--bg); padding: 1px 6px; border-radius: 4px; color: var(--accent); font-size: 0.88em; }
+  .check a { color: var(--accent); }
+
+  .exit { margin-top: 10px; padding: 10px 14px; background: rgba(74,222,128,0.06); border-left: 3px solid var(--green); border-radius: 0 6px 6px 0; font-size: 0.88rem; color: var(--muted); }
+  .exit strong { color: var(--green); }
+
+  .codebox { background: var(--bg); border: 1px solid var(--surface2); border-radius: 8px; padding: 12px 14px; margin: 10px 0; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.82rem; color: #cbd5e1; overflow-x: auto; white-space: pre; }
+
+  .why { margin: 10px 0; padding: 12px 16px; background: rgba(251,191,36,0.06); border-left: 3px solid var(--yellow); border-radius: 0 6px 6px 0; font-size: 0.88rem; }
+  .why summary { color: var(--yellow); font-weight: 600; cursor: pointer; }
+  .why[open] summary { margin-bottom: 8px; }
+  .why p, .why li { color: var(--muted); }
+  .why li { margin-left: 18px; }
+
+  /* Quick links */
+  .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin-top: 24px; }
+  .links a { display: block; padding: 10px 14px; background: var(--surface); border: 1px solid var(--surface2); border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.88rem; transition: all 0.15s; }
+  .links a:hover { border-color: var(--accent); color: var(--accent); }
+  .links a .label { color: var(--muted); font-size: 0.75rem; display: block; margin-bottom: 2px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--surface2); vertical-align: top; }
+  th { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
+  tbody tr:hover { background: rgba(56,189,248,0.04); }
+
+  /* Reset button */
+  .reset-btn { background: transparent; color: var(--muted); border: 1px solid var(--surface2); border-radius: 6px; padding: 6px 12px; font-size: 0.78rem; cursor: pointer; font-family: inherit; }
+  .reset-btn:hover { color: var(--red); border-color: var(--red); }
+
+  /* Why-it-matters appendix tab */
+  .appendix h2 { font-size: 1.25rem; margin: 28px 0 12px; color: var(--accent); }
+  .appendix h3 { font-size: 1rem; margin: 18px 0 8px; }
+  .appendix p { color: var(--muted); margin-bottom: 12px; max-width: 820px; }
+  .appendix ul { color: var(--muted); margin: 8px 0 16px 24px; }
+  .appendix li { margin-bottom: 6px; }
+  .appendix strong { color: var(--text); }
+  .appendix table { max-width: 900px; }
+
+  footer { text-align: center; color: var(--surface2); font-size: 0.8rem; margin-top: 48px; }
+</style>
+<style>
+  .tag-ui { background: rgba(96,165,250,0.18); color: var(--blue); }
+  .tag-api { background: rgba(244,114,182,0.18); color: var(--pink); }
+  .tag-done { background: rgba(74,222,128,0.18); color: var(--green); }
+  .warn { margin: 10px 0; padding: 12px 16px; background: rgba(248,113,113,0.07); border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; font-size: 0.88rem; color: var(--muted); }
+  .warn strong { color: var(--red); }
+  .model td:first-child { font-weight: 600; color: var(--accent); white-space: nowrap; }
+  .kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 10px; margin: 16px 0; }
+  .kpi div { background: var(--surface); border: 1px solid var(--surface2); border-radius: 10px; padding: 14px 16px; }
+  .kpi .n { font-size: 1.6rem; font-weight: 800; }
+  .kpi .l { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+  .bar { height: 6px; border-radius: 3px; background: var(--surface2); margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="brand">Konvoy <span>Engineering</span></div>
+      <div class="breadcrumb"><a href="index.html">← All dashboards</a> · Board Configuration Runbook</div>
+    </div>
+    <div class="meta">
+      <div><strong>Owner:</strong> Rob Wilde</div>
+      <div><strong>Scope:</strong> Project 4 · Milestones · Issues</div>
+      <div><strong>Last updated:</strong> 2026-08-18</div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1>Board Configuration Runbook</h1>
+    <p>How the Konvoy Cloud board is meant to be wired, why each field exists, and the exact steps to get there. Companion to the <a href="sprint-hygiene-runbook.html" style="color:var(--accent)">Sprint Hygiene Runbook</a> — that one is the weekly cadence, this one is the wiring underneath it. Tick boxes save locally; your progress survives a refresh.</p>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="setup">Setup <span class="count" id="count-setup">0/0</span></button>
+    <button class="tab" data-tab="mile">Milestones <span class="count" id="count-mile">0/0</span></button>
+    <button class="tab" data-tab="issues">Issues <span class="count" id="count-issues">0/0</span></button>
+    <button class="tab" data-tab="sprint">Per-Sprint <span class="count" id="count-sprint">0/0</span></button>
+    <button class="tab" data-tab="verify">Verify <span class="count" id="count-verify">0/0</span></button>
+    <button class="tab" data-tab="decide">Decisions</button>
+    <button class="tab" data-tab="why">Why It Matters</button>
+    <button class="reset-btn" style="margin-left:auto;align-self:center;" onclick="resetAll()">Reset ticks</button>
+  </div>
+
+  <!-- =================== SETUP =================== -->
+  <div class="panel active" id="panel-setup">
+    <div class="panel-intro">
+      <strong>One-time migration.</strong> Run it once, tick the boxes, done. <span class="tag tag-ui">UI</span> steps need clicking — the public API can't make them. <span class="tag tag-api">API</span> steps are scriptable and the snippet is inline. <span class="tag tag-done">DONE</span> steps were executed on 2026-08-18 during the configuration review; they're here for the audit trail.
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>The model — one field, one job</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <p style="color:var(--muted);margin-bottom:4px">Every recurring "do I need to set this too?" question is answered here. If a field isn't in the <em>you</em> column, stop touching it.</p>
+        <table class="model">
+          <thead><tr><th>Field</th><th>Answers</th><th>Set by</th><th>Applies to</th></tr></thead>
+          <tbody>
+            <tr><td>Sprint <span style="color:var(--muted);font-weight:400">(iteration)</span></td><td><em>When</em> is this being done?</td><td>You, at planning</td><td>Issues only</td></tr>
+            <tr><td>Milestone</td><td><em>What scope</em> does this belong to?</td><td>You, at epic/release creation</td><td>Issues; PRs only for release payloads</td></tr>
+            <tr><td>Status</td><td><em>Where</em> is it in the pipeline?</td><td>Workflows, automatically</td><td>Issues + PRs</td></tr>
+            <tr><td>Project membership</td><td>Is this tracked at all?</td><td>Workflows, automatically</td><td>Issues + PRs</td></tr>
+            <tr><td>Parent issue</td><td>Which epic is this part of?</td><td>The sub-issue link itself</td><td>Issues</td></tr>
+            <tr><td>Issue type</td><td>What kind of thing is this?</td><td>You, at creation</td><td>Issues</td></tr>
+            <tr><td>Priority / Size / Points</td><td>How big, how urgent?</td><td>You, at planning</td><td>Issues</td></tr>
+            <tr><td>Cost Initiative</td><td>Which cost programme?</td><td>You, when relevant</td><td>Issues</td></tr>
+          </tbody>
+        </table>
+        <div class="exit"><strong>Two rules follow from it:</strong> (1) An issue and its PR are independent objects — <code>closes #5745</code> is a reference, not containment, and nothing propagates across it. The fix is automation and omission, not diligence. (2) Milestone means scope. Sprint means time. They are not two views of the same thing.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>1. Widen <code>Auto-add to project</code> to include PRs <span class="tag tag-ui">UI</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <p style="color:var(--muted)">The highest-value change in this runbook. All 9 built-in workflows are enabled, but the auto-add filter is issue-biased — so PRs get added by hand, inconsistently.</p>
+        <div class="kpi">
+          <div><div class="n" style="color:var(--red)">42%</div><div class="l">of last 40 PRs on the board</div><div class="bar"><i style="width:42%;background:var(--red)"></i></div></div>
+          <div><div class="n" style="color:var(--green)">100%</div><div class="l">after this change</div><div class="bar"><i style="width:100%;background:var(--green)"></i></div></div>
+        </div>
+        <div class="check"><input type="checkbox" data-id="s1a"><div class="check-body">Open <a href="https://github.com/orgs/konvoy-kegs/projects/4/workflows">Project 4 → Workflows</a></div></div>
+        <div class="check"><input type="checkbox" data-id="s1b"><div class="check-body">Select <strong>Auto-add to project</strong></div></div>
+        <div class="check"><input type="checkbox" data-id="s1c"><div class="check-body">Add <code>is:pr</code> to the filter alongside the existing issue criteria — <code>is:issue, is:open</code> becomes <code>is:issue, is:pr, is:open</code></div></div>
+        <div class="check"><input type="checkbox" data-id="s1d"><div class="check-body">Save, open a throwaway PR, confirm it lands on the board untouched</div></div>
+        <div class="exit"><strong>Exit criteria:</strong> A newly opened PR appears on Project 4 with no manual action. You never open the project picker on a PR again.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>2. Rebuild the Epics view as a grouping <span class="tag tag-ui">UI</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <p style="color:var(--muted)">The current Epics view filter is <code>-no:parent-issue</code> minus a hand-typed exclusion list of <strong>17</strong> parent issue numbers. There are <strong>27</strong> open epics — so 10 are invisible, and the list needs editing whenever an epic is created or finished.</p>
+        <div class="check"><input type="checkbox" data-id="s2a"><div class="check-body">Open the <strong>Epics</strong> view</div></div>
+        <div class="check"><input type="checkbox" data-id="s2b"><div class="check-body">Clear the filter entirely; set it to <code>is:issue is:open</code></div></div>
+        <div class="check"><input type="checkbox" data-id="s2c"><div class="check-body">Set <strong>Group by → Parent issue</strong> (the field already exists)</div></div>
+        <div class="check"><input type="checkbox" data-id="s2d"><div class="check-body">Add <strong>Sub-issues progress</strong> as a visible column for the completion bars</div></div>
+        <div class="exit"><strong>Exit criteria:</strong> All 27 epics appear, grouped, with no hardcoded issue numbers anywhere in the view config. The view stays correct when epic #28 is created.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>3. Add a Sprint view <span class="tag tag-ui">UI</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <div class="check"><input type="checkbox" data-id="s3a"><div class="check-body">New view, name it <strong>Sprint</strong></div></div>
+        <div class="check"><input type="checkbox" data-id="s3b"><div class="check-body">Filter: <code>is:issue is:open sprint:@current</code></div></div>
+        <div class="check"><input type="checkbox" data-id="s3c"><div class="check-body">Group by <strong>Status</strong>, layout <strong>Board</strong></div></div>
+        <div class="check"><input type="checkbox" data-id="s3d"><div class="check-body">Add <strong>Story Points</strong> and <strong>Assignees</strong> as visible fields</div></div>
+        <div class="warn"><strong>Don't drop <code>is:issue</code>.</strong> Without it PRs double every row — that's why Kanban has always felt noisier than the item count suggests.</div>
+        <div class="exit"><strong>Exit criteria:</strong> The Sprint view shows the current iteration only, and rolls over on its own when the iteration advances.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>4. Add a Triage view <span class="tag tag-ui">UI</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <div class="check"><input type="checkbox" data-id="s4a"><div class="check-body">New view, name it <strong>Triage</strong></div></div>
+        <div class="check"><input type="checkbox" data-id="s4b"><div class="check-body">Filter: <code>is:issue is:open no:sprint -has:parent-issue</code></div></div>
+        <div class="check"><input type="checkbox" data-id="s4c"><div class="check-body">Layout <strong>Table</strong>, sort by <strong>Created</strong> descending</div></div>
+        <div class="exit"><strong>Exit criteria:</strong> You can answer "what's arrived that I haven't planned?" in one click.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>5. Create an <code>Epic</code> org issue type <span class="tag tag-ui">UI</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <p style="color:var(--muted)">The org has Task / Bug / Feature only. <code>type:Epic</code> returns 0, <code>label:epic</code> finds <strong>8</strong> open issues, and <strong>27</strong> actually have sub-issues — the label is already lying by a factor of three.</p>
+        <div class="check"><input type="checkbox" data-id="s5a"><div class="check-body">Open <a href="https://github.com/organizations/konvoy-kegs/settings/issue-types">Organization settings → Issue types</a></div></div>
+        <div class="check"><input type="checkbox" data-id="s5b"><div class="check-body"><strong>New issue type</strong> → name <code>Epic</code>, description "A large body of work delivered through sub-issues", colour purple</div></div>
+        <div class="check"><input type="checkbox" data-id="s5c"><div class="check-body">Apply it to the 27 issues that have sub-issues (list them with the snippet in the Issues tab)</div></div>
+        <div class="check"><input type="checkbox" data-id="s5d"><div class="check-body">Retire <code>label:epic</code> once type coverage is complete</div></div>
+        <div class="warn"><strong>Attempted via API on 2026-08-18 and rejected.</strong> The planning PAT carries <code>read:org</code>, not <code>admin:org</code>. Do it in the UI, or widen the token scope first.</div>
+        <div class="exit"><strong>Exit criteria:</strong> <code>type:Epic</code> returns 27. <code>label:epic</code> is deleted or documented as deprecated.</div>
+      </div>
+    </div>
+
+    <div class="section collapsed">
+      <div class="section-head"><h3>6. Confirm the field inventory <span class="tag tag-api">API</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <p style="color:var(--muted)">Project 4 should have exactly these author-set fields: Status, Priority, Size, Story Points, Start Date, Target Date, Cost Initiative, Sprint. No duplicates, no per-epic variants.</p>
+        <div class="codebox">gh api graphql -f query='
+query{organization(login:"konvoy-kegs"){projectV2(number:4){
+ fields(first:50){nodes{... on ProjectV2FieldCommon{name dataType}}}}}}' \
+ --jq '.data.organization.projectV2.fields.nodes[] | "\(.dataType)\t\(.name)"'</div>
+        <div class="check"><input type="checkbox" data-id="s6a"><div class="check-body">Output matches the list above — anything extra gets deleted or justified in History</div></div>
+        <div class="exit"><strong>Exit criteria:</strong> Field list is closed. New fields require a written reason.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== MILESTONES =================== -->
+  <div class="panel" id="panel-mile">
+    <div class="panel-intro">
+      <strong>Rule: a milestone names a scope or a release payload. It never names a fortnight.</strong>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>Standing rules</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <ul style="color:var(--muted);margin-left:20px">
+          <li style="margin-bottom:8px"><strong style="color:var(--text)">Theme-named milestones are correct</strong> and stay — <code>Billing in Konvoy Cloud</code>, <code>LaunchDarkly Feature Flags</code>, <code>Vercel Setup Audit</code>, <code>Konvoy End-User Documentation</code>. Big epics get a theme name, never an <code>M##</code>.</li>
+          <li style="margin-bottom:8px"><strong style="color:var(--text)">Stop creating <code>M##</code> milestones.</strong> The Sprint iteration field does this job and auto-advances.</li>
+          <li style="margin-bottom:8px"><strong style="color:var(--text)">PRs stay out of milestones</strong> — one exception: a release payload milestone answering "what shipped in v1.89.x".</li>
+          <li><strong style="color:var(--text)">Never delete a milestone — close it.</strong> Closed milestones keep their attached issues, which is what the sprint reports read from.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>Sprint milestone retirement <span class="tag tag-done">PART DONE</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <div class="check done"><input type="checkbox" data-id="m1a" checked disabled><div class="check-body"><code>M24 - August 3 - 14</code> — 5 carry-over issues moved onto the M29 iteration, time-milestone cleared, milestone <strong>closed</strong> with its 61 closed issues intact. Done 2026-08-18.</div></div>
+        <div class="check"><input type="checkbox" data-id="m1b"><div class="check-body"><code>M29 - August 17 - 28</code> — the last sprint milestone. Runs in parallel with the M29 iteration for this sprint only.</div></div>
+        <div class="check"><input type="checkbox" data-id="m1c"><div class="check-body"><strong>At M30 (31 Aug): do not create a sprint milestone.</strong> Sprint field only.</div></div>
+        <div class="warn"><strong>Order of operations matters.</strong> Publish the sprint report <em>before</em> moving issues out of a sprint milestone. The report reads the milestone; empty it first and the numbers vanish.</div>
+        <div class="exit"><strong>Exit criteria:</strong> The milestones page shows theme-named scope milestones only, and no <code>M##</code> after M29.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>Current milestone state <span class="tag tag-api">API</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <table>
+          <thead><tr><th>Milestone</th><th>Open</th><th>Kind</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr><td>Billing in Konvoy Cloud</td><td>13</td><td>Scope</td><td style="color:var(--green)">Keep</td></tr>
+            <tr><td>Konvoy End-User Documentation</td><td>12</td><td>Scope</td><td style="color:var(--green)">Keep</td></tr>
+            <tr><td>LaunchDarkly Feature Flags</td><td>8</td><td>Scope</td><td style="color:var(--green)">Keep</td></tr>
+            <tr><td>Vercel Setup Audit</td><td>4</td><td>Scope</td><td style="color:var(--green)">Keep</td></tr>
+            <tr><td>M29 - August 17 - 28</td><td>23</td><td>Time</td><td style="color:var(--yellow)">Last one — retire after this sprint</td></tr>
+            <tr><td>M24 - August 3 - 14</td><td>0</td><td>Time</td><td style="color:var(--muted)">Closed 2026-08-18</td></tr>
+          </tbody>
+        </table>
+        <div class="codebox">gh api /repos/konvoy-kegs/konvoy/milestones --paginate \
+  --jq '.[] | select(.state=="open") | "\(.open_issues)\topen\t\(.title)"'</div>
+        <p style="color:var(--muted);font-size:0.88rem">Anything matching <code>M[0-9][0-9]</code> in that output after 31 Aug is a regression.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== ISSUES =================== -->
+  <div class="panel" id="panel-issues">
+    <div class="panel-intro">
+      <strong>Goal: make the 346-item open list navigable</strong> without inventing structure to hide in.
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>The shape of the backlog, measured</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <div class="kpi">
+          <div><div class="n">346</div><div class="l">open issues</div></div>
+          <div><div class="n" style="color:var(--purple)">126</div><div class="l">epic children (36%)</div></div>
+          <div><div class="n" style="color:var(--accent)">220</div><div class="l">triage list</div></div>
+          <div><div class="n" style="color:var(--yellow)">27</div><div class="l">epics</div></div>
+          <div><div class="n" style="color:var(--muted)">283</div><div class="l">no milestone</div></div>
+        </div>
+        <p style="color:var(--muted);font-size:0.9rem">The 14-child epic was never the problem — a third of the list was epic children before it existed. And the milestone page only ever showed the ~63 issues carrying a milestone; the other 283 were unreachable that way.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>The four saved searches</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <p style="color:var(--muted)">Bookmark these. They replace what the milestone page was giving you, and they reach the whole backlog.</p>
+        <div class="codebox">is:issue is:open -has:parent-issue        → morning triage, epic children collapsed
+is:issue is:open has:sub-issue            → the epic portfolio
+parent-issue:konvoy-kegs/konvoy#5835      → one epic's children
+is:issue is:open no:milestone             → the unplanned pile</div>
+        <div class="check"><input type="checkbox" data-id="i1a"><div class="check-body">All four bookmarked in the browser bar</div></div>
+        <div class="warn"><code>parent-issue:</code> is a first-class search qualifier in GitHub's own search UI, but the <strong>REST search endpoint silently ignores</strong> <code>has:parent-issue</code> and <code>has:sub-issue</code> and returns the unfiltered count. Don't script against it — use the GraphQL snapshot in the Per-Sprint tab.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>Creating an epic</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <div class="check"><input type="checkbox" data-id="i2a"><div class="check-body">Create the parent issue, title prefixed <code>[EPIC]</code>, issue type <strong>Epic</strong></div></div>
+        <div class="check"><input type="checkbox" data-id="i2b"><div class="check-body">Add children as <strong>sub-issues</strong> — not a checklist, not a new milestone, not a new project</div></div>
+        <div class="check"><input type="checkbox" data-id="i2c"><div class="check-body">Give the epic a <strong>theme-named milestone</strong> if it's a stakeholder-visible programme; otherwise no milestone at all</div></div>
+        <div class="check"><input type="checkbox" data-id="i2d"><div class="check-body">Leave the children's Sprint field <strong>empty</strong> until they're actually planned in</div></div>
+        <div class="check"><input type="checkbox" data-id="i2e"><div class="check-body">Do <strong>not</strong> set the project on the children — <code>Auto-add sub-issues to project</code> handles it</div></div>
+        <div class="exit"><strong>Exit criteria:</strong> The epic shows an <code>n/m</code> sub-issue bar. The 14 new children have not pushed anything down a list you care about, because your triage search excludes them.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>What not to do</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <details class="why" open>
+          <summary>No project-per-epic</summary>
+          <p>27 epic boards means 27 places to look and no portfolio rollup. Those 9 workflows plus Status / Priority / Size / Story Points / Cost Initiative would need recreating and maintaining per project. Status vocabulary drifts immediately and "Done" stops meaning one thing. Projects are for <strong>workstreams</strong>; scope units are what sub-issues are for — you already have that, #5835 reads 13/13.</p>
+        </details>
+        <details class="why">
+          <summary>No milestone-per-sprint</summary>
+          <p>See the Milestones tab. Sprint milestones are a workaround from before the iteration field existed, and they're the field the epic milestones have been fighting over.</p>
+        </details>
+        <details class="why">
+          <summary>No <code>epic</code> label once the issue type lands</summary>
+          <p>Two markers for one concept means neither is trusted. The label already finds 8 of 27.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== PER-SPRINT =================== -->
+  <div class="panel" id="panel-sprint">
+    <div class="panel-intro">
+      Run these alongside the <a href="sprint-hygiene-runbook.html" style="color:var(--accent)">Sprint Hygiene Runbook</a> blocks. <strong>The Sprint field is 14-day, Monday start</strong> — currently M29 (17–28 Aug) and M30 (31 Aug–11 Sep).
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>Sprint open — Monday, day 1</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <div class="check"><input type="checkbox" data-id="p1a"><div class="check-body">The iteration advanced on its own. Confirm the <strong>Sprint</strong> view is showing the new one.</div></div>
+        <div class="check"><input type="checkbox" data-id="p1b"><div class="check-body">Unfinished work from last sprint is still on the <em>old</em> iteration — decide per item: pull to current, or drop back to Triage. <strong>Do not</strong> let it sit on a completed iteration.</div></div>
+        <div class="check"><input type="checkbox" data-id="p1c"><div class="check-body">Set <strong>Sprint</strong> on each item being pulled in. Set Story Points at the same time.</div></div>
+        <div class="check"><input type="checkbox" data-id="p1d"><div class="check-body">Create no milestone.</div></div>
+        <div class="exit"><strong>Exit criteria:</strong> Sprint view total ≤ sustainable velocity, 20% buffer left, every item has points.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>Sprint close — final Friday</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <div class="check"><input type="checkbox" data-id="p2a"><div class="check-body">Publish the sprint report <strong>first</strong> — it reads the board, and the report number is the iteration name.</div></div>
+        <div class="check"><input type="checkbox" data-id="p2b"><div class="check-body">Then sweep leftovers forward.</div></div>
+        <div class="check"><input type="checkbox" data-id="p2c"><div class="check-body">Add the next iteration to the Sprint field config if fewer than two future iterations exist.</div></div>
+        <div class="exit"><strong>Exit criteria:</strong> Report live on the published site before any item moves.</div>
+      </div>
+    </div>
+
+    <div class="section collapsed">
+      <div class="section-head"><h3>Snapshot script <span class="tag tag-api">API</span></h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <p style="color:var(--muted)">Counts the things the REST search endpoint gets wrong. Run before each report.</p>
+        <div class="codebox">gh api graphql --paginate -f query='
+query($endCursor:String){repository(owner:"konvoy-kegs",name:"konvoy"){
+ issues(first:100,states:OPEN,after:$endCursor){
+  pageInfo{hasNextPage endCursor}
+  nodes{number parent{number} subIssues(first:1){totalCount} milestone{title}}}}}' \
+ --jq '.data.repository.issues.nodes[]' | python3 -c '
+import sys,json
+r=[json.loads(l) for l in sys.stdin if l.strip()]
+print("open              ",len(r))
+print("epic children     ",sum(1 for i in r if i["parent"]))
+print("triage (no parent)",sum(1 for i in r if not i["parent"]))
+print("epics             ",sum(1 for i in r if i["subIssues"]["totalCount"]))
+print("no milestone      ",sum(1 for i in r if not i["milestone"]))'</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== VERIFY =================== -->
+  <div class="panel" id="panel-verify">
+    <div class="panel-intro">
+      Run after Setup, then once a month. If you can't tick all of these, something drifted.
+    </div>
+    <div class="section">
+      <div class="section-head"><h3>Configuration self-check</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <div class="check"><input type="checkbox" data-id="v1"><div class="check-body">A PR opened today is on Project 4 without manual action.</div></div>
+        <div class="check"><input type="checkbox" data-id="v2"><div class="check-body"><code>type:Epic</code> returns the same count as <code>is:issue is:open has:sub-issue</code>.</div></div>
+        <div class="check"><input type="checkbox" data-id="v3"><div class="check-body">The Epics view contains no hardcoded issue numbers.</div></div>
+        <div class="check"><input type="checkbox" data-id="v4"><div class="check-body">Sprint view = current iteration, issues only.</div></div>
+        <div class="check"><input type="checkbox" data-id="v5"><div class="check-body">Triage view is non-empty and doesn't contain epic children.</div></div>
+        <div class="check"><input type="checkbox" data-id="v6"><div class="check-body">Milestones page has no <code>M##</code> entry newer than M29.</div></div>
+        <div class="check"><input type="checkbox" data-id="v7"><div class="check-body">No open issue carries both a sprint milestone and a Sprint value.</div></div>
+        <div class="check"><input type="checkbox" data-id="v8"><div class="check-body">You have not typed a project name or a milestone onto a PR this sprint.</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h3>Troubleshooting</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <table>
+          <thead><tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr></thead>
+          <tbody>
+            <tr><td>New PRs still missing from the board</td><td>Setup step 1 not saved, or the filter treats <code>is:issue</code> as AND rather than OR</td><td>Re-open the Auto-add workflow; test with a throwaway PR</td></tr>
+            <tr><td>Epics view missing a new epic</td><td>View reverted to an exclusion-list filter</td><td>Re-apply Group by → Parent issue; never filter by parent number</td></tr>
+            <tr><td>Sprint view empty on Monday</td><td>Iteration advanced but no items carry the new value</td><td>Expected on day 1 — planning is what populates it</td></tr>
+            <tr><td>Carry-over work disappears at the sprint boundary</td><td>Items left on the completed iteration</td><td>Sweep at sprint open, not sprint close</td></tr>
+            <tr><td>A sprint report shows fewer items than you remember</td><td>Issues moved out of the milestone before the report ran</td><td>Always publish first. Recover from the closed milestone's issue list</td></tr>
+            <tr><td>Scripted counts don't match the UI</td><td>REST search ignores <code>has:parent-issue</code> / <code>has:sub-issue</code></td><td>Use the GraphQL snapshot script</td></tr>
+            <tr><td>Someone creates a project per epic</td><td>Structure being invented to solve a view problem</td><td>Point them at "What not to do", then hand them the four saved searches</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== DECISIONS =================== -->
+  <div class="panel" id="panel-decide">
+    <div class="panel-intro">
+      <strong>Unresolved means still paying.</strong> Each of these has an ongoing cost while it sits open.
+    </div>
+    <div class="section">
+      <div class="section-head"><h3>Open decisions</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <table>
+          <thead><tr><th>#</th><th>Decision</th><th>Position</th><th>Owner</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>When to stop double-running sprint milestones</td><td>Keep both for M29; Sprint field only from M30 (31 Aug)</td><td>Rob</td></tr>
+            <tr><td>2</td><td>Whether PRs keep carrying the sprint milestone</td><td>Current practice says yes; this runbook says no except release payloads. <strong style="color:var(--red)">Unresolved — 25 of the last 40 PRs carry one.</strong> Pick one and write it down</td><td>Rob</td></tr>
+            <tr><td>3</td><td>Whether to convert M23/M24 history into iterations</td><td>Only if sprint reporting needs to read from one field. Reports already exist as published HTML</td><td>Rob</td></tr>
+            <tr><td>4</td><td>Whether #5205 <code>[EPIC] Global search orders latency</code> needs a theme-named milestone</td><td>Time-milestone cleared 2026-08-18; currently has none</td><td>Rob</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-head"><h3>History</h3><span class="toggle">▾</span></div>
+      <div class="section-body">
+        <table>
+          <thead><tr><th>Date</th><th>Change</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>2026-08-17</td><td><code>Sprint</code> iteration field created</td><td>14-day, Monday start, M29 + M30; 18 issues backfilled</td></tr>
+            <tr><td>2026-08-18</td><td>M24 sprint milestone closed</td><td>5 carry-overs moved to M29 iteration, time-milestone cleared, 61 closed issues retained</td></tr>
+            <tr><td>2026-08-18</td><td>Initial version of this runbook</td><td>Setup steps 1–5 still outstanding — all need UI access</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== WHY =================== -->
+  <div class="panel appendix" id="panel-why">
+    <div class="panel-intro">
+      A learning companion. Read once, then return when a rule feels like bureaucracy — that's exactly when you're about to break it.
+    </div>
+
+    <h2>Why the fields feel like double entry</h2>
+    <p>Because they <strong>are</strong> two objects. GitHub models an issue and a pull request as independent items that happen to reference each other. <code>closes #5745</code> creates a link for closing behaviour and nothing else — no field propagates across it. So the instinct that you're doing the same work twice is correct; the mistake is concluding that the fix is to be more diligent. The fix is that one of those fields should be automatic and the other shouldn't exist on a PR at all.</p>
+    <p><strong>Project membership is automatable and already automated.</strong> Nine workflows are enabled on Project 4 including <code>Auto-add to project</code>, <code>Auto-add sub-issues to project</code>, <code>Pull request linked to issue</code> and <code>Pull request merged</code>. The only reason you've been setting the project on PRs by hand is that the auto-add filter was written for issues. One filter edit and the step is gone permanently.</p>
+    <p><strong>Milestones have no workflow.</strong> There isn't one in the built-in list and nothing in <code>.github/workflows</code> touches them. That's deliberate on GitHub's part — the PR milestone was designed for release payloads ("what shipped in v1.89.4"), which is a genuinely different question from "which sprint was this in". It's the one place a PR milestone earns its keep, and you already run a release process that could use it.</p>
+
+    <h2>Why the morning list felt unmanageable</h2>
+    <p>It's a view problem wearing a data-model problem's clothes. As of 18 Aug: <strong>346</strong> open issues, of which <strong>126 (36%)</strong> are already epic children and <strong>283</strong> have no milestone. So the 14-child epic wasn't the cause — a third of the list was epic children before it existed. And the milestone page only ever showed the ~63 issues that carried a milestone; the other 283 were unreachable that way.</p>
+    <p>Milestone pages felt better for one reason: they were the only scoped view anyone had built. <code>is:issue is:open -has:parent-issue</code> gets you to 220 instead of 346 and costs nothing. <code>parent-issue:konvoy-kegs/konvoy#5835</code> gets you one epic's 13 children. Both were available the whole time.</p>
+    <p>The general lesson: <strong>when a list is unmanageable, build a view before you invent structure.</strong> Structure invented to solve a view problem — a project per epic, a milestone per sprint — is permanent, has maintenance cost, and doesn't actually fix the list.</p>
+
+    <h2>Why iterations beat sprint milestones</h2>
+    <p>Three reasons, in order of how much time they save you:</p>
+    <ul>
+      <li><strong>They auto-advance.</strong> Unfinished work rolls forward visibly instead of needing a manual M24→M29 sweep. That sweep is the thing you asked for by hand, and it's the thing that silently doesn't happen when you're busy.</li>
+      <li><strong>They free the milestone field for its actual job.</strong> While <code>M##</code> occupied it, an epic and a sprint were competing for the same slot on the same issue. That competition is why the epic milestones looked like a workaround.</li>
+      <li><strong><code>@current</code> is a stable filter.</strong> A view filtered on <code>sprint:@current</code> never needs editing. A view filtered on <code>milestone:"M29 - August 17 - 28"</code> needs editing every fortnight, forever, and silently shows the wrong sprint if you forget.</li>
+    </ul>
+    <p>The cost is that iterations are project-scoped, so they don't appear on the repo issue list. That's the trade: you look at the board for time, and at the repo for scope.</p>
+
+    <h2>Why an issue type rather than a label</h2>
+    <p>Labels are cheap, which is exactly the problem — anyone can add one, nobody has to, and there's no validation. <code>label:epic</code> currently finds 8 issues while 27 have sub-issues, so the label is already lying by a factor of three. An issue type is a single-value field on a controlled org-level vocabulary; it shows in the issue header, it's filterable as <code>type:Epic</code>, and it can't drift into <code>Epic</code> / <code>epic</code> / <code>EPIC</code>. The label trim from 29 to 22 in July was the same instinct — fewer, more meaningful axes.</p>
+
+    <h2>Why this runbook exists separately from the hygiene runbook</h2>
+    <p>The hygiene runbook answers "what do I do this week". This one answers "why is the board shaped like this". They rot at different rates: hygiene changes when the team changes, configuration changes when the tooling does. Keeping them apart means a GitHub feature release doesn't invalidate your Monday checklist, and a fourth developer doesn't invalidate your field model.</p>
+    <p>It also means the field model is written down somewhere other than your head — which is the whole point. The next person who asks "should I set the milestone on the PR too?" gets the table at the top of this document instead of twenty minutes of your Monday.</p>
+
+    <h2>Anti-patterns to watch for</h2>
+    <ul>
+      <li><strong>Re-adding an <code>M30</code> milestone out of habit.</strong> The muscle memory is strong and the cost isn't visible for a fortnight. Decision 1 exists to force the moment.</li>
+      <li><strong>Hand-editing a view filter to include specific issue numbers.</strong> Any filter containing an issue number is a filter that will be wrong next month. Group instead.</li>
+      <li><strong>Setting Sprint on a PR.</strong> PRs inherit their timing from the issue they close. If a PR needs a sprint, the issue is missing.</li>
+      <li><strong>Treating "unresolved" in the Decisions tab as harmless.</strong> Decision 2 is currently costing 40% of PR field entry. Unresolved means still paying.</li>
+    </ul>
+  </div>
+
+  <div class="links">
+    <a href="https://github.com/orgs/konvoy-kegs/projects/4"><span class="label">Board</span>Konvoy Cloud — Project 4</a>
+    <a href="https://github.com/orgs/konvoy-kegs/projects/4/workflows"><span class="label">Board</span>Workflows</a>
+    <a href="https://github.com/orgs/konvoy-kegs/projects/4/insights"><span class="label">Board</span>Insights</a>
+    <a href="https://github.com/konvoy-kegs/konvoy/milestones"><span class="label">Repo</span>Milestones</a>
+    <a href="https://github.com/organizations/konvoy-kegs/settings/issue-types"><span class="label">Org</span>Issue types</a>
+    <a href="https://github.com/konvoy-kegs/konvoy"><span class="label">Repo</span>Main monorepo</a>
+    <a href="sprint-hygiene-runbook.html"><span class="label">Runbook</span>Sprint Hygiene</a>
+    <a href="index.html"><span class="label">Site</span>All dashboards</a>
+  </div>
+
+  <footer>Konvoy Engineering · Board Configuration Runbook · last updated 2026-08-18 · update the History table on every configuration change</footer>
+</div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'konvoy-board-config-runbook-v1';
+  function loadState(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e){ return {}; } }
+  function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+
+  const state = loadState();
+
+  document.querySelectorAll('input[type="checkbox"][data-id]:not([disabled])').forEach(cb => {
+    const id = cb.dataset.id;
+    if (state[id]) {
+      cb.checked = true;
+      cb.closest('.check').classList.add('done');
+    }
+    cb.addEventListener('change', () => {
+      state[id] = cb.checked;
+      saveState(state);
+      cb.closest('.check').classList.toggle('done', cb.checked);
+      updateCounts();
+    });
+  });
+
+  document.querySelectorAll('.tab[data-tab]').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab[data-tab]').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.section-head').forEach(h => {
+    h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed'));
+  });
+
+  function updateCounts(){
+    ['setup','mile','issues','sprint','verify'].forEach(key => {
+      const panel = document.getElementById('panel-'+key);
+      if (!panel) return;
+      const total = panel.querySelectorAll('input[type="checkbox"][data-id]').length;
+      const done = panel.querySelectorAll('input[type="checkbox"][data-id]:checked').length;
+      const el = document.getElementById('count-'+key);
+      if (el) el.textContent = done + '/' + total;
+      const tab = document.querySelector('.tab[data-tab="'+key+'"]');
+      if (tab) tab.classList.toggle('done', done === total && total > 0);
+    });
+  }
+  updateCounts();
+
+  window.resetAll = function(){
+    if (confirm('Reset all checkboxes in this runbook?')) {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  };
+})();
+</script>
+</body>
+</html>
