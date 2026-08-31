@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive vs Account Status — Issue #5846 Review — Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 24px 80px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  a { color: var(--accent); }
+  a.iss { text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.5); white-space: nowrap; }
+  a.iss:hover { border-bottom-style: solid; }
+  code { font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; font-size: 0.86em; background: rgba(15,23,42,0.7); border: 1px solid var(--surface2); border-radius: 4px; padding: 1px 5px; color: #cbd5e1; }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  h2:first-of-type { margin-top: 0; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+
+  .headline { background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(74,222,128,0.06)); border: 1px solid rgba(56,189,248,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.06rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #e2f5ff; }
+
+  .quote { background: var(--surface); border-left: 3px solid var(--purple); border-radius: 0 10px 10px 0; padding: 18px 22px; margin-bottom: 30px; }
+  .quote p { font-size: 0.96rem; color: #cbd5e1; font-style: italic; }
+  .quote .who { display: block; margin-top: 10px; font-style: normal; font-size: 0.84rem; color: var(--muted); }
+
+  .qa { display: grid; gap: 14px; }
+  .q { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 20px 22px; }
+  .q h3 { font-size: 1.02rem; margin-bottom: 10px; color: var(--accent); }
+  .q p { font-size: 0.93rem; color: #cbd5e1; }
+  .q p + p { margin-top: 10px; }
+  .q .short { font-weight: 600; color: var(--text); font-size: 0.97rem; }
+  .q ul { margin: 10px 0 0 20px; font-size: 0.92rem; color: #cbd5e1; }
+  .q li { margin-bottom: 5px; }
+  .q table { margin-top: 14px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: rgba(15,23,42,0.5); border: 1px solid var(--surface2); border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 16px; background: rgba(51,65,85,0.5); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
+  td { padding: 13px 16px; border-top: 1px solid var(--surface2); vertical-align: top; }
+  td.w { width: 30%; font-weight: 600; }
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .yes { color: var(--green); font-weight: 600; }
+  .no { color: var(--red); font-weight: 600; }
+  .part { color: var(--yellow); font-weight: 600; }
+  .scroll { overflow-x: auto; }
+  h2 + .scroll table, .lede + .scroll table { background: var(--surface); }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); }
+  .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); } .n.red { color: var(--red); }
+
+  .caveat { background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.9rem; }
+  .caveat b { color: var(--yellow); }
+  .good { background: rgba(74,222,128,0.08); border-left-color: var(--green); }
+  .good b { color: var(--green); }
+
+  .findings { display: grid; gap: 12px; }
+  .f { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--green); border-radius: 10px; padding: 18px 20px; }
+  .f.open { border-left-color: var(--yellow); }
+  .f.sec { border-left-color: var(--red); }
+  .f h3 { font-size: 0.98rem; margin-bottom: 6px; }
+  .f p { font-size: 0.9rem; color: #cbd5e1; }
+  .f .meta { display: block; margin-top: 9px; font-size: 0.84rem; color: var(--muted); }
+
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; }
+  .tag-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tag-open { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tag-sec { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--surface2); color: var(--surface2); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
+    <h1>Archive vs Account Status <span>&middot;</span> Issue #5846 Review</h1>
+    <div class="dates">Asked 17 August 2026 &middot; Answered 25 August &middot; Finance answers issued 31 August
+    &middot; One question, seven defects, eight pull requests</div>
+  </header>
+
+  <!-- ============ THE SHORT VERSION ============ -->
+  <div class="headline">
+    <p><strong>Patrick asked a housekeeping question and it turned out to be a real one.</strong> He wanted to tidy
+    customers who have stopped trading out of his reports, and asked what Archive and the Account Status tick
+    actually do. Nobody knew for certain &mdash; the answer given in the meeting was openly a guess, and it was
+    wrong in the direction that mattered.</p>
+
+    <p><strong>Archive did much less than the app claimed.</strong> Its confirmation box promised three things it
+    did not deliver: it did not stop new orders, did not remove the customer from lists, and did not block their
+    login. The investigation turned up <strong>nine code discrepancies</strong>, filed as seven tracked issues
+    &mdash; including one security defect serious enough to stand on its own.</p>
+
+    <p><strong>Six are fixed and shipped; one is open because it is a product decision, not a bug.</strong>
+    The bulk archive Patrick originally asked for has deliberately <em>not</em> been run. Doing it under the old
+    behaviour would have left live contract pricing attached to dead customers &mdash; 15 archived customers are in
+    that state already.</p>
+  </div>
+
+  <div class="quote">
+    <p>&ldquo;We&rsquo;ve got a heap of customers in our list of organisations, and a number of those will have
+    either stopped trading because they&rsquo;re no longer an entity, or they&rsquo;re closed or insolvent, or
+    they&rsquo;ve moved to Kegstar. How do we best recognise that in Cloud? &hellip; What does archiving mean for
+    historical information, for being able to search them, and what does the active/inactive tick box mean? What
+    does it do?&rdquo;</p>
+    <span class="who">Patrick Hanrahan &mdash; Sprint Retro / Planning, 17 August 2026. Rob committed to reporting
+    back within the same week; the written investigation landed 25 August, the finance-facing answers on 31 August.</span>
+  </div>
+
+  <!-- ============ THE ANSWER ============ -->
+  <h2>Part 1 &mdash; The answers, as issued to finance</h2>
+  <div class="lede">Four questions, answered from what the code actually does. All figures are live production as at
+  31 August 2026, against a total of 1,819 customers.</div>
+
+  <div class="qa">
+
+    <div class="q">
+      <h3>Q1. Does archiving a customer make them &ldquo;inactive&rdquo;?</h3>
+      <p class="short">No. They are two separate switches, and today they disagree for 220 customers.</p>
+      <p><strong>Archived</strong> is its own flag, set by the Archive button. <strong>Account Status</strong>
+      &mdash; the tick on the Overview tab &mdash; is a different, manually set &ldquo;on hold&rdquo; flag, normally
+      used when an invoice is overdue.</p>
+      <p>They used to be linked: archiving forced a customer on hold. That link was <strong>deliberately removed in
+      August</strong>, because it meant nobody could tell whether &ldquo;on hold&rdquo; was a real credit decision
+      or just a side effect of archiving.</p>
+      <div class="scroll">
+      <table>
+        <tr><th></th><th class="num">Shows on hold</th><th class="num">Shows not on hold</th><th class="num">Never set</th><th class="num">Total</th></tr>
+        <tr><td class="w">Archived</td><td class="num">155</td><td class="num">10</td><td class="num">173</td><td class="num"><strong>338</strong></td></tr>
+        <tr><td class="w">Not archived</td><td class="num">37</td><td class="num">751</td><td class="num">693</td><td class="num"><strong>1,481</strong></td></tr>
+      </table>
+      </div>
+      <p><strong>183 archived customers do not show as on hold, and 37 customers who are not archived do.</strong>
+      A clean-up that keys off Account Status expecting it to mean &ldquo;archived&rdquo; will be wrong in both
+      directions.</p>
+      <p>And to confirm the second point finance raised: any customer not archived is active in the archive sense,
+      and whether they are exclusive has no bearing on it whatsoever. Exclusive is a third, entirely independent
+      flag.</p>
+    </div>
+
+    <div class="q">
+      <h3>Q2. What happens when we archive a customer?</h3>
+      <p class="short">Nothing is deleted and nothing is lost. Every order, invoice and keg movement stays exactly
+      as it was, and stays visible. Archiving is a status change, not a deletion.</p>
+      <p>What it does:</p>
+      <ul>
+        <li>Marks the customer as archived, with an &ldquo;Archived&rdquo; badge.</li>
+        <li>Archives all of their locations as well.</li>
+        <li><strong>Blocks new rental, lease and refill orders</strong> &mdash; this is new, and is one of the fixes
+        that came out of this investigation.</li>
+        <li><strong>Deliberately still allows collections and transfers</strong>, so we can get our kegs back.
+        Blocking those would strand our fleet at a customer who has stopped paying.</li>
+        <li>Refuses to archive at all if the customer has open rental or lease orders.</li>
+      </ul>
+      <p>Two things that surprise people:</p>
+      <ul>
+        <li><strong>Their access is not removed.</strong> Archiving does nothing to logins &mdash; the
+        customer&rsquo;s people can still sign in and see their history. Revoking access is a separate change we
+        have not made, and it would affect around <strong>260 user accounts</strong>, so it needs a deliberate
+        decision rather than being bundled in.</li>
+        <li><strong>NetSuite is not told.</strong> Archiving does not sync to NetSuite at all &mdash; there is no
+        &ldquo;archived&rdquo; field on the NetSuite customer record for it to sync to. The one related field that
+        does sync is the Exclusive tick.</li>
+      </ul>
+      <p>What it does <em>not</em> do &mdash; the gaps now being fixed: it does not end exclusive pricing agreements
+      (<strong>15 archived customers still have live contract pricing</strong>), does not clear the Exclusive tick
+      (<strong>32 still have it set</strong>), and does not check whether they still hold our kegs
+      (<strong>2 archived customers still hold 4 kegs</strong>).</p>
+    </div>
+
+    <div class="q">
+      <h3>Q3. If an archived customer comes back, can we recover everything?</h3>
+      <p class="short">Yes for the customer, no for their locations &mdash; and you do not need to create a new
+      customer record.</p>
+      <p>The customer record and all their history are intact. There is an Un-archive action for exactly this.</p>
+      <p><strong>The catch:</strong> their locations do not come back. Archiving archives every location;
+      un-archiving restores only the customer. Each location has to be un-archived by hand, one at a time. For a
+      customer with many sites that is real work, and easy to get wrong.</p>
+      <p><strong>Restoring locations is not yet being built.</strong> The groundwork is in
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a>, which starts recording
+      which locations were archived <em>by the archive action</em> rather than by hand &mdash; we cannot tell those
+      apart retrospectively today. The restore itself is a separate piece of work that has not been filed yet, and
+      the intended design is that an admin <em>chooses</em> which locations to bring back rather than the system
+      restoring all of them automatically.</p>
+      <p>Two consequences worth knowing now: the manual, one-at-a-time approach remains the only option until that
+      work is scheduled, and even once it ships it can only help customers archived <em>after</em> the provenance
+      stamp starts being written. Anyone archived before then will always need the manual approach.</p>
+      <p>Also relevant: because archiving never ended their pricing agreements, those agreements are still sitting
+      there. That helps if the customer returns &mdash; and it is the same reason they are still being priced under
+      contract terms while they are gone.</p>
+      <p><strong>On Kegstar specifically:</strong> Kegstar is a competitor, so it is external to our system. Archive
+      is the right action, and yes, they can be brought back later.</p>
+    </div>
+
+    <div class="q">
+      <h3>Q4. What is the &ldquo;exclusive&rdquo; tick linked to?</h3>
+      <p class="short">It is a label, not the pricing. It has real effects, but not the one its name suggests.</p>
+      <p><strong>Ticking it does exactly two things:</strong> it unlocks the contracted volume forecast for that
+      customer, and it sets the &ldquo;Exclusive Customer&rdquo; field on their NetSuite record. That is all.</p>
+      <p>It does <strong>not</strong> set or control any prices, does not create, start, end or extend an agreement,
+      does not affect what the customer can order or is charged, and does not appear on invoices.</p>
+      <p><strong>The actual commercial terms live somewhere else</strong> &mdash; in a separate, dated Exclusive
+      Agreement record holding start and end dates, minimum volumes, casual status and agreed per-SKU pricing.
+      <em>That</em> is what prices their orders. A customer is genuinely on contract pricing if they have a live
+      agreement, regardless of what the tick says.</p>
+      <div class="scroll">
+      <table>
+        <tr><th>Tick versus reality</th><th class="num">Customers</th></tr>
+        <tr><td>Tick says <strong>yes</strong>, and they have live agreement pricing</td><td class="num">178</td></tr>
+        <tr><td>Tick says <strong>yes</strong>, but they have <strong>no</strong> live agreement</td><td class="num">40</td></tr>
+        <tr><td>Tick says <strong>no</strong>, but they <strong>do</strong> have live agreement pricing</td><td class="num">46</td></tr>
+        <tr><td>Tick has never been set either way</td><td class="num">878</td></tr>
+      </table>
+      </div>
+      <p class="short" style="font-weight:400;font-size:0.86rem;color:var(--muted)">These four rows total 1,142, not
+      1,819 &mdash; the remaining 677 are customers whose tick says no and who have no agreement either, which is
+      the case that needs no action.</p>
+      <p>So for the clean-up: <strong>do not use the Exclusive tick to decide who is on contract pricing.</strong>
+      46 customers would be missed and 40 wrongly included. The agreements are the source of truth; the tick is a
+      label that has drifted from them.</p>
+      <p>On those 878 &mdash; the tick has simply never been set, so it is stored as blank rather than an explicit
+      &ldquo;no&rdquo;. They read as not exclusive, which is the correct interpretation, so there is nothing to
+      action. A change that normalises them to a definite &ldquo;no&rdquo; is merged, but
+      <strong>is not yet in any pending release</strong> &mdash; the current draft release was cut two days before
+      it landed. It needs a release cut before it reaches production.</p>
+    </div>
+
+  </div>
+
+  <div class="caveat">
+    <b>Why the bulk archive has not run yet.</b> The issue asked for Patrick&rsquo;s list to be archived in one
+    sweep. Under the behaviour found in the investigation that would have left <strong>live exclusive pricing
+    agreements attached to dead customers</strong> &mdash; 15 archived customers are already in that state, and 4 of
+    those are invisible to an end-date-only check. Archiving more customers into it would quietly have made things
+    worse. The archive action is being completed first
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a>), then the sweep runs. This
+    is the &ldquo;say so plainly rather than archiving and hoping&rdquo; clause in the issue&rsquo;s own acceptance
+    criteria being honoured.
+  </div>
+
+  <!-- ============ NUMBERS ============ -->
+  <h2>Part 2 &mdash; What the investigation produced</h2>
+  <div class="lede">One discovery issue, opened 17 August, answered with a 50,000-character written investigation
+  (PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5934">#5934</a>) on 25 August &mdash; the
+  first of the eight pull requests counted below.</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n blue">7</div><div class="l">Issues raised</div><div class="s">from 9 code discrepancies</div></div>
+    <div class="kpi"><div class="n green">6</div><div class="l">Fixed and shipped</div><div class="s">via 8 pull requests</div></div>
+    <div class="kpi"><div class="n red">1</div><div class="l">Security defect</div><div class="s">cross-tenant data exposure</div></div>
+    <div class="kpi"><div class="n yellow">1</div><div class="l">Open by design</div><div class="s">a product decision, not a bug</div></div>
+  </div>
+
+  <div class="caveat good">
+    <b>The method is the point.</b> Every finding carries a file and line reference verified against a named commit,
+    and every population figure comes from read-only queries run against both the development and production
+    databases. Nothing in it is an assumption. That is why a guess in a meeting became seven actionable tickets and
+    a security fix, rather than a conversation everyone half-remembers.
+  </div>
+
+  <!-- ============ WHAT ARCHIVE CLAIMS ============ -->
+  <h2>What the Archive dialog claimed, versus what it did</h2>
+  <div class="lede">The promises in the confirmation box, checked one by one against the code as it stood on
+  25 August.</div>
+
+  <div class="scroll">
+  <table>
+    <tr><th>The dialog said&hellip;</th><th>Reality when investigated</th><th>Now</th></tr>
+    <tr><td class="w">&ldquo;remove them from lists&rdquo;</td><td><span class="no">No.</span> Archived customers stay in the list and stay reachable by link, with an &ldquo;Archived&rdquo; badge. There is no active/archived filter control at all.</td><td>Unchanged &mdash; product decision, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5932">#5932</a></td></tr>
+    <tr><td class="w">&ldquo;unable login&rdquo;</td><td><span class="no">No.</span> The only login guard checks whether the <em>user</em> is deleted. Organisation state is never consulted in login, authorisation or tenant scoping.</td><td>Unchanged &mdash; would affect ~260 accounts, needs a decision</td></tr>
+    <tr><td class="w">&ldquo;place orders&rdquo;</td><td><span class="no">No.</span> The only guard was rental-only and lived on three deprecated endpoints. The live ordering screen had no check at all.</td><td><span class="yes">Fixed</span> &mdash; rental, lease and refill now blocked; collections and transfers deliberately still allowed</td></tr>
+    <tr><td class="w">&ldquo;receive notifications&rdquo;</td><td><span class="part">Partly.</span> Not enforced through the archive path itself.</td><td>Folded into <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a></td></tr>
+    <tr><td class="w"><em>(not claimed, but expected)</em><br>ends pricing agreements</td><td><span class="no">No.</span> 15 archived customers still hold live contract pricing; 4 are invisible to an end-date-only test.</td><td>Scoped &mdash; <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a></td></tr>
+    <tr><td class="w"><em>(not claimed, but expected)</em><br>tells NetSuite</td><td><span class="no">No.</span> Archive set the hold flag through a plain setter that raised no event. There is also no &ldquo;archived&rdquo; field on the NetSuite customer record to sync to &mdash; only the Exclusive tick syncs.</td><td>Partly scoped &mdash; clearing the Exclusive tick will propagate, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a></td></tr>
+    <tr><td class="w"><em>(not claimed, but expected)</em><br>checks kegs on hire</td><td><span class="no">No.</span> Two customers are archived with 4 kegs still recorded at their premises. Nothing inspects the keg table.</td><td>Scoped &mdash; <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a></td></tr>
+    <tr><td class="w"><em>(not claimed, but expected)</em><br>un-archive is the inverse</td><td><span class="no">No.</span> Un-archive restores the customer flag only. Locations stay archived permanently and must be restored by hand, one at a time.</td><td><span class="part">Not yet scoped.</span> #5991 adds only the provenance stamp; the restore itself is a separate issue, not yet filed</td></tr>
+  </table>
+  </div>
+
+  <!-- ============ THE SEVEN ============ -->
+  <h2>Part 3 &mdash; The seven issues, and where each stands</h2>
+  <div class="lede">In the order they were filed. Six closed; one open, and deliberately so.</div>
+
+  <div class="findings">
+
+    <div class="f">
+      <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5927">#5927</a> &mdash; Archived and on-hold customers could still be given orders <span class="tag tag-done">Fixed</span></h3>
+      <p>The only guard against ordering for a held customer applied to rental orders only, and sat on three
+      endpoints that are all deprecated. The ordering screen the application actually uses had no check of any kind
+      &mdash; an operator could place an order for an on-hold customer, or clone an order onto an archived one,
+      through the live interface today.</p>
+      <span class="meta">Closed 26 August &middot; PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5940">#5940</a> (+489/&minus;23 across 7 files) &middot; The fix is deliberately partial: rental, lease and refill are blocked, but collections and transfers still work so the fleet can be recovered. This had to land before the archive behaviour could safely change.</span>
+    </div>
+
+    <div class="f sec">
+      <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5928">#5928</a> &mdash; One customer could read another customer&rsquo;s contract <span class="tag tag-sec">Security</span></h3>
+      <p>The endpoint returning an exclusive agreement checked permissions against the organisation named in the
+      request, never against the organisation that owns the agreement. Any ordinary user at any customer could
+      supply their own organisation plus an arbitrary agreement reference and receive someone else&rsquo;s contract:
+      term dates, minimum keg rental, maximum monthly supply percentage, annual review date, casual status and the
+      full SKU pricing list.</p>
+      <span class="meta">Closed 27 August &middot; PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5939">#5939</a> &middot; Fixed to return &ldquo;not found&rdquo; rather than &ldquo;forbidden&rdquo;, so the endpoint does not confirm that another tenant&rsquo;s agreement exists. The list endpoint was checked and was never affected.</span>
+    </div>
+
+    <div class="f">
+      <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5929">#5929</a> &mdash; Two pricing agreements could cover the same day <span class="tag tag-done">Fixed</span></h3>
+      <p>The overlap check tested whether either end of a new date range fell inside an existing agreement, but not
+      whether the new range fully <em>enclosed</em> an existing one. A new agreement spanning a whole year would be
+      accepted over an existing three-month agreement sitting inside it, and which one priced an order was then
+      decided by a tiebreak rather than by anyone&rsquo;s intent. The same flawed check was duplicated in the
+      front-end form.</p>
+      <span class="meta">Closed 26 August &middot; PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5938">#5938</a> (+387/&minus;5 across 5 files) &middot; No database constraint backs this, so the fix had to land on both sides.</span>
+    </div>
+
+    <div class="f">
+      <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5930">#5930</a> &mdash; Archive silently set the hold flag <span class="tag tag-done">Fixed</span></h3>
+      <p>The source of the 220-customer drift in Q1. Archiving flipped the account-hold flag through a plain setter
+      that raised no event, and un-archiving never cleared it. The two flags then disagreed permanently, and nobody
+      could tell a real credit hold from an archiving side effect.</p>
+      <span class="meta">Closed 27 August &middot; PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5942">#5942</a> (+218/&minus;12 across 8 files) &middot; Deliberately merged <em>after</em> #5927 &mdash; removing the implicit hold before the real order guard existed would have removed the incidental protection it was accidentally providing.</span>
+    </div>
+
+    <div class="f">
+      <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5931">#5931</a> &mdash; None of this was documented for users <span class="tag tag-done">Fixed</span></h3>
+      <p>The organisations user guide was effectively silent: Account Status appeared only in a screenshot&rsquo;s
+      alt text; Archive, Hold Account and Agreements were named once as button labels in a single sentence; and the
+      word &ldquo;Exclusive&rdquo; did not appear anywhere in the user guide at all. Because the guides had just
+      been surfaced inside the application itself, that silence had become customer-facing rather than an internal
+      gap.</p>
+      <span class="meta">Closed 25 August &middot; PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5937">#5937</a> &middot; Directly satisfies the &ldquo;raise the gap rather than archive and hope&rdquo; acceptance criterion on #5846.</span>
+    </div>
+
+    <div class="f open">
+      <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5932">#5932</a> &mdash; There is no single &ldquo;customer stopped trading&rdquo; action <span class="tag tag-open">Open &mdash; needs a decision</span></h3>
+      <p>The root finding. Archive was never designed as offboarding; it is simply the closest thing available,
+      which is why it keeps being asked to do work it was not built for. The open questions are for product, not
+      engineering: should offboarding automatically end live pricing agreements, and should archived customers be
+      hidden from the organisations list by default behind a &ldquo;show archived&rdquo; toggle?</p>
+      <span class="meta">Open, carried out of Milestone 29 &middot; This is a decision, not a task &mdash; it needs Patrick and Marc, not a developer.</span>
+    </div>
+
+    <div class="f">
+      <h3><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5933">#5933</a> &mdash; One bad row could take the customer list down <span class="tag tag-done">Fixed</span></h3>
+      <p>The exclusivity flag was declared in code as always having a value, while the database allowed it to be
+      empty. Because it is read while building the whole customer list, a single producer with an empty flag would
+      have failed the entire list for every user. Confirmed <strong>latent</strong>, not a live incident &mdash; no
+      production row was in that state &mdash; but reachable through the customer-update endpoint with a
+      well-formed request.</p>
+      <span class="meta">Closed 29 August &middot; PRs <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5941">#5941</a> then <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5972">#5972</a> &middot; Split across two releases on purpose: reject bad values first, tighten the database column second, so code and schema were never in disagreement. This is also the change that normalises the 878 blank Exclusive ticks to a definite &ldquo;no&rdquo;.</span>
+    </div>
+
+  </div>
+
+  <!-- ============ WHAT'S LEFT ============ -->
+  <h2>Part 4 &mdash; What is still open</h2>
+  <div class="lede">Four items. Two need a business decision rather than engineering time.</div>
+
+  <div class="scroll">
+  <table>
+    <tr><th>Item</th><th>What it needs</th><th>From whom</th></tr>
+    <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a><br>Complete the Archive action</td><td>Extends the existing Archive button so it ends agreements, clears the Exclusive tick (which does then reach NetSuite), stamps which locations it archived, and wraps the whole thing in a transaction. Scoped, with the live population counted per region. No new button, no new concept. <strong>Location restore is explicitly out of scope.</strong></td><td>Engineering &mdash; needs a sprint slot</td></tr>
+    <tr><td class="w">Location restore on un-archive</td><td>Not yet filed. Depends on the provenance stamp in #5991 existing first, and needs a design decision: an admin picks which locations to restore, rather than restoring all of them.</td><td>Engineering &mdash; needs an issue raising</td></tr>
+    <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5932">#5932</a><br>Should archived customers be hidden?</td><td>Two product decisions: whether offboarding ends live pricing agreements automatically, and whether archived customers drop out of the organisations list by default.</td><td>Patrick &amp; Marc</td></tr>
+    <tr><td class="w">Revoking archived customers&rsquo; access</td><td>Not currently done, and not yet an issue. Would affect around 260 user accounts, so it is a deliberate decision rather than something to bundle into #5991.</td><td>Finance &amp; Patrick</td></tr>
+    <tr><td class="w">The bulk archive itself</td><td>Patrick&rsquo;s list of no-longer-operating customers, plus sign-off on the semantics above. Runs against development first, verified, then production &mdash; per the change-and-revert discipline.</td><td>Patrick &mdash; the list</td></tr>
+  </table>
+  </div>
+
+  <div class="caveat">
+    <b>The thing most likely to go wrong from here.</b> Patrick&rsquo;s stated goal was getting these customers out
+    of his reports. Archiving does not do that, and completing the archive action will not do it either &mdash; the
+    Power BI reports read the database directly and do not filter on archived status. That is separate work and it
+    has not yet been raised as an issue. It is the single most likely way for this thread to be marked
+    &ldquo;done&rdquo; while the person who asked still has the original problem.
+  </div>
+
+  <!-- ============ WHY IT MATTERS ============ -->
+  <h2>Why this one is worth reading twice</h2>
+  <div class="lede">Three things the thread demonstrates, beyond the fixes themselves.</div>
+
+  <div class="scroll">
+  <table>
+    <tr><td class="w">A guess became a receipt</td><td>The answer given in the meeting was openly a guess &mdash; archive was assumed to pull customers out of estimations and costing. Writing it down properly, with line references, turned an assumption into seven tickets and one security fix.</td></tr>
+    <tr><td class="w">The dialog lied, and nobody had checked</td><td>Three of the four promises in the archive confirmation box were false. That text had been in front of operators for years. User-facing copy is not covered by any test we run.</td></tr>
+    <tr><td class="w">The right answer was to slow down</td><td>The issue asked for a bulk archive. Running it would have been quick, would have looked complete, and would have attached live contract pricing to dead customers at scale. Declining to run it until the action is fixed is the whole value of the investigation.</td></tr>
+  </table>
+  </div>
+
+  <footer>
+    Konvoy Kegs Engineering &middot; Review of
+    <a href="https://github.com/konvoy-kegs/konvoy/issues/5846">issue #5846</a>, prepared 31 August 2026 &middot;
+    Part 1 reproduces the answers issued to finance on 31 August; its figures are live production against 1,819
+    customers. Source investigation: <code>doc/organisation-account-status-lifecycle-2026-08.md</code>, verified
+    against <code>main</code> at commit <code>46d6a5420</code>; decision record for #5991 at <code>9fb28fca9</code>.
+    Where the development and production regions differ, production is quoted.
+  </footer>
+
+</div>
+</body>
+</html>
