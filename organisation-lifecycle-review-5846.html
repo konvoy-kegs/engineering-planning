@@ -118,6 +118,72 @@
     that state already.</p>
   </div>
 
+  <!-- ============ ADDENDUM 2026-09-01 ============ -->
+  <div class="caveat">
+    <p><b>Addendum &mdash; 1 September 2026: six statements below are now out of date.</b>
+    This review was accurate as issued on 31 August. PR
+    <a href="https://github.com/konvoy-kegs/konvoy/pull/5992">#5992</a> merged at 14:00 that same day and
+    completed the Archive action, which falsified several claims here &mdash; including the two flagged in Q2 as
+    &ldquo;things that surprise people&rdquo;. The corrections, in the order they appear:</p>
+
+    <table>
+      <thead><tr><th>What this review says</th><th>Position as at 1 September</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Q2: &ldquo;Their access is not removed. Archiving does nothing to logins&rdquo;, and revoking it
+          &ldquo;needs a deliberate decision rather than being bundled in&rdquo;</td>
+          <td><b>Now revoked.</b> Both the password and refresh grants refuse a user whose only enabled
+          memberships are archived. It was bundled into #5992 rather than decided separately &mdash; the ~260
+          affected accounts were never put to a separate decision. Recorded honestly in the engineering notes as
+          &ldquo;a scope addition, not a dependency&rdquo;.</td>
+        </tr>
+        <tr>
+          <td>Q2: &ldquo;NetSuite is not told. Archiving does not sync to NetSuite at all&rdquo;</td>
+          <td><b>Partly false now.</b> Archiving clears the Exclusive tick, and that field does sync. So archiving
+          an exclusive customer now generates NetSuite traffic. There is still no &ldquo;archived&rdquo; field to
+          sync to.</td>
+        </tr>
+        <tr>
+          <td>Q2: archiving &ldquo;does not end exclusive pricing agreements&hellip; does not clear the Exclusive
+          tick&hellip; does not check whether they still hold our kegs&rdquo;</td>
+          <td><b>The action now does all three.</b> Live agreements are end-dated, the tick is cleared, and kegs
+          on hire raise a confirmation naming the count. The 15 and 32 figures remain correct, but they now
+          describe <em>historical residue</em> on customers archived before #5992, not current behaviour &mdash;
+          tracked as <a href="https://github.com/konvoy-kegs/konvoy/issues/6001">#6001</a>.</td>
+        </tr>
+        <tr>
+          <td>Dialog table: &ldquo;There is no active/archived filter control at all&rdquo;</td>
+          <td><b>A filter now exists</b> &mdash; <i>Filter by Account Status</i> (Archived / On hold / Active). The
+          list still <em>defaults</em> to showing everyone, deliberately, so the second half of
+          <a href="https://github.com/konvoy-kegs/konvoy/issues/5932">#5932</a>&rsquo;s question is still open.</td>
+        </tr>
+        <tr>
+          <td>Part 4: #5991 &ldquo;Engineering &mdash; needs a sprint slot&rdquo;</td>
+          <td><b>Shipped.</b> Merged, deployed to dev-oc, migration applied. Queued for production in draft
+          release v1.90.0.</td>
+        </tr>
+        <tr>
+          <td>Q4: the change normalising the 878 blank Exclusive ticks is &ldquo;not yet in any pending release&rdquo;</td>
+          <td><b>A release now exists.</b> Draft v1.90.0 was cut on 31 August targeting <code>main</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><b>What has not changed, and is the most important line in this document.</b> &ldquo;The thing most likely
+    to go wrong from here&rdquo; still stands in full: the Power BI reports read the database directly and do not
+    filter on archived status, so none of the above moves Patrick&rsquo;s original goal. It is now filed as
+    <a href="https://github.com/konvoy-kegs/konvoy/issues/6002">#6002</a>, and it needs no code change &mdash;
+    <code>organisation.active</code> is already a plain queryable column, so the fix is a predicate in the report
+    definitions. One trap for whoever does it: <code>account_on_hold</code> is nullable (866 of 1,819 prod-oc rows
+    are NULL), so <code>AND account_on_hold = 0</code> silently drops 693 customers; the correct form is
+    <code>AND (account_on_hold = 0 OR account_on_hold IS NULL)</code>.</p>
+
+    <p>Also now filed: location restore on un-archive, which this review correctly listed as unscoped, is
+    <a href="https://github.com/konvoy-kegs/konvoy/issues/6003">#6003</a>. And the user guide, which stated
+    plainly that archiving does not affect logins, was corrected in
+    <a href="https://github.com/konvoy-kegs/konvoy/pull/6000">#6000</a>.</p>
+  </div>
+
   <div class="quote">
     <p>&ldquo;We&rsquo;ve got a heap of customers in our list of organisations, and a number of those will have
     either stopped trading because they&rsquo;re no longer an entity, or they&rsquo;re closed or insolvent, or
