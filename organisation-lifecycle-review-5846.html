@@ -132,10 +132,13 @@
         <tr>
           <td>Q2: &ldquo;Their access is not removed. Archiving does nothing to logins&rdquo;, and revoking it
           &ldquo;needs a deliberate decision rather than being bundled in&rdquo;</td>
-          <td><b>Now revoked.</b> Both the password and refresh grants refuse a user whose only enabled
-          memberships are archived. It was bundled into #5992 rather than decided separately &mdash; the ~260
-          affected accounts were never put to a separate decision. Recorded honestly in the engineering notes as
-          &ldquo;a scope addition, not a dependency&rdquo;.</td>
+          <td><b>Now revoked, and live in production since 31 August.</b> Both the password and refresh grants
+          refuse a user whose only enabled memberships are archived. Note this is checked <em>at sign-in</em>
+          rather than performed by the Archive button, so it applies to <em>every</em> already-archived
+          customer &mdash; around 338 in prod-oc &mdash; not just ones archived from here on. It was bundled
+          into #5992 rather than decided separately; the ~260 affected accounts were never put to a separate
+          decision. Recorded honestly in the engineering notes as &ldquo;a scope addition, not a dependency&rdquo;.
+          <b>This one still warrants a ratification decision.</b></td>
         </tr>
         <tr>
           <td>Q2: &ldquo;NetSuite is not told. Archiving does not sync to NetSuite at all&rdquo;</td>
@@ -159,12 +162,13 @@
         </tr>
         <tr>
           <td>Part 4: #5991 &ldquo;Engineering &mdash; needs a sprint slot&rdquo;</td>
-          <td><b>Shipped.</b> Merged, deployed to dev-oc, migration applied. Queued for production in draft
-          release v1.90.0.</td>
+          <td><b>Shipped and live in production.</b> Merged, then released in v1.90.0, published 31 August
+          15:19&nbsp;UTC and deployed to all three regions (OC, EU, NA). The migration has run in prod.</td>
         </tr>
         <tr>
           <td>Q4: the change normalising the 878 blank Exclusive ticks is &ldquo;not yet in any pending release&rdquo;</td>
-          <td><b>A release now exists.</b> Draft v1.90.0 was cut on 31 August targeting <code>main</code>.</td>
+          <td><b>Now live.</b> Shipped in v1.90.0 on 31 August, so those 878 are stored as an explicit
+          &ldquo;no&rdquo; rather than blank. Behaviour is unchanged &mdash; they always read as not exclusive.</td>
         </tr>
       </tbody>
     </table>
