@@ -101,8 +101,21 @@
   <header>
     <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
     <h1>Milestone 29 Review <span>&amp;</span> Milestone 31 Plan</h1>
-    <div class="dates">Sprint ran 17 &ndash; 28 August 2026 &middot; Milestone 29 closes 31 August &middot; Team of 3 &middot; Prepared for the CEO &amp; COO</div>
+    <div class="dates">Sprint ran 17 &ndash; 28 August 2026 &middot; Milestone 29 closed 31 August &middot; Team of 3
+    &middot; Prepared for the CEO &amp; COO &middot; <strong style="color:var(--green)">Updated 2 September</strong></div>
   </header>
+
+  <div class="release" style="background:rgba(74,222,128,0.07);border-color:rgba(74,222,128,0.35)">
+    <div class="rtag" style="color:var(--green);background:rgba(74,222,128,0.14)">Update &mdash; 2 September</div>
+    <p><strong>v1.90.0 was published on 31 August at 15:19 UTC and is live in all three regions.</strong> The
+    unpublished-release warning that led this report when it was written on the morning of 31 August was resolved
+    that afternoon. The release carried the whole backlog, including the second half of the exclusivity fix and the
+    completed Archive action.</p>
+    <p class="rnote">Two other things have moved since. Six more Milestone 29 items have closed, taking it from
+    73/93 (78%) to <strong>79/96 (82%)</strong> &mdash; and three of those items were <em>added</em> to the
+    milestone after it had already closed. The figures in this report are as at the closing date, which is what a
+    sprint review measures; the drift is noted as its own point below.</p>
+  </div>
 
   <!-- ============ THE SHORT VERSION ============ -->
   <div class="headline">
@@ -118,17 +131,18 @@
     access-control fixes came out of a separate scope review on the documentation epic. All four are fixed and
     shipped.</p>
 
-    <p><strong>The honest caveat: only one release reached production this fortnight.</strong> v1.89.32 went out
-    on 21 August. The next release was cut on 27 August and is <em>still sitting as a draft</em>, which means
-    roughly the last week of this sprint&rsquo;s work &mdash; including the second half of the security fixes &mdash;
-    is finished, merged, and not yet in front of customers.</p>
+    <p><strong>The honest caveat: only one release reached production during the fortnight itself.</strong>
+    v1.89.32 went out on 21 August, and nothing followed it until v1.90.0 on 31 August &mdash; three days after the
+    sprint closed. So for the last week of the sprint, and for three days after it, finished and reviewed work sat
+    in front of nobody. It has all shipped now, but a ten-day gap between releases is the pattern to watch, not the
+    draft that caused it.</p>
   </div>
 
-  <div class="release">
-    <div class="rtag">Needs attention</div>
-    <p><strong>v1.89.32</strong> shipped on 21 August. <strong>v1.89.33</strong> was cut on 27 August and has been
-    an unpublished draft ever since. After three sprints of steadily improving release cadence, this is a step
-    backwards &mdash; and it is a five-minute fix, not a technical problem.</p>
+  <div class="release" style="background:rgba(74,222,128,0.07);border-color:rgba(74,222,128,0.35)">
+    <div class="rtag" style="color:var(--green);background:rgba(74,222,128,0.14)">Shipped</div>
+    <p><strong>v1.89.32</strong> shipped on 21 August, during the sprint. <strong>v1.90.0</strong> shipped on
+    31 August at 15:19 UTC, three days after it closed, and is live in OC, EU and NA. The version jump is
+    deliberate: it carried the completed Archive action, which changes behaviour customers can see.</p>
     <p class="rnote">The infrastructure release debt is unchanged and now overdue by over two months:
     <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/475">kubernetes #475</a>
     (develop &rarr; main reconcile) has not been touched since 19 June.</p>
@@ -142,7 +156,7 @@
   <div class="kpis">
     <div class="kpi"><div class="n green">73</div><div class="l">Items closed</div><div class="s">of 93 in the milestone &mdash; 78%</div></div>
     <div class="kpi"><div class="n blue">31</div><div class="l">Issues shipped</div><div class="s">discrete pieces of work</div></div>
-    <div class="kpi"><div class="n purple">42</div><div class="l">Pull requests merged</div><div class="s">1 release published, 1 drafted</div></div>
+    <div class="kpi"><div class="n purple">42</div><div class="l">Pull requests merged</div><div class="s">across 2 releases, the second late</div></div>
     <div class="kpi"><div class="n yellow">20</div><div class="l">Items carried forward</div><div class="s">1 is an epic, not a task</div></div>
   </div>
 
@@ -330,37 +344,50 @@
   </table>
 
   <div class="caveat">
-    <b>Milestone 31 currently holds five items.</b> That is not a fortnight of work for three people, and it does not
-    include any of the twenty items carried out of Milestone 29 &mdash; those sit in no sprint at all right now.
-    Placing them is the main job of this planning session; see point 2 below.
+    <b>Milestone 31 held five items when this was written; it now holds eight.</b> That is still not a fortnight of
+    work for three people, and it still does not include the items carried out of Milestone 29 &mdash; 17 of which
+    sit in no sprint at all. Placing them is the main job of this planning session; see point 2 below.
   </div>
 
   <!-- ============ WATCH ============ -->
-  <h2>Six things to watch</h2>
+  <h2>Seven things to watch</h2>
   <div class="lede">Ordered by how quickly they need a decision.</div>
 
   <div class="watch">
 
-    <div class="w-item">
-      <h3>1. A week of finished work is sitting in an unpublished release</h3>
-      <p>v1.89.33 was cut on 27 August and has never been published. Everything merged in the final week of the
-      sprint &mdash; including the second half of the exclusivity crash fix and several of the order corrections
-      &mdash; is done, reviewed and not in production.</p>
-      <span class="ask">Decision: publish it today, or say what is blocking it. This is the single highest-value
-      action on the list.</span>
+    <div class="w-item" style="border-left-color:var(--green)">
+      <h3>1. The release gap &mdash; resolved, but worth a rule <span class="tag tag-done">Closed 31 Aug</span></h3>
+      <p>As written on the morning of 31 August, this said a week of finished work was sitting in an unpublished
+      draft. <strong>v1.90.0 went out that afternoon</strong> and everything shipped. The underlying pattern is what
+      remains: ten days passed between v1.89.32 and v1.90.0, spanning the end of a sprint, with reviewed work idle
+      throughout.</p>
+      <span class="ask">Decision: agree a maximum age for a cut-but-unpublished release &mdash; two working days
+      would have caught this &mdash; so it is a rule rather than someone noticing.</span>
     </div>
 
     <div class="w-item">
-      <h3>2. Twenty carried items belong to no sprint</h3>
-      <p>Milestone 29 leaves 20 open items and Milestone 31 was opened with 5. The carried items include two live
-      production defects, one epic and several discovery questions. Nothing is lost &mdash; but nothing is
-      scheduled either.</p>
-      <span class="ask">Decision: in this session, place each of the 20 into Milestone 31, into a scope milestone,
+      <h3>2. Seventeen carried items belong to no sprint</h3>
+      <p>Milestone 29 left 20 open items at close; six have since been finished, three were added, and 17 remain.
+      Milestone 31 was opened with 5. The carried items include two live production defects, one epic and several
+      discovery questions. Nothing is lost &mdash; but nothing is scheduled either.</p>
+      <span class="ask">Decision: in this session, place each of the 17 into Milestone 31, into a scope milestone,
       or into the backlog. Anything carried three times should be closed or explicitly parked.</span>
     </div>
 
     <div class="w-item amber">
-      <h3>3. The quality gate is built but not switched on</h3>
+      <h3>3. Work is still being added to a closed milestone</h3>
+      <p>Three items (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5982">#5982</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5985">#5985</a> and
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a>) were filed into
+      Milestone 29 <em>after</em> the sprint had ended, moving it from 93 items to 96. All three were real work and
+      all three landed &mdash; #5991 is the completed Archive action &mdash; so this is a bookkeeping problem, not a
+      delivery one. But it means any milestone figure quoted later will disagree with the one quoted at the time.</p>
+      <span class="ask">Decision: once a sprint milestone closes, new work goes to the next milestone. The board
+      automation shipped this sprint can enforce it.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>4. The quality gate is built but not switched on</h3>
       <p><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5870">#5870</a> is the last step: making
       the new check <em>required</em> on the main branch. Until then the checks run and report but cannot block a
       merge &mdash; exactly the weakness we set out to fix &mdash; and we are still paying for SonarCloud alongside
@@ -370,7 +397,7 @@
     </div>
 
     <div class="w-item">
-      <h3>4. Two silent billing defects are still open</h3>
+      <h3>5. Two silent billing defects are still open</h3>
       <p>Refill orders billing $0 (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a>)
       has been open 47 days and carried since Milestone 22. Newer, and the same shape: editing customer pricing
       silently clears the lease fees on the same row
@@ -380,7 +407,7 @@
     </div>
 
     <div class="w-item amber">
-      <h3>5. Signing into a second account keeps the first identity</h3>
+      <h3>6. Signing into a second account keeps the first identity</h3>
       <p><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5647">#5647</a>, open 28 days: signing
       into a second account retains the previous user&rsquo;s identity, and the organisation page then returns a
       permission error. It is a session-handling fault, and it sits uncomfortably close to the access-control work
@@ -390,7 +417,7 @@
     </div>
 
     <div class="w-item amber">
-      <h3>6. The infrastructure release debt has not moved since June</h3>
+      <h3>7. The infrastructure release debt has not moved since June</h3>
       <p><a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/475">kubernetes #475</a> &mdash; the
       develop-to-main reconcile &mdash; was last touched on 19 June. It has appeared in three consecutive reports.
       Twelve infrastructure changes shipped this sprint <em>around</em> it, which widens rather than closes the gap.</p>
@@ -400,8 +427,9 @@
   </div>
 
   <footer>
-    Konvoy Kegs Engineering &middot; Milestone 29 review, prepared 31 August 2026 &middot;
-    Figures taken from the
+    Konvoy Kegs Engineering &middot; Milestone 29 review, prepared 31 August 2026, updated 2 September &middot;
+    The headline figures are deliberately left as at the milestone&rsquo;s closing date, so they stay comparable
+    with earlier reports; the update box at the top records what has moved since. Figures taken from the
     <a href="https://github.com/konvoy-kegs/konvoy/milestone/29">Milestone 29 issue list</a> on its closing date,
     and from pull requests merged in the terraform and kubernetes repositories between 17 and 28 August.
     Milestone 24 comparison figures are taken from the
