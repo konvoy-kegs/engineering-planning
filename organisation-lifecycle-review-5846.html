@@ -200,6 +200,11 @@
     pricing</strong>, <strong>32 still had the Exclusive tick set</strong>, and <strong>2 archived customers still
     held 4 of our kegs</strong>. That is the state a bulk archive would have added to, which is why the sweep was
     held back until the action was complete.
+    <br><br>
+    <b>Those figures describe residue, not current behaviour.</b> Everything archived from 31 August onwards is
+    handled correctly. The customers archived <em>before</em> that still carry their agreements and their tick, and
+    clearing them is a backfill tracked as
+    <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6001">#6001</a>.
   </div>
 
   <div class="caveat danger">
@@ -508,7 +513,7 @@
       alt text; Archive, Hold Account and Agreements were named once as button labels in a single sentence; and the
       word &ldquo;Exclusive&rdquo; did not appear anywhere in the user guide at all. Because the guides had just
       been surfaced inside the application itself, that silence had become customer-facing.</p>
-      <span class="meta">Closed 25 August &middot; PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5937">#5937</a> &middot; Satisfies the &ldquo;raise the gap rather than archive and hope&rdquo; acceptance criterion on #5846.</span>
+      <span class="meta">Closed 25 August &middot; PR <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/5937">#5937</a> &middot; Satisfies the &ldquo;raise the gap rather than archive and hope&rdquo; acceptance criterion on #5846. The guide then had to be corrected again on 31 August (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6000">#6000</a>), because it stated plainly that archiving does not affect logins &mdash; true when written, false eight hours later.</span>
     </div>
 
     <div class="f open">
@@ -516,8 +521,10 @@
       <p>The root finding, and the origin of everything in Parts 1 and 2. Archive was never designed as offboarding;
       it was simply the closest thing available, which is why it kept being asked to do work it was not built for.
       Completing the action (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5991">#5991</a>)
-      addressed the mechanics. What remains open is the product question: should archived customers be hidden from
-      the organisations list by default, behind a &ldquo;show archived&rdquo; toggle?</p>
+      addressed the mechanics, and a <strong>Filter by Account Status</strong> control now exists on the list
+      (Archived / On hold / Active). What remains open is the product question: <strong>the list still defaults to
+      showing everyone</strong>, deliberately. Should archived customers drop out by default, behind a
+      &ldquo;show archived&rdquo; toggle?</p>
       <span class="meta">Open &middot; A decision, not a task &mdash; it needs Patrick and Marc, not a developer.</span>
     </div>
 
@@ -554,16 +561,25 @@
     <tr><td class="w">An &ldquo;End Agreement&rdquo; button</td><td>Choose from A&ndash;D in Part 5, and answer the two questions there. Recommendation is D, built as B.</td><td>Marc &amp; Tommy</td></tr>
     <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6003">#6003</a><br>Restore locations on un-archive</td><td>Build the restore picker on the provenance stamp added by #5992. An admin chooses which locations return rather than all of them.</td><td>Engineering &mdash; needs a sprint slot</td></tr>
     <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5995">#5995</a><br>Live-agreement check ignores archived state</td><td>A known bug: the &ldquo;does this customer have a live agreement?&rdquo; check ignores whether the customer is archived, so archived customers still price. Blocks option (b) in Part 4.</td><td>Engineering</td></tr>
-    <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5932">#5932</a><br>Hide archived from the list?</td><td>The last open question from the original discovery.</td><td>Patrick &amp; Marc</td></tr>
+    <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5932">#5932</a><br>Hide archived from the list?</td><td>The filter now exists, but the list still defaults to showing everyone. The last open question from the original discovery.</td><td>Patrick &amp; Marc</td></tr>
+    <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6002">#6002</a><br>Power BI still shows archived customers</td><td><strong>The one that actually answers Patrick&rsquo;s original goal.</strong> No code change needed &mdash; a predicate in the report definitions. Mind the nullable-column trap described above.</td><td>Engineering &mdash; highest business value</td></tr>
+    <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6001">#6001</a><br>Backfill pre-31-August archives</td><td>Customers archived before the fix still carry live agreements and the exclusive tick. New archives are handled correctly; this clears the historical residue.</td><td>Engineering</td></tr>
   </table>
   </div>
 
   <div class="caveat">
     <b>The thing most likely to go wrong from here.</b> Patrick&rsquo;s stated goal was getting these customers out
     of his reports. Archiving does not do that, and completing the archive action has not done it either &mdash;
-    the Power BI reports read the database directly and do not filter on archived status. That is separate work and
-    it has still not been raised as an issue. It remains the single most likely way for this thread to be marked
-    &ldquo;done&rdquo; while the person who asked still has the original problem.
+    the Power BI reports read the database directly and do not filter on archived status. It is now filed as
+    <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6002">#6002</a>, and it needs no code change:
+    <code>organisation.active</code> is already a plain queryable column, so the fix is a predicate in the report
+    definitions.
+    <br><br>
+    <b>One trap for whoever does it.</b> <code>account_on_hold</code> is nullable &mdash; 866 of 1,819 production
+    rows are blank &mdash; so a filter written as <code>AND account_on_hold = 0</code> will silently drop 693
+    customers. The correct form is <code>AND (account_on_hold = 0 OR account_on_hold IS NULL)</code>. This remains
+    the single most likely way for the thread to be marked &ldquo;done&rdquo; while the person who asked still has
+    the original problem.
   </div>
 
   <!-- ============ WHY IT MATTERS ============ -->
@@ -609,7 +625,7 @@
 
   <footer>
     Konvoy Kegs Engineering &middot; Review of
-    <a href="https://github.com/konvoy-kegs/konvoy/issues/5846">issue #5846</a> &middot; Last updated 1 September 2026
+    <a href="https://github.com/konvoy-kegs/konvoy/issues/5846">issue #5846</a> &middot; Last updated 2 September 2026
     &middot; Behaviour verified against the code running in production after v1.90.0 (published 31 August 2026,
     15:19 UTC, live in OC, EU and NA). Population figures are prod-oc, measured 1 September against 1,823 customers,
     except the flag-distribution table in Part 6 which is 31 August against 1,819. Original investigation:
