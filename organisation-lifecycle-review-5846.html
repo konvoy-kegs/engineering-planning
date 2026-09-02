@@ -132,10 +132,11 @@
     pushes that change to NetSuite, archives their locations, and stops their people signing in. Before this work,
     it did almost none of that while a dialog told operators it did.</p>
 
-    <p><strong>What now needs decisions rather than engineering:</strong> whether revoking archived customers&rsquo;
-    login should stand (it affects around 260 accounts and was bundled in rather than decided on its own merits);
-    three screen labels that actively mislead; whether Cloud should set the Exclusive tick itself; and whether to
-    build an &ldquo;End Agreement&rdquo; button. Each is set out below with a recommendation.</p>
+    <p><strong>Five things now need decisions rather than engineering:</strong> whether revoking archived
+    customers&rsquo; login should stand (it affects around 260 accounts and was bundled in rather than decided on
+    its own merits); three screen labels that actively mislead; whether Cloud should set the Exclusive tick itself;
+    whether to build an &ldquo;End Agreement&rdquo; button; and whether archived customers should drop out of the
+    organisations list by default. Each is set out below with a recommendation.</p>
   </div>
 
   <div class="shipped">
@@ -164,7 +165,7 @@
     <div class="kpi"><div class="n blue">7</div><div class="l">Issues from the question</div><div class="s">6 closed, 1 open by design</div></div>
     <div class="kpi"><div class="n green">9</div><div class="l">Pull requests</div><div class="s">all shipped in v1.90.0</div></div>
     <div class="kpi"><div class="n red">1</div><div class="l">Security defect</div><div class="s">cross-tenant data exposure</div></div>
-    <div class="kpi"><div class="n yellow">4</div><div class="l">Decisions waiting</div><div class="s">on Patrick, Marc &amp; Tommy</div></div>
+    <div class="kpi"><div class="n yellow">5</div><div class="l">Decisions waiting</div><div class="s">on Patrick, Marc &amp; Tommy</div></div>
   </div>
 
   <!-- ============ PART 1 ============ -->
@@ -179,7 +180,7 @@
   <div class="scroll">
   <table>
     <tr><th>#</th><th>What archiving does</th><th>New?</th></tr>
-    <tr><td class="num">1</td><td><strong>Refuses outright</strong> if the customer has open rental or lease orders.</td><td class="yes">New</td></tr>
+    <tr><td class="num">1</td><td><strong>Refuses outright</strong> if the customer has open rental or lease orders.</td><td>Existing</td></tr>
     <tr><td class="num">2</td><td><strong>Warns, naming the number</strong>, if they still hold our kegs &mdash; you can then confirm or back out.</td><td class="yes">New</td></tr>
     <tr><td class="num">3</td><td>Marks them archived.</td><td>Existing</td></tr>
     <tr><td class="num">4</td><td><strong>Ends their live exclusive agreements</strong> &mdash; end date pulled back to today, auto-extend switched off.</td><td class="yes">New</td></tr>
@@ -192,6 +193,14 @@
   <p style="font-size:0.95rem;color:#cbd5e1;margin-top:20px">It also <strong>blocks new rental, lease and refill
   orders</strong>, while <strong>deliberately still allowing collections and transfers</strong> &mdash; so we can
   get our kegs back from a customer who has stopped paying. Blocking those would strand the fleet.</p>
+
+  <div class="caveat good">
+    <b>The scale of what steps 4, 5, 7 and 2 were fixing.</b> Because archive never did any of this, the backlog
+    was already substantial when the work started: <strong>15 archived customers still held live contract
+    pricing</strong>, <strong>32 still had the Exclusive tick set</strong>, and <strong>2 archived customers still
+    held 4 of our kegs</strong>. That is the state a bulk archive would have added to, which is why the sweep was
+    held back until the action was complete.
+  </div>
 
   <div class="caveat danger">
     <b>The eighth consequence: their people can no longer log in.</b> This is not something the Archive button does
@@ -220,7 +229,7 @@
   <div class="scroll">
   <table>
     <tr><th>Lost on archive</th><th>Restored on un-archive?</th></tr>
-    <tr><td class="w">Their locations</td><td><span class="no">No.</span> Each must be un-archived by hand, one at a time. Raised as <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6003">#6003</a>.</td></tr>
+    <tr><td class="w">Their locations</td><td><span class="no">No.</span> Each must be un-archived by hand, one at a time. Raised as <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6003">#6003</a> &mdash; but see the caveat below: it will only help customers archived from now on.</td></tr>
     <tr><td class="w">Their exclusive agreements</td><td><span class="no">No.</span> The pricing stays ended and has to be re-created by hand.</td></tr>
     <tr><td class="w">The Exclusive Contract tick</td><td><span class="no">No.</span> Stays cleared.</td></tr>
     <tr><td class="w">The NetSuite exclusive flag</td><td><span class="no">No.</span> Cleared on archive, not re-pushed on un-archive.</td></tr>
@@ -236,6 +245,14 @@
   <p style="font-size:0.93rem;color:var(--muted);margin-top:12px">One deliberate exception: an agreement that has
   not started yet keeps its dates, because an end date cannot sit before a start date. Only its auto-extend is
   switched off. That is intended, and covered by a test.</p>
+
+  <div class="caveat">
+    <b>The location restore will not reach customers already archived.</b> We cannot tell retrospectively which
+    locations were archived <em>by the archive action</em> and which were archived by hand at some earlier point.
+    v1.90.0 started stamping that provenance, so <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6003">#6003</a>
+    can only restore locations for customers archived from 31 August onwards. <strong>The 338 customers archived
+    before then will always need the manual, one-at-a-time approach.</strong>
+  </div>
 
   <div class="rec" style="margin-top:20px">
     <b>Recommendation.</b> Leave agreements ended on un-archive &mdash; a customer returning after a year should be
@@ -318,8 +335,11 @@
       Agreement record holding start and end dates, minimum volumes, casual status and agreed per-SKU pricing.
       <em>That</em> is what prices their orders. A customer is genuinely on contract pricing if they have a live
       agreement, regardless of what the tick says.</p>
-      <span class="rec"><b>For any clean-up:</b> do not use the Exclusive tick to decide who is on contract pricing.
-      The agreements are the source of truth; the tick is a label that has drifted from them &mdash; see Part 4.</span>
+      <p>Beyond those two effects, it is read by a couple of internal audit reports, purely as a column of
+      output.</p>
+      <span class="rec"><b>For any clean-up:</b> do not use the Exclusive tick to decide who is on contract pricing
+      &mdash; <strong>47 customers would be missed and 42 wrongly included</strong>. The agreements are the source
+      of truth; the tick is a label that has drifted from them, and is still drifting &mdash; see Part 4.</span>
     </div>
 
   </div>
@@ -356,7 +376,7 @@
   <table>
     <tr><th>Option</th><th>What it means</th><th>Catch</th></tr>
     <tr><td class="w">(a) Auto-tick on creation, auto-untick when the last agreement ends</td><td>Cloud sets the tick when an agreement is created, and clears it when the last one ends.</td><td>The untick needs a nightly job, since expiry is not an event.</td></tr>
-    <tr><td class="w">(b) Stop storing the tick; derive it from the agreements each time</td><td>Cleaner in principle &mdash; the drift becomes impossible rather than merely corrected.</td><td>The existing &ldquo;does this customer have a live agreement?&rdquo; check has a known bug (it ignores whether the agreement is active, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5995">#5995</a>), so this route inherits it unless that is fixed first.</td></tr>
+    <tr><td class="w">(b) Stop storing the tick; derive it from the agreements each time</td><td>Cleaner in principle &mdash; the drift becomes impossible rather than merely corrected.</td><td>The existing &ldquo;does this customer have a live agreement?&rdquo; check has a known bug &mdash; it ignores whether the customer is archived, so archived customers still price (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5995">#5995</a>). This route inherits that bug unless it is fixed first.</td></tr>
   </table>
   </div>
 
@@ -533,7 +553,7 @@
     <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6012">#6012</a><br>Auto-set the Exclusive tick</td><td>Choose option (a) or (b) in Part 4. Recommendation is (a), shipping the auto-tick now and the auto-untick with the End Agreement work.</td><td>Patrick</td></tr>
     <tr><td class="w">An &ldquo;End Agreement&rdquo; button</td><td>Choose from A&ndash;D in Part 5, and answer the two questions there. Recommendation is D, built as B.</td><td>Marc &amp; Tommy</td></tr>
     <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6003">#6003</a><br>Restore locations on un-archive</td><td>Build the restore picker on the provenance stamp added by #5992. An admin chooses which locations return rather than all of them.</td><td>Engineering &mdash; needs a sprint slot</td></tr>
-    <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5995">#5995</a><br>Live-agreement check ignores archived state</td><td>A known bug: the &ldquo;does this customer have a live agreement?&rdquo; check ignores whether the organisation is active, so archived customers still price. Blocks option (b) above.</td><td>Engineering</td></tr>
+    <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5995">#5995</a><br>Live-agreement check ignores archived state</td><td>A known bug: the &ldquo;does this customer have a live agreement?&rdquo; check ignores whether the customer is archived, so archived customers still price. Blocks option (b) in Part 4.</td><td>Engineering</td></tr>
     <tr><td class="w"><a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5932">#5932</a><br>Hide archived from the list?</td><td>The last open question from the original discovery.</td><td>Patrick &amp; Marc</td></tr>
   </table>
   </div>
@@ -575,7 +595,7 @@
       <tr><td>Archived shown as a banner</td><td><code>Organisation.tsx:268-269</code></td></tr>
       <tr><td>List filter labelled <code>Filter by Account Status</code></td><td><code>app/src/components/organisation/OrganisationsListView.tsx:42-44, 224-228</code></td></tr>
       <tr><td>Archive&rsquo;s seven steps</td><td><code>api/src/Service/Organisation/OrganisationService.php:540-607</code></td></tr>
-      <tr><td>Login refused for archived-only users, checked at sign-in</td><td><code>api/src/Security/OAuth/UserRepository.php:38</code> (password grant); <code>api/src/EventSubscriber/OAuthRefreshTokenUserSubscriber.php:104</code> (refresh grant); predicate in <code>api/src/Entity/User/User.php:181</code></td></tr>
+      <tr><td>Login refused for archived-only users, checked at sign-in (not by the archive method)</td><td><code>api/src/Security/OAuth/UserRepository.php:38</code> (password grant); <code>api/src/EventSubscriber/OAuthRefreshTokenUserSubscriber.php:104</code> (refresh grant); predicate in <code>api/src/Entity/User/User.php:181</code></td></tr>
       <tr><td>How agreements are ended</td><td><code>OrganisationService.php:629-667</code></td></tr>
       <tr><td>Un-archive is two lines</td><td><code>OrganisationService.php:669-673</code></td></tr>
       <tr><td>Agreement creation never sets the tick</td><td><code>api/src/Service/Organisation/AgreementService.php:62-129</code></td></tr>
