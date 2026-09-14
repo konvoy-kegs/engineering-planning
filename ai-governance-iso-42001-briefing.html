@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Governance &amp; ISO 42001 — Manager Briefing — Konvoy Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Konvoy brand palette — sampled from konvoykegs.com */
+  :root {
+    --bg: #000000; --surface: #141414; --surface2: #202020; --line: #333333;
+    --text: #ffffff; --muted: #b1b1b1; --dim: #7a7a7a;
+    --red: #e4002b; --red-soft: rgba(228,0,43,0.14);
+    --gold: #f5b800; --gold-soft: rgba(245,184,0,0.14);
+    --green: #3ddc84; --green-soft: rgba(61,220,132,0.14);
+    --grey-soft: rgba(177,177,177,0.16);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Montserrat', 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; padding: 40px 24px 80px; }
+  .wrap { max-width: 920px; margin: 0 auto; }
+
+  a { color: var(--red); }
+  a.iss { text-decoration: none; border-bottom: 1px dotted rgba(228,0,43,0.6); white-space: nowrap; }
+  a.iss:hover { border-bottom-style: solid; }
+
+  header { border-bottom: 2px solid var(--red); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .crumb a { text-decoration: none; color: var(--muted); }
+  .crumb a:hover { color: var(--text); }
+  .brand { font-weight: 800; font-size: 0.95rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px; }
+  .brand span { color: var(--red); }
+  h1 { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; }
+  h1 span { color: var(--red); }
+  .dates { color: var(--muted); font-size: 0.92rem; margin-top: 10px; }
+  .part { display: inline-block; background: var(--red); color: #fff; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 4px; margin-bottom: 14px; }
+
+  h2 { font-size: 1.4rem; font-weight: 700; margin: 56px 0 8px; letter-spacing: -0.3px; }
+  h2:first-of-type { margin-top: 0; }
+  .lede { color: var(--muted); font-size: 0.92rem; margin-bottom: 22px; }
+  p + p { margin-top: 12px; }
+
+  .headline { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: 6px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.05rem; }
+  .headline strong { color: #fff; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 18px 0 8px; }
+  .st { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px 16px; text-align: center; }
+  .st .v { font-size: 2rem; font-weight: 800; line-height: 1.1; }
+  .st .k { font-size: 0.74rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .v.green { color: var(--green); } .v.gold { color: var(--gold); } .v.red { color: var(--red); } .v.grey { color: var(--muted); }
+
+  .bar { display: flex; height: 18px; border-radius: 4px; overflow: hidden; margin: 14px 0 6px; background: var(--surface2); }
+  .bar div { height: 100%; }
+  .bar .pass { background: var(--green); } .bar .partial { background: var(--gold); } .bar .fail { background: var(--red); } .bar .nv { background: var(--dim); }
+  .barnote { font-size: 0.8rem; color: var(--muted); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 6px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 22px; }
+  .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .card h3 span { color: var(--red); margin-right: 6px; }
+  .card p { font-size: 0.9rem; color: var(--muted); }
+  .card p strong { color: var(--text); }
+
+  .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 10px; }
+  .cmp { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; font-size: 0.9rem; }
+  .cmp b { display: block; color: var(--text); font-size: 0.95rem; margin-bottom: 4px; }
+  .cmp.hi { border-color: var(--red); }
+  .cmp.hi b { color: var(--red); }
+  .cmp span { color: var(--muted); }
+
+  .theme { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: 6px; padding: 20px 22px; margin-bottom: 14px; }
+  .theme h3 { font-size: 1.02rem; font-weight: 700; margin-bottom: 8px; }
+  .theme p { font-size: 0.92rem; color: #d6d6d6; }
+  .theme .why { display: block; margin-top: 10px; font-size: 0.86rem; color: var(--muted); }
+  .theme .why b { color: var(--red); font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  th { text-align: left; padding: 12px 14px; background: var(--surface2); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 700; }
+  td { padding: 11px 14px; border-top: 1px solid var(--line); vertical-align: top; }
+  td.n { white-space: nowrap; width: 1%; color: var(--dim); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+  td.s { white-space: nowrap; width: 1%; }
+  tr.grp td { background: var(--surface2); font-weight: 700; color: var(--text); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 14px; }
+  .tablewrap { overflow-x: auto; }
+
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 9px; border-radius: 4px; }
+  .p-pass { background: var(--green-soft); color: var(--green); }
+  .p-partial { background: var(--gold-soft); color: var(--gold); }
+  .p-fail { background: var(--red-soft); color: var(--red); }
+  .p-nv { background: var(--grey-soft); color: var(--muted); }
+
+  .callout { background: var(--gold-soft); border-left: 4px solid var(--gold); border-radius: 0 6px 6px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.92rem; }
+  .callout b { color: var(--gold); }
+  .callout.red { background: var(--red-soft); border-left-color: var(--red); }
+  .callout.red b { color: var(--red); }
+
+  .script { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 24px 26px; margin-top: 16px; }
+  .script .q { font-weight: 700; color: var(--red); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+  .script .a { font-size: 0.98rem; color: #eaeaea; }
+  .script .a + .q { margin-top: 20px; }
+  .script .dont { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 0.88rem; color: var(--muted); }
+  .script .dont b { color: var(--text); }
+
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 10px 22px; font-size: 0.9rem; margin-top: 12px; }
+  dt { font-weight: 700; color: var(--text); white-space: nowrap; }
+  dd { color: var(--muted); }
+  @media (max-width: 600px) { dl { grid-template-columns: 1fr; gap: 2px; } dd { margin-bottom: 10px; } }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--dim); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
+    <div class="brand"><span>&#9646;</span> Konvoy Engineering</div>
+    <div class="part">Part 1 of 2 &middot; Manager briefing</div>
+    <h1>AI Governance &amp; <span>ISO 42001</span><br>What it is, and why it matters to us</h1>
+    <div class="dates">Briefing for managers &middot; Based on the AI-governance audit of 12 September 2026 (epic <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6077">konvoy #6077</a>) &middot; Published 14 September 2026</div>
+  </header>
+
+  <div class="headline">
+    <p><strong>Konvoy's engineering team uses AI assistants to help build our software. In September 2026 we audited how that use is controlled, against the international standard for managing AI (ISO/IEC 42001).</strong>
+    The audit found that the guardrails are not yet where they should be &mdash; 13 of the 18 checks did not pass &mdash; and every gap now has a numbered ticket to fix it.</p>
+    <p>That is exactly what a first audit is for. As we go back into the sales process, customers and tender panels are increasingly asking <em>&ldquo;Do you use AI, and how do you govern it?&rdquo;</em> This page gives you the plain-English answer. <strong>Part 2</strong> (next session) will walk through the findings and the fix-up plan in detail.</p>
+  </div>
+
+  <!-- ============ WHERE WE USE AI ============ -->
+  <h2>First: where does Konvoy actually use AI?</h2>
+  <div class="lede">This briefing is about AI used <em>to build</em> our software, not AI features inside the product.</div>
+
+  <div class="cards">
+    <div class="card">
+      <h3><span>&#9646;</span>What we use</h3>
+      <p>Engineers use AI coding assistants &mdash; principally <strong>Claude Code</strong> (Anthropic) and <strong>GitHub Copilot</strong> &mdash; to write, review and test code for Konvoy Cloud. Think of it as a very fast junior developer that works alongside a person.</p>
+    </div>
+    <div class="card">
+      <h3><span>&#9646;</span>What it can reach</h3>
+      <p>The assistant works inside our code repository on an engineer's machine. It can also be connected to other tools &mdash; GitHub, Slack, Sentry, LaunchDarkly &mdash; through plug-ins. <strong>What it is allowed to touch is exactly what the audit examined.</strong></p>
+    </div>
+    <div class="card">
+      <h3><span>&#9646;</span>What stays human</h3>
+      <p>Every code change is reviewed by a person before it reaches production &mdash; the audit confirmed this control is in place and working. Our pull-request checklist already asks engineers to declare when an AI agent was used.</p>
+    </div>
+  </div>
+
+  <!-- ============ WHAT IS ISO 42001 ============ -->
+  <h2>What is ISO/IEC 42001?</h2>
+  <div class="lede">The world's first management-system standard for artificial intelligence, published December 2023.</div>
+
+  <p>You will already know ISO standards by reputation: <strong>ISO 9001</strong> for quality, <strong>ISO 27001</strong> for information security. ISO 42001 is the same idea applied to AI. It does not tell you <em>which</em> AI to use. It asks whether you have a <strong>system</strong> for using AI responsibly: a written policy, clear owners, a risk assessment, a set of controls, evidence that the controls work, and a habit of reviewing and improving them.</p>
+
+  <div class="compare">
+    <div class="cmp"><b>ISO 9001</b><span>Quality management. &ldquo;Do you make things consistently well?&rdquo;</span></div>
+    <div class="cmp"><b>ISO 27001</b><span>Information security. &ldquo;Do you protect the data you hold?&rdquo;</span></div>
+    <div class="cmp hi"><b>ISO 42001</b><span>AI management. &ldquo;Do you use AI in a controlled, accountable way?&rdquo;</span></div>
+  </div>
+
+  <p style="margin-top:22px">The standard comes with a list of <strong>38 controls</strong> (its &ldquo;Annex&nbsp;A&rdquo;) grouped into areas such as leadership and policy, roles and responsibilities, data handling, security, transparency and lifecycle management. Organisations can be <strong>certified</strong> against it by an accredited body, on a three-year cycle with annual check-ups. Amazon Web Services, Microsoft and Anthropic all hold certification.</p>
+
+  <p>Two things matter for Konvoy. First, ISO 42001 is <strong>voluntary</strong> &mdash; no law requires it &mdash; but it is increasingly written into <strong>procurement and tender requirements</strong>, particularly for public-sector and large-enterprise buyers, and is widely treated as the de-facto benchmark for AI governance. Second, you can <strong>align</strong> to it without being certified. That is what we have done: we used its controls as the yardstick for an internal audit. <strong>We are not certified and must not say we are.</strong></p>
+
+  <!-- ============ WHAT THE AUDIT IS ============ -->
+  <h2>What the audit was</h2>
+  <div class="lede">Eighteen plain-English checks, each tied to an ISO 42001 control, run against our codebase and the AI assistant's setup.</div>
+
+  <p>Engineering wrote a checklist of <strong>18 rules</strong> (numbered KV-AI-01 to KV-AI-18), each mapped to a specific ISO 42001 control, and had an AI agent run them against the Konvoy Cloud repository and the environment the assistant runs in. The work was tracked as an epic with eight child issues, executed on 12 September and corrected under review over the following two days.</p>
+
+  <div class="cards" style="margin-top:18px">
+    <div class="card">
+      <h3><span>1</span>Guardrails on the assistant</h3>
+      <p>Is it centrally configured? Is it blocked from reading password files, sending data to the internet, or changing our cloud infrastructure by itself? Does it run in a sandbox? <strong>Rules 01&ndash;05.</strong></p>
+    </div>
+    <div class="card">
+      <h3><span>2</span>Tools it can plug into</h3>
+      <p>Is there an approved list of the external tools and add-ons the assistant may connect to, and is that list written down? Are automatic checks run on what it does? <strong>Rules 06&ndash;08.</strong></p>
+    </div>
+    <div class="card">
+      <h3><span>3</span>Data hygiene in the codebase</h3>
+      <p>Are there passwords sitting in the code? Is real customer or production data present where the assistant can see it? Is test data made up rather than real? <strong>Rules 09&ndash;13.</strong></p>
+    </div>
+    <div class="card">
+      <h3><span>4</span>People, process and paperwork</h3>
+      <p>Do written instructions tell the assistant what it must never use? Does a human review every change? Do quality gates block bad code? Is there an AI policy at all? <strong>Rules 14&ndash;18.</strong></p>
+    </div>
+  </div>
+
+  <p style="margin-top:22px">Three features of how it was run are worth knowing, because they are what make the result credible to an outside reader. The audit was <strong>read-only</strong> &mdash; it changed nothing. It <strong>never read or printed a secret value</strong>; it reports file names, line numbers and pattern names only, and the report carries a formal redaction statement. And it was <strong>challenged and corrected in the open</strong>: one grade was made <em>stricter</em> during review (moved from &ldquo;partial&rdquo; to &ldquo;fail&rdquo;) because the rule as written demanded it, and the report records that change rather than hiding it. An audit whose grades never move under scrutiny is less trustworthy, not more.</p>
+
+  <!-- ============ RESULTS ============ -->
+  <h2>The result at a glance</h2>
+  <div class="lede">Overall verdict: <strong style="color:var(--red)">Does not conform</strong>. That is the honest baseline, not a failure of the exercise.</div>
+
+  <div class="stats">
+    <div class="st"><div class="v green">2</div><div class="k">Pass</div></div>
+    <div class="st"><div class="v gold">2</div><div class="k">Partial</div></div>
+    <div class="st"><div class="v red">13</div><div class="k">Fail</div></div>
+    <div class="st"><div class="v grey">1</div><div class="k">Not verifiable</div></div>
+  </div>
+  <div class="bar" aria-label="18 rules: 2 pass, 2 partial, 13 fail, 1 not verifiable">
+    <div class="pass" style="width:11.1%"></div>
+    <div class="partial" style="width:11.1%"></div>
+    <div class="fail" style="width:72.2%"></div>
+    <div class="nv" style="width:5.6%"></div>
+  </div>
+  <div class="barnote">18 rules graded. Any single &ldquo;fail&rdquo; sets the overall verdict to <em>does not conform</em> &mdash; the standard is deliberately strict.</div>
+
+  <p style="margin-top:22px"><strong>What passed matters.</strong> The two clean passes are the ones a customer cares most about: <strong>every code change is reviewed by a person</strong> before it is merged, and <strong>engineers' local development setups do not connect to production systems</strong>. Human oversight of the AI is real, not aspirational.</p>
+
+  <p><strong>What failed is mostly missing paperwork and unlocked doors, not evidence of harm.</strong> There is no written AI policy yet. There is no register of the external tools the assistant may connect to. The assistant's permission settings are permissive by default: nothing explicitly stops it reading a password file or calling out to the internet. Our automated pipeline does not scan for leaked secrets. And a handful of test-data files contain realistic-looking email addresses and phone numbers where made-up data should have been used. None of these findings says customer data <em>was</em> exposed; they say the controls that would prove it <em>could not be</em> are not yet in place.</p>
+
+  <div class="callout">
+    <b>Two items still need a human to look.</b> A secret-scanning tool flagged 29 suspicious-looking strings across 17 files; by design the audit did not open them, so a person must confirm whether any is a real credential or (as is likely for several) a test placeholder. Separately, two very large log files on a developer machine tripped a size rule and need their contents checked. Both are assigned to the Head of Engineering.
+  </div>
+
+  <!-- ============ THE 18 RULES ============ -->
+  <h2>The 18 checks in plain English</h2>
+  <div class="lede">For readers who want the detail without the jargon. Each rule maps to an ISO 42001 Annex A control.</div>
+
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Rule</th><th>What it checks</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="3">1 &middot; Guardrails on the assistant</td></tr>
+      <tr><td class="n">01</td><td>The assistant's settings are controlled centrally by an administrator, not just by each engineer.</td><td class="s"><span class="pill p-partial">Partial</span></td></tr>
+      <tr><td class="n">02</td><td>Whether the assistant may act without asking permission matches a decision the company has written down.</td><td class="s"><span class="pill p-nv">Not verifiable</span></td></tr>
+      <tr><td class="n">03</td><td>The assistant is blocked from reading password and key files.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">04</td><td>The assistant is blocked from sending data out to the internet or changing cloud infrastructure on its own.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">05</td><td>The assistant runs inside a sandbox with an approved list of websites it may reach.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+
+      <tr class="grp"><td colspan="3">2 &middot; Tools it can plug into</td></tr>
+      <tr><td class="n">06</td><td>Every external tool the assistant can connect to is on an approved list and recorded in a register.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">07</td><td>Automatic checks scan the assistant's changes for secrets before they are saved.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">08</td><td>Only add-ons from trusted, approved sources can be installed.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+
+      <tr class="grp"><td colspan="3">3 &middot; Data hygiene in the codebase</td></tr>
+      <tr><td class="n">09</td><td>No password files are stored in the codebase, and key files cannot be added by accident.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">10</td><td>A secret-scanning tool finds nothing suspicious in the codebase.</td><td class="s"><span class="pill p-partial">Partial</span></td></tr>
+      <tr><td class="n">11</td><td>No real production data sits in the development environment.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">12</td><td>Test data is made up, never real customers.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">13</td><td>Local development setups do not connect to production systems.</td><td class="s"><span class="pill p-pass">Pass</span></td></tr>
+
+      <tr class="grp"><td colspan="3">4 &middot; People, process and paperwork</td></tr>
+      <tr><td class="n">14</td><td>Written instructions tell the assistant which data it must never use, and that a human must review.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">15</td><td>Every code change is reviewed by a person before it is merged.</td><td class="s"><span class="pill p-pass">Pass</span></td></tr>
+      <tr><td class="n">16</td><td>Automated quality and secret checks must pass before code can be merged.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">17</td><td>The assistant's activity is logged centrally so we can see what it did.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+      <tr><td class="n">18</td><td>A written AI policy and its supporting registers exist.</td><td class="s"><span class="pill p-fail">Fail</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="barnote" style="margin-top:10px">Rule 01 was graded before the central-settings check was completed; that check was performed on 13 September and confirmed central management is in place. Rule 16: quality checks exist and run, but are advisory rather than blocking, and no secret scanning is included.</div>
+
+  <!-- ============ WHY IT MATTERS ============ -->
+  <h2>Why this matters to Konvoy</h2>
+  <div class="lede">Three reasons, in order of how soon they bite.</div>
+
+  <div class="theme">
+    <h3>1. We are going back to market, and buyers will ask</h3>
+    <p>&ldquo;Do you use AI in your business, and how is it governed?&rdquo; is now a standard line in enterprise vendor questionnaires and public tenders. A vague answer costs credibility; a made-up answer costs the deal. We can now answer with <strong>evidence</strong>: a dated audit against a recognised international standard, an honest result, and a numbered remediation plan. Very few companies our size can say that.</p>
+    <span class="why"><b>Why it matters:</b> the difference between &ldquo;we think we're careful&rdquo; and &ldquo;here is our audit&rdquo; is the difference between a follow-up question and a tick in the box.</span>
+  </div>
+
+  <div class="theme">
+    <h3>2. The risk is real, and we found it before an incident did</h3>
+    <p>An AI assistant with broad access is a fast, tireless user of whatever it can reach. If nothing stops it reading a password file, it might. If nothing stops it calling out to the internet, a badly-worded instruction could send something it shouldn't. Konvoy Cloud holds customer order, pricing and location data. The audit found these doors unlocked while nobody was standing at them &mdash; which is the moment to lock them.</p>
+    <span class="why"><b>Why it matters:</b> every fix on the list is cheap. The incident they prevent is not.</span>
+  </div>
+
+  <div class="theme">
+    <h3>3. It is where the industry is heading</h3>
+    <p>ISO 42001 is becoming the reference point that regulators, insurers and large customers converge on when they ask about AI &mdash; in the same way ISO 27001 became the default answer to &ldquo;are you secure?&rdquo;. Aligning early, while the fixes are small, is far cheaper than scrambling when a contract makes it a condition.</p>
+    <span class="why"><b>Why it matters:</b> if a future tender requires certification, the path to it starts with exactly the audit we have just done.</span>
+  </div>
+
+  <!-- ============ HOW TO ANSWER ============ -->
+  <h2>If a customer or bidder asks you</h2>
+  <div class="lede">Short, accurate answers you can give today. Stick to these &mdash; overclaiming is the one thing that would hurt us.</div>
+
+  <div class="script">
+    <div class="q">&ldquo;Does Konvoy use AI?&rdquo;</div>
+    <div class="a">Yes. Our engineering team uses AI coding assistants to help build and test the Konvoy Cloud platform. Every change they produce is reviewed by an engineer before it goes live.</div>
+
+    <div class="q">&ldquo;How do you govern it?&rdquo;</div>
+    <div class="a">In September 2026 we audited our use of AI assistants against ISO/IEC 42001, the international standard for AI management systems. The audit graded 18 controls, identified gaps, and each gap is tracked as a numbered remediation item owned by engineering. We are working through them now and will re-audit when they are done.</div>
+
+    <div class="q">&ldquo;Are you ISO 42001 certified?&rdquo;</div>
+    <div class="a">No. We have <em>aligned</em> our internal audit to the standard's controls; we have not sought certification. If certification becomes a requirement for a customer, we have the foundation to pursue it.</div>
+
+    <div class="q">&ldquo;Does AI touch our data?&rdquo;</div>
+    <div class="a">The assistants work on our source code, not on the live customer database. Our audit specifically checks that no production data or real customer details sit where the assistant works, and the remaining items on that list are being closed out.</div>
+
+    <div class="dont"><b>Please don't say:</b> &ldquo;we're compliant&rdquo;, &ldquo;we're certified&rdquo;, or &ldquo;we passed&rdquo;. We did not pass, and saying otherwise in a tender is the kind of claim that gets checked. &ldquo;We audited, we found gaps, we're fixing them&rdquo; is both true and, to an experienced buyer, more convincing.</div>
+  </div>
+
+  <!-- ============ WHAT NEXT ============ -->
+  <h2>What happens next</h2>
+  <div class="lede">Part 2 will cover this in detail. The short version:</div>
+
+  <p>The 13 failed rules have been turned into <strong>14 remediation issues</strong> on the engineering board (one rule was split in two). Most are small configuration changes &mdash; adding a deny-list here, turning on a setting there. The largest single item is <strong>writing the AI governance policy itself</strong>, which is also the document that every other decision needs a home in, including the &ldquo;when may the assistant act without asking?&rdquo; question that the audit could not grade because no decision had ever been written down.</p>
+
+  <p>Once the remediation is done, the same 18-rule audit will be <strong>re-run</strong> and the result published alongside this one. The audit runbook is now committed to the codebase as a reusable tool, so a re-run is a repeatable exercise rather than a one-off project.</p>
+
+  <div class="callout red">
+    <b>One decision for the business, not engineering.</b> Should Konvoy pursue formal ISO 42001 certification? It is a 6&ndash;12 month, externally audited process with real cost, and it only makes sense if customers will ask for it. The right time to decide is after we see what the current sales round demands. This page is meant to help you spot that signal.
+  </div>
+
+  <!-- ============ GLOSSARY ============ -->
+  <h2>Glossary</h2>
+  <dl>
+    <dt>AI assistant / coding agent</dt><dd>Software that reads and writes code on an engineer's instruction. Claude Code and GitHub Copilot are the ones we use.</dd>
+    <dt>ISO/IEC 42001</dt><dd>The international standard for an AI management system. Published December 2023. Voluntary, certifiable.</dd>
+    <dt>Annex A control</dt><dd>One of the 38 specific safeguards the standard lists. Each of our 18 rules points at one or more of them.</dd>
+    <dt>Aligned vs certified</dt><dd><em>Aligned</em> means we measure ourselves against the standard. <em>Certified</em> means an accredited external body has confirmed it. We are the former.</dd>
+    <dt>Conform / does not conform</dt><dd>The standard's pass/fail language. One failed control means &ldquo;does not conform&rdquo;.</dd>
+    <dt>Remediation issue</dt><dd>A numbered ticket on the engineering board describing one fix. Fourteen were raised from this audit.</dd>
+    <dt>Secret</dt><dd>A password, API key or certificate. The audit checks these never sit in the code or within the assistant's reach.</dd>
+    <dt>Sandbox</dt><dd>A fenced-off environment that limits what software can touch or connect to, even if it tries.</dd>
+  </dl>
+
+  <footer>
+    Konvoy Kegs Engineering &middot; Sources: <a href="https://github.com/konvoy-kegs/konvoy/issues/6077">epic konvoy #6077</a>, audit report <code>docs/ai-governance/audit-reports/ai-governance-audit-2026-09-12.md</code>, triage <a href="https://github.com/konvoy-kegs/konvoy/issues/6085">konvoy #6085</a>. Part 2 (findings and remediation plan) to follow.
+  </footer>
+</div>
+</body>
+</html>
