@@ -310,10 +310,46 @@
 
   <table>
     <tr><th>Area</th><th>What changed</th></tr>
-    <tr><td class="w">Cost</td><td>VPC flow-log aggregation relaxed to 10 minutes and detailed EC2 monitoring switched off on the EKS nodes (<a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/707">terraform #707</a>) &mdash; two small, permanent CloudWatch reductions under the cost programme. The saving will show in the October bill; it is not quantified here until measured.</td></tr>
+    <tr><td class="w">Cost</td><td>VPC flow-log aggregation relaxed to 10 minutes and detailed EC2 monitoring switched off on the EKS nodes (<a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/707">terraform #707</a>) &mdash; two small, permanent CloudWatch reductions under the cost programme, estimated at 50&ndash;60 AUD/mo and not booked until measured. See the cost section below.</td></tr>
     <tr><td class="w">Cost visibility</td><td>The Konvoy Cost Guardrails alert rules in Grafana were adopted into code and repaired (<a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/714">terraform #714</a>) &mdash; the alerts exist to catch a bill that starts climbing.</td></tr>
     <tr><td class="w">Database refresh</td><td>The RDS refresh procedure now cleans up the outgoing primary and its snapshots after cutover (<a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/706">terraform #706</a>), so a refresh no longer leaves paid-for storage behind.</td></tr>
   </table>
+
+  <h2>Cost programme, across three boards</h2>
+  <div class="lede">Rob&rsquo;s infrastructure cost work is tracked on three GitHub project boards separate from the
+  product board. Progress this sprint was light &mdash; the fortnight went to Billing, security and the audit &mdash;
+  and bringing these up to date is a stated focus for 14 &ndash; 25 September. Figures in issue titles are estimates
+  until measured; none is booked as a saving here.</div>
+
+  <table>
+    <tr><th>Board</th><th>This sprint</th><th>Going into next sprint</th></tr>
+    <tr>
+      <td class="w"><a href="https://github.com/orgs/konvoy-kegs/projects/12">AWS cost &amp; RDS programme</a><br><span style="color:var(--muted);font-weight:400;font-size:0.82rem">33 of 42 closed &middot; 79%</span></td>
+      <td>The only board that moved. CloudWatch trimmed &mdash; flow-log aggregation to 10 minutes, EC2 detailed monitoring off on the EKS nodes, estimated <strong>50&ndash;60 AUD/mo</strong> (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/578">terraform #578</a>, shipped 9 Sept). Four legacy MySQL 8.0 option groups left over from the 8.4 upgrade cleaned out (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/569">#569</a>). Outside the board but in the same vein: the RDS refresh now reaps its own snapshots (<a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/706">#706</a>) and the cost-guardrail alerts were repaired (<a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/714">#714</a>).</td>
+      <td>Verify the CloudWatch saving actually landed once the 16 Sept bill data is in (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/708">#708</a>). The big one is still held: prod node right-sizing, <strong>~260 AUD/mo</strong>, waiting on pod-request tuning (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/576">#576</a>). Three new Francis backup items &mdash; nightly backups off in EU/NA, dev down to one instance.</td>
+    </tr>
+    <tr>
+      <td class="w"><a href="https://github.com/orgs/konvoy-kegs/projects/14">EKS upgrade &amp; estate consolidation</a><br><span style="color:var(--muted);font-weight:400;font-size:0.82rem">24 of 51 closed &middot; 47%</span></td>
+      <td>Nothing closed. The 1.33 &rarr; 1.34 exit from Extended Support finished in August (see the <a href="aws-extended-support-exit.html">programme page</a>); the next two hops, 1.35 and 1.36, are both marked <em>deferred</em> because ingress-nginx has no supported path forward (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/601">terraform #601</a>).</td>
+      <td>Two decisions gate the rest. Halve the prod-oc spot node group &mdash; two 8-vCPU nodes running at 1&ndash;2% CPU (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/654">#654</a>). And the estate question: once the IoT fleet is retired, can everything run from prod-oc and the EU and NA clusters be torn down (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/527">kubernetes #527</a>)? That is the largest cost lever on any board and it is entirely audit-and-decide work, not code. <strong>Hard date unchanged: 2 December 2026</strong>, when the Extended Support surcharge returns unless all four clusters reach 1.35.</td>
+    </tr>
+    <tr>
+      <td class="w"><a href="https://github.com/orgs/konvoy-kegs/projects/17">Databricks &amp; Airbyte decommission</a><br><span style="color:var(--muted);font-weight:400;font-size:0.82rem">2 of 22 closed &middot; 9%</span></td>
+      <td>Nothing closed on the board itself. Related product work did land: the Databricks asset-cycle dashboard was fenced off behind its flag (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5926">konvoy #5926</a>), and the Deep Archive buckets for the teardown were created in August.</td>
+      <td>Three gates before anything is destroyed: prove the destroy path cannot touch the shared data lake (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/690">terraform #690</a>), watch Databricks compute usage fall to zero for seven days after quiescing (<a class="iss" href="https://github.com/konvoy-kegs/databricks/issues/80">databricks #80</a>), and a go/no-go on one customer organisation still tied to the dashboard (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5923">konvoy #5923</a>). Two business questions need answers from outside Engineering: is there a live Snowflake contract reading the data lake (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/691">#691</a>), and do the Databricks subscription terms need receiver sign-off to cancel (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/692">#692</a>)?</td>
+    </tr>
+  </table>
+
+  <div class="caveat">
+    <b>Why these are behind.</b> All three boards are one person&rsquo;s work, and that person spent the fortnight on
+    the Billing backend, the release revert, the quality gate and the AI-governance audit. The catch-up plan for
+    14 &ndash; 25 September is to clear the decision items first &mdash; <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/654">terraform #654</a>,
+    <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/527">kubernetes #527</a>,
+    <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/691">terraform #691</a> and
+    <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/692">#692</a> &mdash; because each
+    unblocks a chain of small, cheap deletions behind it. The Databricks board in particular is 20 items that cannot
+    start until three gates are answered.
+  </div>
 
   <div class="caveat">
     <b>Just after the window.</b> Over the weekend of 12&ndash;13 September the
@@ -336,6 +372,7 @@
     <tr><td class="w">Revenue defects</td><td>Lease fees silently cleared on pricing edit (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5889">#5889</a>) &mdash; carried a third time. Refill $0 data backfill and Finance decision (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a>) &mdash; needs rates from Kim.</td></tr>
     <tr><td class="w">Billing in Konvoy Cloud</td><td>16 open items in its scope milestone, due 30 September. The design review with Finance and management (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5975">#5975</a>) and the NetSuite PDF deployment (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6047">#6047</a>) gate everything else.</td></tr>
     <tr><td class="w">Quality gate cutover</td><td>Make it a required check (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5870">#5870</a>) and fix the dead npm-audit endpoint (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6044">#6044</a>). Same two items as last report.</td></tr>
+    <tr><td class="w">Cost programme catch-up</td><td>Three boards, one owner, light progress this sprint. Decision items first (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/654">terraform #654</a>, <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/527">kubernetes #527</a>, <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/691">#691</a>, <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/692">#692</a>), then verify the CloudWatch saving after 16 Sept. See the cost section above.</td></tr>
     <tr><td class="w">AI-governance remediation</td><td>14 new issues, all Backlog. Most are small configuration changes; the largest is the written AI policy. Two human review steps are owned by Rob.</td></tr>
     <tr><td class="w">Booths Transport EDI</td><td>Epic plus four items; the collections-status filter merged to the epic branch this sprint. Phase 0 remains Booths-side coordination.</td></tr>
     <tr><td class="w">Vercel setup audit</td><td>Two of its items shipped this sprint (token header, CSP). Epic still open.</td></tr>
@@ -426,7 +463,10 @@
     Konvoy Kegs Engineering &middot; Milestone 31 review, prepared 14 September 2026 &middot; Figures taken from the
     <a href="https://github.com/konvoy-kegs/konvoy/milestone/31">Milestone 31 issue list</a> as at its closing date,
     from issues closed and pull requests merged in konvoy-kegs/konvoy between 31 August and 11 September, and from
-    pull requests merged in the terraform and kubernetes repositories over the same window. Milestone 29 comparison
+    pull requests merged in the terraform and kubernetes repositories over the same window. Cost-programme counts are
+    from GitHub project boards <a href="https://github.com/orgs/konvoy-kegs/projects/12">12</a>,
+    <a href="https://github.com/orgs/konvoy-kegs/projects/14">14</a> and
+    <a href="https://github.com/orgs/konvoy-kegs/projects/17">17</a> as at 14 September. Milestone 29 comparison
     figures are taken from the <a href="sprint-review-2026-08-28.html">Milestone 29 report</a> as published.
     Theme groupings are approximate.
   </footer>
