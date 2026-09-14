@@ -38,6 +38,8 @@
   .release .rtag { display: inline-block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--red); background: rgba(248,113,113,0.14); border-radius: 6px; padding: 4px 10px; margin-bottom: 12px; }
   .release p { font-size: 0.94rem; color: #cbd5e1; }
   .release .rnote { margin-top: 12px; font-size: 0.88rem; color: var(--muted); }
+  .release.amber { background: rgba(251,191,36,0.07); border-color: rgba(251,191,36,0.4); }
+  .release.amber .rtag { color: var(--yellow); background: rgba(251,191,36,0.14); }
 
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 10px; }
   .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
@@ -106,31 +108,41 @@
 
   <!-- ============ THE SHORT VERSION ============ -->
   <div class="headline">
-    <p><strong>A lot of work was finished this fortnight, and none of it reached customers.</strong>
+    <p><strong>A fortnight of finished work goes live today as one release.</strong>
     Across all milestones the team closed <strong>48 issues and merged 42 pull requests</strong> &mdash; about the
-    same output as the last sprint. But <strong>no production release has been published since v1.90.0 on
-    31 August</strong>. The next one, v1.90.1, has sat as a draft the whole time. Everything below that says
-    &ldquo;shipped&rdquo; means merged and ready, not live.</p>
+    same output as the last sprint. All of it ships in <strong>v1.90.1, publishing 14 September</strong>: 35 pull
+    requests, pre-flighted end to end, with the feature-flag state checked against production so nothing turns on
+    by surprise. It is the first release since v1.90.0 on 31 August &mdash; one for the sprint where earlier sprints
+    managed two to four &mdash; and the last four of those days were a hard block, not a choice.</p>
 
     <p><strong>The milestone figure looks worse than the fortnight was.</strong> Milestone 31 closed at
     <strong>56% (34 of 61 items)</strong>, down from 78%, with 27 items carried. That is partly real &mdash; two
     revenue defects were carried for the third time &mdash; and partly bookkeeping: more than half of the issues
     closed this fortnight sat in other milestones or in none, so the sprint milestone never saw them.</p>
 
-    <p><strong>Two things need a decision today.</strong> First, publish the release. Second, on 3 September eleven
-    commits reached the main branch <em>without a pull request or a review</em> &mdash; caught and reverted within
-    five hours, re-landed properly a week later, no harm done. But the branch rules let it happen, and the
+    <p><strong>Two things need a decision today.</strong> First, on 3 September eleven commits reached the main
+    branch <em>without a pull request or a review</em> &mdash; caught and removed within five hours, re-landed
+    properly a week later, no harm done. But the branch rules let it happen, and the
     <a href="ai-governance-iso-42001-briefing.html">AI-governance audit</a> completed at the weekend says the same
-    thing from a different angle.</p>
+    thing from a different angle. Second, a revenue defect &mdash; editing a customer&rsquo;s pricing silently wipes
+    their lease fees &mdash; has now been carried into a third sprint and needs an owner or an explicit decision to
+    accept it.</p>
   </div>
 
-  <div class="release">
-    <div class="rtag">Not shipped</div>
-    <p><strong>No release reached production during the sprint.</strong> v1.90.0 went out on 31 August, the day the
-    sprint started, and nothing has followed. v1.90.1 exists only as an unpublished draft. Last report&rsquo;s first
-    watch item asked for a maximum age on a cut-but-unpublished release; it was not set, and this sprint is the
-    result &mdash; two weeks of reviewed, merged work, including six security fixes and the refill-billing guard,
-    waiting in front of nobody.</p>
+  <div class="release amber">
+    <div class="rtag">Releasing today</div>
+    <p><strong>v1.90.1 publishes on 14 September with everything merged since 31 August</strong> &mdash; 35 pull
+    requests including the refill $0 guard, six security fixes, the end-of-extended-contract feature and the
+    orders from/to location filters, which this release makes visible to every user for the first time (a
+    deliberate product decision, not a flag left open). Pre-flight is complete: dev deploys, the pre-production
+    smoke and end-to-end runs, and a flag-by-flag check against LaunchDarkly production confirming that nothing in
+    the release changes who sees what. It also carries the command for the archived-customer clean-up
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6001">#6001</a>); the production run of that
+    command stays gated behind its own checklist and follows the release, not the other way round.</p>
+    <p class="rnote">Why one release rather than two or three: from 10 to 14 September the deployment pipeline was
+    stopped outright by three new dependency advisories that the audit gate would not pass
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6110">#6110</a>), cleared this morning. The ten
+    days before that were a scheduling choice. Release dates this month: 21 August, 31 August, 14 September.</p>
     <p class="rnote">The infrastructure release debt is unchanged:
     <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/475">kubernetes #475</a>
     (develop &rarr; main reconcile) has now not been touched since 19 June &mdash; nearly three months, and its fourth
@@ -146,7 +158,7 @@
     <div class="kpi"><div class="n yellow">34</div><div class="l">Items closed</div><div class="s">of 61 in the milestone &mdash; 56%</div></div>
     <div class="kpi"><div class="n blue">14</div><div class="l">Milestone issues shipped</div><div class="s">48 closed across all milestones</div></div>
     <div class="kpi"><div class="n purple">42</div><div class="l">Pull requests merged</div><div class="s">37 by the team, 5 dependency bumps</div></div>
-    <div class="kpi"><div class="n red">0</div><div class="l">Production releases</div><div class="s">v1.90.1 still a draft</div></div>
+    <div class="kpi"><div class="n blue">1</div><div class="l">Production release</div><div class="s">v1.90.1 &mdash; 35 PRs, publishing 14 Sept</div></div>
   </div>
 
   <div class="caveat" style="margin-top:20px">
@@ -181,8 +193,8 @@
 
   <!-- ============ WHAT WE SHIPPED ============ -->
   <h2>What we finished</h2>
-  <div class="lede">Seven themes, in the order a manager should care about them. &ldquo;Merged&rdquo; means done and
-  reviewed but not yet in production &mdash; see the release note above.</div>
+  <div class="lede">Seven themes, in the order a manager should care about them. Anything tagged
+  &ldquo;In v1.90.1&rdquo; goes live with today&rsquo;s release.</div>
 
   <div class="themes">
 
@@ -207,7 +219,7 @@
     </div>
 
     <div class="theme money">
-      <h3>2. Refill orders can no longer bill at $0 <span class="tag tag-done">Merged</span></h3>
+      <h3>2. Refill orders can no longer bill at $0 <span class="tag tag-done">In v1.90.1</span></h3>
       <p>The defect first raised in July (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a>)
       finally has its code fix: any refill or venue-collection order whose fee would resolve to $0 is now rejected,
       both when it is created and when it is completed
@@ -216,12 +228,12 @@
       (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5457">#5457</a>).</p>
       <p>What remains is data and a Finance decision, not code: 16 pricing rows across 8 exclusive agreements still
       hold a seeded zero and need confirmed rates from Kim, and one completed $0 order needs a credit-or-rebill call.</p>
-      <span class="why"><b>Why it matters:</b> recurrence is blocked once this is released. The 16 rows are the money
+      <span class="why"><b>Why it matters:</b> recurrence is blocked from today&rsquo;s release. The 16 rows are the money
       already at risk, and they need an owner in Finance, not Engineering.</span>
     </div>
 
     <div class="theme sec">
-      <h3>3. Six security fixes, none of them from an incident <span class="tag tag-done">Merged</span></h3>
+      <h3>3. Six security fixes, none of them from an incident <span class="tag tag-done">In v1.90.1</span></h3>
       <p>A customer using the &ldquo;View as User&rdquo; preview reported seeing admin menus they should not have
       (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5891">#5891</a>) &mdash; fixed. Credentials
       could appear in error stack traces, and the login handshake used a weaker random number than it should
@@ -234,7 +246,7 @@
       and Google Tag Manager was removed from the app altogether.</p>
       <span class="why"><b>Why it matters:</b> each one shrinks what a third-party script, an analytics vendor or a
       curious customer could see. None was a breach; all of them are the kind of finding that would have been a
-      breach eventually. None is live until v1.90.1 ships.</span>
+      breach eventually. All six go live with v1.90.1 today.</span>
     </div>
 
     <div class="theme">
@@ -275,10 +287,12 @@
     </div>
 
     <div class="theme">
-      <h3>6. Three feature flags retired, one clean-up reversed <span class="tag tag-done">Merged</span></h3>
+      <h3>6. Three feature flags retired, one clean-up reversed <span class="tag tag-done">In v1.90.1</span></h3>
       <p>The location-metrics permission flag (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5918">#5918</a>)
       and the orders from/to-location filter flag (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5919">#5919</a>)
-      were retired with their features on for everyone. The Databricks asset-cycle dashboard was fenced off behind
+      were retired with their features on for everyone. The second of those is, in effect, a small launch: the
+      from/to filters had been switched off in every environment since January, so v1.90.1 is the first time any
+      customer sees them. The Databricks asset-cycle dashboard was fenced off behind
       its flag pending the Databricks decommission
       (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5926">#5926</a>). Map node-clustering
       scaffolding was removed on 3 September (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5978">#5978</a>)
@@ -289,7 +303,7 @@
     </div>
 
     <div class="theme">
-      <h3>7. Small things support will notice <span class="tag tag-done">Merged</span></h3>
+      <h3>7. Small things support will notice <span class="tag tag-done">In v1.90.1</span></h3>
       <p>Order-number search now works without the type prefix, answering a support request
       (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6032">#6032</a>). Empty result pages stopped
       offering a &ldquo;next page&rdquo; that could not exist
@@ -368,7 +382,7 @@
 
   <table>
     <tr><th>Workstream</th><th>Status going in</th></tr>
-    <tr><td class="w">Release v1.90.1</td><td>Draft, containing everything merged since 31 August. First job of the week.</td></tr>
+    <tr><td class="w">Release v1.90.1</td><td>Pre-flighted; publishes 14 September. Then the production run of the archived-customer clean-up (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6001">#6001</a>), which needs the release in place first and a NetSuite-notification decision recorded before it runs.</td></tr>
     <tr><td class="w">Revenue defects</td><td>Lease fees silently cleared on pricing edit (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5889">#5889</a>) &mdash; carried a third time. Refill $0 data backfill and Finance decision (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5461">#5461</a>) &mdash; needs rates from Kim.</td></tr>
     <tr><td class="w">Billing in Konvoy Cloud</td><td>16 open items in its scope milestone, due 30 September. The design review with Finance and management (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5975">#5975</a>) and the NetSuite PDF deployment (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6047">#6047</a>) gate everything else.</td></tr>
     <tr><td class="w">Quality gate cutover</td><td>Make it a required check (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5870">#5870</a>) and fix the dead npm-audit endpoint (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6044">#6044</a>). Same two items as last report.</td></tr>
@@ -391,24 +405,28 @@
   <div class="watch">
 
     <div class="w-item">
-      <h3>1. Two weeks of finished work has not shipped</h3>
-      <p>Forty-two pull requests merged; zero releases published. Six security fixes and the refill-billing guard are
-      among the work sitting in the v1.90.1 draft. This was watch item 1 last time as a ten-day gap; it is now a full
-      sprint.</p>
-      <span class="ask">Decision: publish v1.90.1 this week, and adopt the rule proposed last time &mdash; a cut release
-      is published within two working days or someone says why not.</span>
-    </div>
-
-    <div class="w-item">
-      <h3>2. Eleven commits reached the main branch without review</h3>
+      <h3>1. Eleven commits reached the main branch without review</h3>
       <p>On 3 September a feature branch was created tracking the remote main branch, so a routine push landed eleven
       commits directly on main with no pull request, no automated checks and no reviewer
       (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6034">#6034</a>). The work itself was sound and
-      had passed every local check; it was reverted within five hours and re-landed through a proper review a week
-      later. No customer impact. The point is that the branch protection <em>allowed</em> it. The AI-governance audit,
+      had passed every local check; it was removed from main within five hours &mdash; by rewriting the branch
+      history rather than by a revert &mdash; and re-landed through a proper review a week later. No customer impact.
+      The point is that the branch protection <em>allowed</em> both the push and the rewrite. The AI-governance audit,
       independently, found that only one status check is actually required on main.</p>
       <span class="ask">Decision: remove the administrator bypass on the main-branch ruleset and make the test and
       quality checks required, so this cannot happen by accident to anyone &mdash; human or AI assistant.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>2. Release cadence has stretched to one per sprint</h3>
+      <p>v1.90.1 goes out today, fourteen days after v1.90.0; earlier sprints shipped two to four releases. Four of
+      those days were a hard stop &mdash; new dependency advisories froze the deployment pipeline from 10 to 14
+      September (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6110">#6110</a>) &mdash; and the
+      other ten were a choice. The release itself is well prepared; the gap is the concern, because a fortnight of
+      changes landing at once is harder to roll back than three small ones.</p>
+      <span class="ask">Decision: adopt the rule proposed last time &mdash; a cut release is published within two
+      working days or someone says why not &mdash; and treat an audit-gate block that stops deploys as an incident to
+      clear the same day, not a wait.</span>
     </div>
 
     <div class="w-item">
