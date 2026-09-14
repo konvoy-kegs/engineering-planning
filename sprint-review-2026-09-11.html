@@ -84,6 +84,7 @@
   .w-item.amber { border-left-color: var(--yellow); }
   .w-item h3 { font-size: 0.98rem; margin-bottom: 6px; }
   .w-item p { font-size: 0.9rem; color: #cbd5e1; }
+  .w-item p + p { margin-top: 8px; }
   .w-item .ask { display: block; margin-top: 9px; font-size: 0.86rem; color: var(--accent); }
 
   .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; }
@@ -124,9 +125,11 @@
     branch <em>without a pull request or a review</em> &mdash; caught and removed within five hours, re-landed
     properly a week later, no harm done. But the branch rules let it happen, and the
     <a href="ai-governance-iso-42001-briefing.html">AI-governance audit</a> completed at the weekend says the same
-    thing from a different angle. Second, a revenue defect &mdash; editing a customer&rsquo;s pricing silently wipes
-    their lease fees &mdash; has now been carried into a third sprint and needs an owner or an explicit decision to
-    accept it.</p>
+    thing from a different angle. Second, a revenue defect: changing any one price on a customer&rsquo;s pricing row
+    silently erases the four lease fees stored on that same row, and 99.7% of location pricing rows carry one. It was
+    found on 20 August, has an engineer assigned, and has sat through two sprints without the single question it
+    needs answered &mdash; whether lease fees belong on customer pricing rows at all. That answer this week, or an
+    explicit decision to accept the risk (watch item 3).</p>
   </div>
 
   <div class="release amber">
@@ -430,13 +433,31 @@
     </div>
 
     <div class="w-item">
-      <h3>3. The lease-fee defect has been carried three times <span class="tag tag-hold">Open 25 days</span></h3>
-      <p>Editing customer pricing silently clears the lease fees on the same row
-      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5889">#5889</a>). Last report asked for it at
-      the top of Milestone 31. It was in Milestone 31; it was not done. It is a revenue defect of the same silent
-      kind as the refill $0 problem, which took three sprints to fix.</p>
-      <span class="ask">Decision: first item in the new sprint with a named owner, or an explicit statement that it is
-      accepted until the Billing epic replaces the screen.</span>
+      <h3>3. Editing a customer&rsquo;s price wipes their lease fees &mdash; unanswered for 25 days <span class="tag tag-hold">Open 25 days</span></h3>
+      <p><strong>What happens.</strong> A customer&rsquo;s pricing for one SKU is stored as a single row of thirteen fees:
+      rental, freight, pickup, refill and so on, plus four lease fees (lease rate, lost-keg fee, branding fee,
+      depreciation). When staff edit any one price on the pricing tab &mdash; say, the rental fee &mdash; the system
+      does not update that one field. It builds a brand-new row from the eight or nine fees the edit form knows
+      about and throws the old row away. The four lease fees are not on the form, so they come back empty. Nothing
+      warns anyone; the pricing tab does not even display lease fees, so the loss is invisible until a lease order
+      bills against a rate that is now blank
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5889">#5889</a>).</p>
+      <p><strong>How exposed we are.</strong> Counted on a copy of the database: 1,306 of 1,310 location pricing rows
+      and 833 of 841 agreement pricing rows carry a lease rate. Any routine price edit on any of them destroys it.
+      What has <em>not</em> been counted is how many production rows have already lost a lease fee this way &mdash;
+      that check has not been run.</p>
+      <p><strong>Why it is stuck.</strong> Not effort. Millicent found it on 20 August while reviewing the
+      finance-notification work; it has been assigned to Bea, placed in Milestone 29 and then Milestone 31, and
+      carries no comments at all. The ticket asks one question before code is written: do lease fees belong on
+      customer and location pricing rows, or only on lease orders and market defaults? If they belong, the fix is
+      small &mdash; copy the existing row and overlay only what changed, with a test &mdash; and fits inside a sprint.
+      If they do not, 1,306 rows hold data that should never have been there and the fix is a clean-up plus a
+      constraint. Nobody has answered, so nobody has started. It is the same silent-billing shape as the refill $0
+      defect, which took three sprints.</p>
+      <span class="ask">Decision: answer the one question on the ticket this week &mdash; Rob or Finance can &mdash;
+      and run the production count now so we know whether any customer&rsquo;s lease fee has already gone. With the
+      answer recorded, this is a named item in the 14 &ndash; 25 September sprint. If the answer is &ldquo;accept the
+      risk until the Billing epic replaces the screen&rdquo;, write that on the ticket and close it.</span>
     </div>
 
     <div class="w-item amber">
