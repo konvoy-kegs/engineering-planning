@@ -50,8 +50,7 @@
   .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
   .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
   .fill { height: 100%; border-radius: 5px; background: var(--accent); }
-  .fill.est { background: repeating-linear-gradient(90deg, var(--purple) 0 6px, rgba(167,139,250,0.35) 6px 10px); }
-  .fill.dim { background: var(--surface2); }
+  .fill.new { background: var(--green); }
 
   .board { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--purple); border-radius: 10px; padding: 22px 24px; margin-bottom: 16px; }
   .board h3 { font-size: 1.08rem; margin-bottom: 4px; }
@@ -86,7 +85,6 @@
   .p-live { background: rgba(56,189,248,0.15); color: var(--accent); }
   .p-wait { background: rgba(251,191,36,0.15); color: var(--yellow); }
   .p-risk { background: rgba(248,113,113,0.15); color: var(--red); }
-  .p-est { background: rgba(167,139,250,0.18); color: var(--purple); }
 
   .watch { display: grid; gap: 12px; }
   .w-item { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--red); border-radius: 10px; padding: 18px 20px; }
@@ -107,75 +105,75 @@
     <div class="crumb"><a href="index.html">&larr; Engineering Planning</a> &middot; companion to the <a href="sprint-review-2026-10-06.html">Milestone 32 review</a></div>
     <h1>Infrastructure Cost Programme <span>&mdash;</span> Progress Review</h1>
     <div class="dates">Three boards: Databricks decommission, RDS MySQL 8.4, EKS upgrade &middot; Progress since the
-    11 September report &middot; Prepared for the CEO &amp; COO &middot; 6 October 2026</div>
+    11 September report &middot; Prepared for the CEO &amp; COO &middot; 6 October 2026 &middot; All figures AUD</div>
   </header>
 
   <!-- ============ THE SHORT VERSION ============ -->
   <div class="headline">
-    <p><strong>The AWS bill is showing its first real step down.</strong> August closed at <strong>$6,989 USD</strong>,
-    the same as June and July. September is showing <strong>$5,458 USD, 22% lower</strong> &mdash; with the caveat
-    that AWS still marks the month as estimated and the two marketplace lines (Databricks, MongoDB Atlas) may not have
-    fully posted. The parts that are already measurable: the EKS Extended Support surcharge is gone, the database line
-    is down a third, and the CloudWatch trim landed. Nothing here is booked as a saving until the month finalises;
-    the programme&rsquo;s rule is measure, then claim.</p>
+    <p><strong>The AWS bill has taken its first real step down.</strong> June, July and August were each invoiced at
+    about <strong>$10,000</strong>. September&rsquo;s invoice, issued on 2 October, is <strong>$7,773 &mdash; 22%
+    lower</strong>. The parts that are already measurable: the EKS Extended Support surcharge is gone, the database
+    line is down a third, Databricks was winding down, and the CloudWatch trim landed. The programme&rsquo;s rule is
+    measure, then claim; this is the first month with something to claim.</p>
 
     <p><strong>Databricks is the big move this fortnight.</strong> Three weeks ago the board was 2 of 22 items done and
-    waiting on three gates. All three gates were answered, the dashboard that read from it was switched off with
-    Patrick&rsquo;s and Mark&rsquo;s approval, the compute was quiesced on 3 October, and
-    <strong>daily Databricks spend fell from $16&ndash;17 to $1</strong>. What remains is the irreversible part &mdash;
-    a written go/no-go on <strong>Sunday 11 October</strong>, the data deleted the same day, and the workspaces,
-    networks and the Airbyte feed destroyed on <strong>15 October</strong>. Rob is doing it personally, on a weekend,
-    one step at a time with a fresh safety check before each.</p>
+    waiting on three gates. All three were answered, the dashboard that read from it was switched off with
+    Patrick&rsquo;s and Mark&rsquo;s approval, the compute was stopped on 3 October, and
+    <strong>daily Databricks spend fell from about $24 to under $2</strong>. What remains is the irreversible part
+    &mdash; a written go/no-go on <strong>Sunday 11 October</strong>, the data deleted the same day, and the
+    workspaces, networks and the Airbyte feed destroyed on <strong>15 October</strong>. Rob is doing it personally,
+    on a weekend, one step at a time with a fresh safety check before each.</p>
 
     <p><strong>Three decisions sit outside the engineering work.</strong> First, the EKS upgrade to Kubernetes 1.35 has
     no start date and its recommended decision date (30 September) has passed; 1.34 leaves standard support on
-    <strong>2 December</strong>, and the alternative is the $2,147 AUD/month surcharge coming back. Second, the largest
+    <strong>2 December</strong>, and the alternative is the $2,147-a-month surcharge coming back. Second, the largest
     remaining lever &mdash; running everything from the Australian cluster and retiring the EU and US ones, roughly
-    $2,700 AUD/month on paper &mdash; is gated on two business questions nobody has answered: is there any contractual
+    $2,700 a month on paper &mdash; is gated on two business questions nobody has answered: is there any contractual
     or data-residency reason to keep an EU or US presence, and is any data pipeline going to resume. Third, the RDS
     backup redesign carries a recorded data-loss trade-off that should be restated and confirmed, not just inherited.</p>
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="n purple">$5,458</div><div class="l">September AWS bill (USD)</div><div class="s">vs $6,989 August &middot; preliminary, AWS still estimating</div></div>
-    <div class="kpi"><div class="n green">$1</div><div class="l">Databricks per day</div><div class="s">from $16&ndash;17/day a fortnight ago &middot; since 5 October</div></div>
-    <div class="kpi"><div class="n blue">$0</div><div class="l">EKS Extended Support</div><div class="s">$2,147 AUD/mo removed since August, measured</div></div>
+    <div class="kpi"><div class="n purple">$7,773</div><div class="l">September AWS invoice</div><div class="s">vs $9,939 for August &middot; as billed, incl. GST</div></div>
+    <div class="kpi"><div class="n green">&lt;$2</div><div class="l">Databricks per day</div><div class="s">from about $24 a day a fortnight ago &middot; since 5 October</div></div>
+    <div class="kpi"><div class="n blue">$0</div><div class="l">EKS Extended Support</div><div class="s">$2,147 a month removed since August, measured</div></div>
     <div class="kpi"><div class="n yellow">84</div><div class="l">Board items closed</div><div class="s">of 122 across the three boards &mdash; 69%, from 59 of 115</div></div>
   </div>
 
   <!-- ============ AWS BILL ============ -->
   <h2>The AWS bill</h2>
-  <div class="lede">Monthly unblended cost from AWS Cost Explorer, in USD (AWS invoices Konvoy in AUD; Cost Explorer
-  reports the underlying USD). June to August are final; September is what AWS reports today and is still flagged
-  estimated.</div>
+  <div class="lede">What AWS actually invoiced each month, in AUD, including GST and the marketplace charges
+  (Databricks, MongoDB Atlas). AWS converts from USD at its own rate on the invoice date &mdash; between 1.42 and 1.45
+  over these four months &mdash; so a little of any month-to-month movement is exchange rate, not usage.</div>
 
   <div class="bars">
-    <div class="bar"><div class="top"><span>June</span><span>$6,995</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
-    <div class="bar"><div class="top"><span>July</span><span>$6,957</span></div><div class="track"><div class="fill" style="width:99%"></div></div></div>
-    <div class="bar"><div class="top"><span>August</span><span>$6,989</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
-    <div class="bar"><div class="top"><span>September <span class="pill p-est">estimated</span></span><span>$5,458</span></div><div class="track"><div class="fill est" style="width:78%"></div></div></div>
+    <div class="bar"><div class="top"><span>June</span><span>$10,069</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+    <div class="bar"><div class="top"><span>July</span><span>$10,085</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+    <div class="bar"><div class="top"><span>August</span><span>$9,939</span></div><div class="track"><div class="fill" style="width:99%"></div></div></div>
+    <div class="bar"><div class="top"><span>September <span class="pill p-live">invoiced 2 Oct</span></span><span>$7,773</span></div><div class="track"><div class="fill new" style="width:77%"></div></div></div>
   </div>
 
   <div class="lede" style="margin-top:22px;margin-bottom:12px">The lines the programme has touched, August against
-  September. Everything else on the bill moved by less than $50.</div>
+  September, before GST and converted at each month&rsquo;s invoice rate. Everything else on the bill moved by less
+  than $70.</div>
 
   <table>
     <tr><th>Line</th><th class="num">June</th><th class="num">August</th><th class="num">September</th><th>What moved it</th></tr>
-    <tr><td class="w">EKS (control plane + Extended Support)</td><td class="num">$288</td><td class="num">$696</td><td class="num down">$288</td><td>Extended Support surcharge accrued in July&ndash;August while the 1.33 &rarr; 1.34 upgrade ran; gone from September. Back to the $0.10/hour control-plane floor on four clusters.</td></tr>
-    <tr><td class="w">RDS (MySQL)</td><td class="num">$1,294</td><td class="num">$1,080</td><td class="num down">$715</td><td>Replica and dev-clone reductions from the 8.4 upgrade, backup retention cut 35 &rarr; 14 days, and no Extended Support charge. August still carried upgrade-time instances.</td></tr>
-    <tr><td class="w">Databricks Lakehouse Platform</td><td class="num">$1,031</td><td class="num">$1,097</td><td class="num down">$719</td><td>Usage fell through September as the dashboard was switched off (23 Sept); compute quiesced 3 October. The settled August figure of $1,097 is the agreed baseline (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/693">terraform #693</a>).</td></tr>
-    <tr><td class="w">CloudWatch</td><td class="num">$126</td><td class="num">$124</td><td class="num down">$70</td><td>Detailed EC2 monitoring off and flow-log aggregation relaxed (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/578">terraform #578</a>, 9 Sept). Metric monitoring went from $30/mo to $0; log ingestion did not move (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/708">#708</a>).</td></tr>
-    <tr><td class="w">EC2 compute + other</td><td class="num">&mdash;</td><td class="num">$1,763</td><td class="num flat">$1,641</td><td>Small drift; the prod-oc spot node halving (3 Oct) is not in September&rsquo;s figure yet.</td></tr>
-    <tr><td class="w">MongoDB Atlas (marketplace)</td><td class="num">&mdash;</td><td class="num">$600</td><td class="num flat">$562</td><td>Contract line; the September figure is likely still posting. Not part of the programme yet.</td></tr>
+    <tr><td class="w">EKS (control plane + Extended Support)</td><td class="num">$415</td><td class="num">$990</td><td class="num down">$408</td><td>Extended Support surcharge accrued in July&ndash;August while the 1.33 &rarr; 1.34 upgrade ran; gone from September. Back to the control-plane floor on four clusters.</td></tr>
+    <tr><td class="w">RDS (MySQL)</td><td class="num">$1,863</td><td class="num">$1,536</td><td class="num down">$1,016</td><td>Replica and dev-clone reductions from the 8.4 upgrade, backup retention cut 35 &rarr; 14 days, and no Extended Support charge. August still carried upgrade-time instances.</td></tr>
+    <tr><td class="w">Databricks Lakehouse Platform</td><td class="num">$1,484</td><td class="num">$1,560</td><td class="num down">$1,021</td><td>Usage fell through September as the dashboard was switched off (23 Sept); compute stopped 3 October. August is the agreed baseline (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/693">terraform #693</a>).</td></tr>
+    <tr><td class="w">CloudWatch</td><td class="num">$181</td><td class="num">$177</td><td class="num down">$100</td><td>Detailed EC2 monitoring off and flow-log aggregation relaxed (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/578">terraform #578</a>, 9 Sept). Metric monitoring went from about $43 a month to $0; log ingestion did not move (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/708">#708</a>).</td></tr>
+    <tr><td class="w">EC2 compute + other</td><td class="num">&mdash;</td><td class="num">$2,507</td><td class="num flat">$2,330</td><td>Small drift; the prod-oc spot node halving (3 Oct) is not in September&rsquo;s figure yet.</td></tr>
+    <tr><td class="w">MongoDB Atlas (marketplace)</td><td class="num">&mdash;</td><td class="num">$853</td><td class="num flat">$798</td><td>Contract line, not part of the programme yet.</td></tr>
   </table>
 
   <div class="caveat">
-    <b>How to read the 22%.</b> About $400 of the drop is the EKS surcharge leaving &mdash; that one is permanent and
-    measured. About $365 is the RDS line, most of it the August upgrade cost falling away rather than a new saving.
-    About $380 is Databricks, which will go to near zero in November if the teardown completes. The rest is CloudWatch
-    and small drift. If the September figure holds when AWS finalises it, the run-rate is roughly <strong>$1,500 USD
-    a month lower than the June&ndash;August plateau</strong>, before the Databricks teardown and the node right-sizing
-    land. That is a projection, not a booking.
+    <b>How to read the 22%.</b> Of the $2,166 drop from August to September, about $580 is the EKS surcharge leaving
+    &mdash; permanent and measured. About $520 is the database line, most of it the August upgrade cost falling away
+    rather than a new saving. About $540 is Databricks, which goes to near zero in November if the teardown completes.
+    About $75 is CloudWatch; the rest is GST following those lines, smaller services, and exchange rate. If September
+    holds, the run-rate is roughly <strong>$2,100 a month lower than the June&ndash;August plateau</strong>, before
+    the Databricks teardown and the node right-sizing land. That is a projection, not a booking.
   </div>
 
   <!-- ============ DATABRICKS ============ -->
@@ -199,8 +197,8 @@
     <p><strong>The switch-off.</strong> The asset-cycle dashboard flag was turned off in production on 23 September
     &ldquo;approved by Patrick (CEO) and Mark (COO)&rdquo;, after seven days of logs showed zero customer traffic on all
     four analytics routes in every region (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5915">konvoy #5915</a>).
-    That set day zero as 2 October. On 3 October the compute was quiesced &mdash; jobs paused, pipelines idle, SQL
-    warehouses stopped, nothing deleted (<a class="iss" href="https://github.com/konvoy-kegs/databricks/issues/79">databricks #79</a>)
+    That set day zero as 2 October. On 3 October the compute was stopped &mdash; jobs paused, pipelines idle, SQL
+    warehouses off, nothing deleted (<a class="iss" href="https://github.com/konvoy-kegs/databricks/issues/79">databricks #79</a>)
     &mdash; and the four Airbyte connections feeding it were set inactive, authorised by Rob
     (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/559">kubernetes #559</a>). Archive copies
     of the data were taken to Deep Archive storage.</p>
@@ -211,11 +209,11 @@
     (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/690">terraform #690</a>,
     <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/719">#719</a>,
     <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/694">#694</a>). The baseline was snapshotted
-    before anything changed: <strong>$1,097 USD/month</strong> of Databricks usage, plus about $160/month of AWS
-    networking and storage underneath it (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/693">#693</a>).</p>
-    <span class="why"><b>Money:</b> daily spend went $30 &rarr; $17 &rarr; $6 &rarr; $2 &rarr; $1 between 22 September and
-    5 October, as measured in Cost Explorer today. On the August baseline the full teardown removes about
-    <strong>$1,250 USD a month</strong> (usage plus networking); the original estimate on the board was $1,226 AUD, which
+    before anything changed: about <strong>$1,560 a month</strong> of Databricks usage, plus about $230 a month of
+    AWS networking and storage underneath it (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/693">#693</a>).</p>
+    <span class="why"><b>Money:</b> daily spend went about $43 &rarr; $24 &rarr; $9 &rarr; $3 &rarr; $1.40 between
+    22 September and 5 October, as measured in Cost Explorer today. On the August baseline the full teardown removes
+    about <strong>$1,800 a month</strong> (usage plus networking); the original estimate on the board was $1,226, which
     the issues now say not to use. Rob&rsquo;s decision on 5 October: finish the shutdown first, measure the saving
     afterwards &mdash; the settled bill is no longer a gate.</span>
   </div>
@@ -227,7 +225,7 @@
       <li><strong>7 Oct</strong> &mdash; result of the Deep Archive restore test: one archived object per bucket restored and its checksum compared to the record (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/720">terraform #720</a>).</li>
       <li><strong>8 Oct</strong> &mdash; second observation sitting; close the quiesce and pause items if the week is clean (<a class="iss" href="https://github.com/konvoy-kegs/databricks/issues/80">databricks #80</a>).</li>
       <li><strong>Sun 11 Oct</strong> &mdash; third sitting, the dashboard-view test, Sentry and support check, then Rob&rsquo;s <strong>written GO or NO-GO</strong>. If GO: fresh destroy plans diffed against today&rsquo;s baseline; drop the kc-dev and kc-prod schemas (<a class="iss" href="https://github.com/konvoy-kegs/databricks/issues/81">#81</a>); final archive top-up with checksum spot-check; empty the two workspace root buckets (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/696">terraform #696</a>).</li>
-      <li><strong>15 Oct</strong> &mdash; destroy the dev and prod workspaces, then the shared layer (metastores, VPCs, NAT gateways), remove the six SSM parameters, delete the workflows (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/686">#686</a>&ndash;<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/689">#689</a>); delete the Airbyte deployment and its database (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/560">kubernetes #560</a>); tear down one stray network by hand &mdash; it is outside Terraform and costs about $80/month on its own.</li>
+      <li><strong>15 Oct</strong> &mdash; destroy the dev and prod workspaces, then the shared layer (metastores, VPCs, NAT gateways), remove the six SSM parameters, delete the workflows (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/686">#686</a>&ndash;<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/689">#689</a>); delete the Airbyte deployment and its database (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/560">kubernetes #560</a>); tear down one stray network by hand &mdash; it is outside Terraform and costs about $115 a month on its own.</li>
     </ol>
     <span class="why"><b>Needs from Rob:</b> the written GO/NO-GO on the 11th; presence on the 11th and 15th; one
     account-level toggle in the Databricks console. <b>Needs from nobody else.</b></span>
@@ -251,19 +249,18 @@
   <div class="board green">
     <h3>Status <span class="pill p-done">Core objective done in August</span></h3>
     <div class="meta">All four instances upgraded 2 August, a day after the Extended Support meter started; the epic closed 7 August, 18 of 18.</div>
-    <p>The upgrade avoided an Extended Support charge the programme page records as about <strong>$1,896 AUD a
+    <p>The upgrade avoided an Extended Support charge the programme page records as about <strong>$1,896 a
     month</strong> &mdash; avoided cost, never paid, so it does not show as a reduction on the bill. What <em>does</em>
-    show is the RDS line falling from $1,294 in June to $715 in September (preliminary), from the replicas and dev
-    clones removed around the upgrade and backup retention cut from 35 to 14 days
+    show is the RDS line falling from $1,863 in June to $1,016 in September, from the replicas and dev clones removed
+    around the upgrade and backup retention cut from 35 to 14 days
     (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/602">terraform #602</a>). MySQL 8.4 is in
     standard support until July 2029.</p>
     <p><strong>Since 11 September</strong>, six items closed, all housekeeping. The CloudWatch trim from last sprint was
-    measured: metric monitoring went from $30.32 to $0.00 over thirty days; the log-ingestion half delivered nothing,
-    so the original &ldquo;50&ndash;60 AUD/mo&rdquo; estimate is really about $30 USD
-    (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/708">#708</a>, preliminary until September
-    finalises). A standing phantom diff on every EKS plan was eliminated
-    (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/710">#710</a>), the Node-NotReady alert was
-    retuned after false positives during node rolls
+    measured: metric monitoring went from about $43 a month to $0; the log-ingestion half delivered nothing, so the
+    original &ldquo;50&ndash;60 a month&rdquo; estimate is really about $43
+    (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/708">#708</a>). A standing phantom diff on
+    every EKS plan was eliminated (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/710">#710</a>),
+    the Node-NotReady alert was retuned after false positives during node rolls
     (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/709">#709</a>,
     <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/749">#749</a>), and a Grafana Cloud key that
     leaked into an agent transcript was revoked and replaced the same day
@@ -275,7 +272,7 @@
   <div class="board amber">
     <h3>What is open <span class="pill p-wait">4 items, two need a decision</span></h3>
     <ul>
-      <li><strong>Production node right-sizing, ~260 AUD/month estimated</strong>
+      <li><strong>Production node right-sizing, about $260 a month estimated</strong>
         (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/576">terraform #576</a>) &mdash; held, on
         purpose. The clusters run roughly twice the compute they need, but that slack is also the only buffer against a
         spot-instance interruption, because there is no autoscaler. The sequence is: right-size what each service
@@ -309,7 +306,7 @@
     production now require a deliberate, per-region, manual dispatch; in the 17 post-merge runs since, every one applied
     to dev and skipped prod (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/607">terraform #607</a>).
     Rob considered and declined the GitHub Enterprise upgrade that would add an approval screen &mdash; about
-    $2,040 a year &mdash; on the grounds that dispatch-as-intent is the control
+    $2,900 a year &mdash; on the grounds that dispatch-as-intent is the control
     (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/608">#608</a>). Node images are now pinned,
     so AWS cannot roll them under us; every cluster&rsquo;s plan reads &ldquo;no changes&rdquo; for the first time
     (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/606">#606</a>).</p>
@@ -320,7 +317,7 @@
     ingress-nginx bump, was applied to dev-oc (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/641">#641</a>)
     &mdash; the issue is closed but the three production clusters have not had it yet.</p>
     <span class="why"><b>Money:</b> the 1.33 &rarr; 1.34 exit in August is the programme&rsquo;s one fully measured
-    win: <strong>$1,488 USD = $2,147 AUD a month off the bill</strong>, visible in the EKS line above
+    win: <strong>$2,147 a month off the bill</strong>, visible in the EKS line above
     (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/573">#573</a>). The node halving is new and
     unmeasured.</span>
   </div>
@@ -329,7 +326,7 @@
     <h3>The 2 December date <span class="pill p-risk">Decision overdue</span></h3>
     <div class="meta">Kubernetes 1.34 leaves AWS standard support on 2 December 2026. The epic recommended deciding by 30 September.</div>
     <p>After 2 December one of two things happens: AWS upgrades the control plane on its own schedule and leaves our
-    node groups and add-ons behind, or the Extended Support surcharge &mdash; the $2,147 AUD a month removed in
+    node groups and add-ons behind, or the Extended Support surcharge &mdash; the $2,147 a month removed in
     August &mdash; comes back. Reaching 1.35 buys until 27 March 2027. The chain is known and none of it has started on
     production: ingress-nginx on prod eu &rarr; na &rarr; oc; KEDA and cert-manager to supported versions
     (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/600">terraform #600</a>); ArgoCD off an
@@ -346,11 +343,11 @@
   <div class="board amber">
     <h3>The estate question &mdash; the biggest lever, entirely a business decision <span class="pill p-wait">0 of 7</span></h3>
     <div class="meta"><a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/527">kubernetes #527</a>: once the IoT fleet is retired, can everything run from the Australian cluster and the EU and US clusters be torn down?</div>
-    <p>The issue&rsquo;s own arithmetic: the EU region costs about <strong>$1,041 USD a month</strong> and the US region
-    about <strong>$842</strong>, so <strong>$1,883 USD (~$2,717 AUD) a month</strong> if both go &mdash; and a further
-    $1,595 USD if Databricks and MongoDB Atlas retire with them. Two caveats the issue itself flags: most of the EU/US
+    <p>The issue&rsquo;s own arithmetic: the EU region costs about <strong>$1,500 a month</strong> and the US region
+    about <strong>$1,215</strong>, so <strong>about $2,700 a month</strong> if both go &mdash; and a further
+    $2,300 if Databricks and MongoDB Atlas retire with them. Two caveats the issue itself flags: most of the EU/US
     database instances are on reserved pricing until June 2027, so they save nothing until then, and the last
-    consolidation sprint was booked at $836 a month and delivered about $204. These are estimates, not plans.</p>
+    consolidation sprint delivered about a quarter of what was booked. These are estimates, not plans.</p>
     <p>None of the seven steps is engineering. The first two are questions for the business
     (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/530">kubernetes #530</a>: is there any
     contractual or data-residency reason to keep an EU or US presence;
@@ -373,7 +370,7 @@
     <tr><td class="d">8 Oct</td><td>Databricks observation sitting #2; close quiesce/pause items if clean</td><td>Rob</td></tr>
     <tr><td class="d">Sun 11 Oct</td><td><strong>Databricks written GO/NO-GO</strong>, then schema drop and bucket emptying &mdash; first irreversible step</td><td>Rob</td></tr>
     <tr><td class="d">15 Oct</td><td>Databricks workspaces, networks, SSM, workflows and Airbyte destroyed; stray VPC by hand</td><td>Rob</td></tr>
-    <tr><td class="d">mid-Oct</td><td>September AWS bill finalises &mdash; re-measure CloudWatch (#708) and confirm the $5,458</td><td>Rob</td></tr>
+    <tr><td class="d">mid-Oct</td><td>Cost Explorer finalises September &mdash; re-measure CloudWatch (#708) against the invoice</td><td>Rob</td></tr>
     <tr><td class="d">after 15 Oct</td><td>prod-na spot nodes 3 &rarr; 1 and verify (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/524">kubernetes #524</a>, <a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/526">#526</a>); node right-sizing sequence can begin (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/576">terraform #576</a>)</td><td>Rob</td></tr>
     <tr><td class="d"><strong>2 Dec</strong></td><td><strong>Kubernetes 1.34 leaves standard support</strong> &mdash; surcharge or forced upgrade unless 1.35 is reached</td><td>Decision: CEO/COO + Rob</td></tr>
     <tr><td class="d">27 Mar 2027</td><td>Kubernetes 1.35 leaves standard support; 1.36 needs the ingress migration</td><td>Rob</td></tr>
@@ -397,7 +394,7 @@
       <p>Is there any contractual or data-residency reason to keep an EU or US footprint
       (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/530">kubernetes #530</a>)? Is any data
       pipeline going to resume (<a class="iss" href="https://github.com/konvoy-kegs/kubernetes/issues/522">#522</a>)?
-      Roughly $2,700 AUD a month on paper sits behind these two answers, although most of it only becomes real after
+      Roughly $2,700 a month on paper sits behind these two answers, although most of it only becomes real after
       June 2027 when the reservations lapse.</p>
       <span class="ask">Decision: Patrick and Mark, in this session or by Friday &mdash; a yes/no on each is enough to
       start the audits.</span>
@@ -424,11 +421,13 @@
     from GitHub project boards <a href="https://github.com/orgs/konvoy-kegs/projects/17">17</a>,
     <a href="https://github.com/orgs/konvoy-kegs/projects/12">12</a> and
     <a href="https://github.com/orgs/konvoy-kegs/projects/14">14</a> as at 6 October (previous counts from the
-    <a href="sprint-review-2026-09-11.html">11 September report</a>). Dollar figures quoted from the issues are
-    labelled estimate or measured as the issue itself records them; the RDS avoided-cost figure is as published on the
-    <a href="aws-extended-support-exit.html">programme page</a>. AWS figures are Cost Explorer unblended cost in USD,
-    queried 6 October; June&ndash;August are final, September and all October daily figures are flagged estimated by
-    AWS and will move. Nothing in this report is booked as a saving until the relevant month finalises.
+    <a href="sprint-review-2026-09-11.html">11 September report</a>). All figures are AUD. Monthly bill totals are the
+    amounts on the AWS invoices (AWS services incl. GST plus the marketplace invoice); service lines and daily figures
+    are AWS Cost Explorer unblended cost, converted at the exchange rate printed on that month&rsquo;s invoice
+    (June 1.4396, August 1.4220, September 1.4196). Dollar figures quoted from the issues are labelled estimate or
+    measured as the issue records them; where an issue stated USD it has been converted at the September rate. The
+    RDS avoided-cost figure is as published on the <a href="aws-extended-support-exit.html">programme page</a>.
+    Nothing in this report is booked as a saving until the relevant month&rsquo;s Cost Explorer data finalises.
   </footer>
 
 </div>
