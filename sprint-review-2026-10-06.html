@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milestone 32 Review &amp; M33 Plan (7–19 October) — Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 24px 80px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  a { color: var(--accent); }
+  a.iss { text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.5); white-space: nowrap; }
+  a.iss:hover { border-bottom-style: solid; }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  h2:first-of-type { margin-top: 0; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+
+  .headline { background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(74,222,128,0.06)); border: 1px solid rgba(56,189,248,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.06rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #e2f5ff; }
+
+  .release { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.4); border-radius: 14px; padding: 22px 26px; margin-bottom: 34px; }
+  .release .rtag { display: inline-block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--red); background: rgba(248,113,113,0.14); border-radius: 6px; padding: 4px 10px; margin-bottom: 12px; }
+  .release p { font-size: 0.94rem; color: #cbd5e1; }
+  .release .rnote { margin-top: 12px; font-size: 0.88rem; color: var(--muted); }
+  .release.amber { background: rgba(251,191,36,0.07); border-color: rgba(251,191,36,0.4); }
+  .release.amber .rtag { color: var(--yellow); background: rgba(251,191,36,0.14); }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 10px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); }
+  .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); } .n.red { color: var(--red); }
+
+  .bars { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px 26px; }
+  .bar { margin-bottom: 15px; }
+  .bar:last-child { margin-bottom: 0; }
+  .bar .top { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 5px; }
+  .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 5px; background: var(--accent); }
+
+  .themes { display: grid; gap: 14px; }
+  .theme { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 20px 22px; }
+  .theme h3 { font-size: 1.02rem; margin-bottom: 8px; }
+  .theme p { font-size: 0.92rem; color: #cbd5e1; }
+  .theme p + p { margin-top: 10px; }
+  .theme .why { display: block; margin-top: 10px; font-size: 0.86rem; color: var(--muted); }
+  .theme .why b { color: var(--green); font-weight: 600; }
+  .theme.sec { border-left-color: var(--red); }
+  .theme.sec .why b { color: var(--red); }
+  .theme.money { border-left-color: var(--purple); }
+  .theme.money .why b { color: var(--purple); }
+  .theme ul { margin: 8px 0 0 18px; font-size: 0.9rem; color: #cbd5e1; }
+  .theme li { margin-bottom: 5px; }
+
+  .caveat { background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.9rem; }
+  .caveat b { color: var(--yellow); }
+  .caveat.green { background: rgba(74,222,128,0.07); border-left-color: var(--green); }
+  .caveat.green b { color: var(--green); }
+  .caveat.red { background: rgba(248,113,113,0.07); border-left-color: var(--red); }
+  .caveat.red b { color: var(--red); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 16px; background: rgba(51,65,85,0.5); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
+  td { padding: 13px 16px; border-top: 1px solid var(--surface2); vertical-align: top; }
+  td.w { width: 34%; font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .watch { display: grid; gap: 12px; }
+  .w-item { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--red); border-radius: 10px; padding: 18px 20px; }
+  .w-item.amber { border-left-color: var(--yellow); }
+  .w-item h3 { font-size: 0.98rem; margin-bottom: 6px; }
+  .w-item p { font-size: 0.9rem; color: #cbd5e1; }
+  .w-item p + p { margin-top: 8px; }
+  .w-item .ask { display: block; margin-top: 9px; font-size: 0.86rem; color: var(--accent); }
+
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; }
+  .tag-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tag-carry { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tag-new { background: rgba(56,189,248,0.15); color: var(--accent); }
+  .tag-hold { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--surface2); color: var(--surface2); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
+    <h1>Milestone 32 Review <span>&amp;</span> M33 Plan</h1>
+    <div class="dates">Sprint ran 15 September &ndash; 6 October 2026 (planned to 28 September, extended one week) &middot;
+    Next sprint M33, 7 &ndash; 19 October &middot; Team of 3 &middot; Prepared for the CEO &amp; COO &middot; 6 October 2026</div>
+  </header>
+
+  <!-- ============ THE SHORT VERSION ============ -->
+  <div class="headline">
+    <p><strong>The sprint set three goals and finished all three.</strong> Milestone 32 was written up as
+    &ldquo;Billing in place ready for production, Vercel all cleaned up, LaunchDarkly all cleaned up.&rdquo; The
+    <strong>LaunchDarkly clean-up epic closed on 25 September</strong> (18 of 18 items), the
+    <strong>Vercel audit epic closed on 2 October</strong> (10 of 10), and the
+    <strong>Billing epic merged to the main branch at 11:19 this morning</strong> &mdash; 55 commits, 267 files,
+    40 of its 42 items done. Two further epics closed alongside &mdash; credit notes, with a deliberate decision to
+    <em>view</em> them rather than create them, and the test-quality audit &mdash; and the API-documentation migration
+    is ten of fourteen done. The extra week bought the Billing merge; without it the sprint would have closed at
+    roughly the same percentage with Billing still on a branch.</p>
+
+    <p><strong>By the numbers it is the strongest close since July.</strong> Milestone 32 finished at
+    <strong>90% (106 of 118 items)</strong> against 56% last time. Across all milestones the team closed
+    <strong>107 issues and merged 100 pull requests</strong> in the three weeks, split almost evenly between the three
+    engineers. The one caveat on the figure: this was a 22-day sprint, not a 12-day one, so the throughput per week is
+    in line with the last two sprints rather than above them.</p>
+
+    <p><strong>The honest part is what is not in production.</strong> Only one release went out in the window
+    (v1.90.2 on 25 September). Everything merged since &mdash; 62 pull requests including Billing and the fix for the
+    LaunchDarkly add-on that was sending login passwords to a third party in plain text &mdash; is on the main branch
+    and nowhere else. Worse, the automatic deploys to the dev-oc test environment had been failing since
+    <strong>6 September</strong> and nobody noticed until Billing needed to land there this morning; it was fixed at
+    13:15 today. <strong>Two decisions for this session:</strong> cut a release this week so the security fixes go
+    live, and name who books the Billing walkthrough with Finance &mdash; the page cannot reach a customer until that
+    sign-off exists.</p>
+  </div>
+
+  <div class="release">
+    <div class="rtag">Not yet released</div>
+    <p><strong>v1.90.2 (25 September) is the only release in the window and nothing has shipped since.</strong> It
+    carried the staff-instructions API, the Locations search box, the automatic reload of stale browser bundles, the
+    fuel-levy removal from the order-detail page, the shell-script lint gate, the LaunchDarkly SDK bump and the new
+    production Content-Security-Policy &mdash; fixes and groundwork, no database migrations, no feature turned on.</p>
+    <p class="rnote">Waiting on the main branch, unreleased: the whole Billing epic
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6361">#6361</a>, merged today), the LaunchDarkly
+    recording fix and add-on removal
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6302">#6302</a>,
+    <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6331">#6331</a>), the backend Sentry redaction
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6323">#6323</a>), the staff pre-fill link fix
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6246">#6246</a>), the Brick Lane term-rental
+    count (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6320">#6320</a>), the search-stopword
+    fix (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6232">#6232</a>) and the rental
+    notification crash (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6341">#6341</a>). Release
+    dates this quarter so far: 31 August, 14 September, 25 September.</p>
+    <p class="rnote">The dev-oc deploy pipeline was red from 6 September to this morning
+    (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6384">#6384</a>): new upstream dependency
+    advisories failed the audit gate on main while every pull request stayed green. It is the same failure shape as
+    the four-day block reported last time, except it lasted a month. Fixed by
+    <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6390">#6390</a>; see watch item 2.</p>
+  </div>
+
+  <!-- ============ NUMBERS ============ -->
+  <h2>The numbers</h2>
+  <div class="lede">Milestone 32, measured today at its extended close. Counts include both issues and pull requests,
+  which is how GitHub reports a milestone.</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n green">106</div><div class="l">Items closed</div><div class="s">of 118 in the milestone &mdash; 90%</div></div>
+    <div class="kpi"><div class="n blue">52</div><div class="l">Milestone issues closed</div><div class="s">107 closed across all milestones</div></div>
+    <div class="kpi"><div class="n purple">100</div><div class="l">Pull requests merged</div><div class="s">Rob 34, Bea 31, Millicent 30, 5 dependency bumps</div></div>
+    <div class="kpi"><div class="n yellow">1</div><div class="l">Production release</div><div class="s">v1.90.2 &mdash; 25 September</div></div>
+  </div>
+
+  <div class="caveat" style="margin-top:20px">
+    <b>On the completion figure.</b> 90% is the best close since Milestone 23 (91%) and the carry-over is 12 items,
+    down from 27. Two things keep it honest. The sprint was extended from 10 working days to 16, so a fortnight&rsquo;s
+    comparison is roughly 70 issues closed, in line with the 48&ndash;73 of recent sprints. And the milestone was used
+    as intended this time: 52 of the 107 issues closed were in it, the rest sat in the Billing and Vercel scope
+    milestones or in none. Three of the 52 were closed as &ldquo;not planned&rdquo;, two of them the credit-memo
+    write side (see theme 1). Over the same three weeks <strong>127 issues were opened</strong> &mdash; the backlog grew by about
+    20, most of it follow-ups the Billing and audit work generated.
+  </div>
+
+  <!-- ============ EFFORT ============ -->
+  <h2>Where the effort went</h2>
+  <div class="lede">All 107 issues closed between 15 September and 6 October, grouped by what they were about.
+  Groupings are approximate.</div>
+
+  <div class="bars">
+    <div class="bar"><div class="top"><span>Billing in Konvoy Cloud &amp; credit notes</span><span>38</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+    <div class="bar"><div class="top"><span>Deploys, CI gates &amp; engineering tooling</span><span>24</span></div><div class="track"><div class="fill" style="width:63%"></div></div></div>
+    <div class="bar"><div class="top"><span>Feature flags &amp; LaunchDarkly clean-up</span><span>12</span></div><div class="track"><div class="fill" style="width:32%"></div></div></div>
+    <div class="bar"><div class="top"><span>API documentation migration</span><span>12</span></div><div class="track"><div class="fill" style="width:32%"></div></div></div>
+    <div class="bar"><div class="top"><span>Vercel, Sentry &amp; token leaks (security)</span><span>11</span></div><div class="track"><div class="fill" style="width:29%"></div></div></div>
+    <div class="bar"><div class="top"><span>Fixes customers &amp; support will notice</span><span>9</span></div><div class="track"><div class="fill" style="width:24%"></div></div></div>
+    <div class="bar"><div class="top"><span>Other (test audit, Databricks gate)</span><span>2</span></div><div class="track"><div class="fill" style="width:5%"></div></div></div>
+  </div>
+
+  <div class="lede" style="margin-top:14px">A third of the sprint was Billing; a quarter was the plumbing that lets
+  three people ship safely &mdash; a monthly-broken deploy pipeline, a lint gate that covered 1 of 19 shell scripts,
+  and the agent tooling the team now writes most code through. Pull requests by author were the most even split
+  this year.</div>
+
+  <!-- ============ WHAT WE FINISHED ============ -->
+  <h2>What we finished</h2>
+  <div class="lede">Six themes, in the order a manager should care about them. &ldquo;In v1.90.2&rdquo; means live;
+  &ldquo;On main&rdquo; means merged and waiting for the next release.</div>
+
+  <div class="themes">
+
+    <div class="theme money">
+      <h3>1. Billing in Konvoy Cloud is built and merged &mdash; UAT and release are what remain <span class="tag tag-carry">On main</span></h3>
+      <p>Patrick&rsquo;s priority #1 from the August planning session. A customer can now see every invoice <em>and</em>
+      credit note NetSuite holds for them inside Konvoy Cloud &mdash; number, date, amount, balance due, status &mdash;
+      filter by date, status and trading entity, and download the PDF. A Konvoy staff member can open the same page for
+      any customer they are authorised for, and email a document to the customer&rsquo;s billing address with one click
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5835">#5835</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5842">#5842</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6337">#6337</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6346">#6346</a>). The epic branch merged to
+      main this morning as one pull request
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6361">#6361</a>) with no database changes.</p>
+      <p><strong>Four decisions were taken that shape what customers get.</strong> The PDF is the <em>exact document
+      NetSuite prints</em>, fetched through a small script deployed inside NetSuite, rather than a Konvoy-drawn copy
+      that could differ from the one Finance sent
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5837">#5837</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6047">#6047</a>) &mdash; all six invoice
+      templates in use, across five legal entities, were proven to print on 4 October. Statuses use NetSuite&rsquo;s own
+      words so the page never disagrees with a statement
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6304">#6304</a>). Customers who trade with
+      both Konvoy Australia and Konvoy Services see both entities&rsquo; documents in one list with an entity filter
+      &mdash; 305 customers are in that position
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5838">#5838</a>). And the page reads NetSuite
+      through a dedicated <em>read-only</em> credential, so a customer-facing screen can never write to the ledger
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5853">#5853</a>).</p>
+      <p><strong>Credit notes: view, don&rsquo;t create.</strong> Two weeks of work to let staff raise and approve credit
+      memos from Konvoy Cloud was built, then deliberately removed before it reached any shared environment
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/4315">#4315</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6293">#6293</a>, 9,312 lines). The decision on
+      27 September: Finance raises credit notes in NetSuite; Konvoy Cloud shows them. The code is recoverable if that
+      changes. The scare from last report &mdash; Konvoy Services invoices printing from the wrong template, &ldquo;57 of
+      2,370&rdquo; &mdash; turned out to be a false alarm once the templates were actually rendered
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6119">#6119</a>). A user guide for the section
+      is written (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6368">#6368</a>).</p>
+      <p><strong>What is not done, in order:</strong> deploy to dev-oc and connect it to production NetSuite for one or
+      two named customers (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6115">#6115</a> &mdash; Finance
+      names the customers); the walkthrough and written sign-off from Patrick, Mariana, Rose, Marie Anne and Alice
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5844">#5844</a> &mdash; nobody has booked it);
+      a production release; then the customer-facing switch, which is <em>off</em> in production and stays off until
+      someone decides which customers see it first
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5843">#5843</a>). The staff view goes live
+      for operator admins with the release, no switch needed. One small infrastructure change must go first or the
+      email button silently drops mail (<a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/752">terraform #752</a>).</p>
+      <span class="why"><b>Why it matters:</b> this removes the &ldquo;can you send me a copy of invoice X&rdquo; email
+      from Finance&rsquo;s inbox and the NetSuite login from Sales&rsquo; day. It is also the first time customers see
+      financial data in Konvoy Cloud, which is why the read-only credential and the UAT gate are not optional. Entity
+      names on the page are the legal names, which for Konvoy Services include &ldquo;(Receivers and Managers
+      Appointed)&rdquo; &mdash; Patrick needs to confirm the wording before customers see it
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6040">#6040</a>).</span>
+    </div>
+
+    <div class="theme sec">
+      <h3>2. LaunchDarkly cleaned up: 20 flags became 9, six orphaned servers went, one serious leak found <span class="tag tag-done">Epic closed 25 Sept</span></h3>
+      <p>The flag-lifecycle epic (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5630">#5630</a>)
+      started in July with 20 live feature flags, nine of which nothing in the code read any more. It closed with
+      <strong>9 flags, every one read by code and tagged for monitoring</strong>, and a written rule that a gated
+      feature stays behind its switch rather than being deleted &mdash; learned the hard way when one deletion had to
+      be reverted (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6086">#6086</a>). The fuel-levy
+      line on the order-detail page was the one deliberate removal: no customer had ever been shown it
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5692">#5692</a>).</p>
+      <p><strong>Six LaunchDarkly relay servers were found running in our clusters serving no one</strong> &mdash;
+      one of them for two and a half years, two in environments decommissioned in May. Each held permanent
+      connections to LaunchDarkly and its own Redis. All six were destroyed, verified across all four clusters
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5732">#5732</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/723">terraform #723</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/728">terraform #728</a>). The LaunchDarkly
+      browser SDK was moved off a version that reached end-of-life on 30 September, five days before the deadline
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6236">#6236</a>). And the asset-cycle
+      dashboard flag was switched off in production on 23 September with Patrick&rsquo;s and Mark&rsquo;s approval,
+      after seven days of logs showed zero customer traffic &mdash; that is what started the Databricks decommission
+      clock (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5915">#5915</a>).</p>
+      <p><strong>The leak.</strong> Auditing what the LaunchDarkly add-ons actually recorded showed the
+      &ldquo;observability&rdquo; package was sending every browser request body to LaunchDarkly verbatim &mdash;
+      <strong>login passwords, refresh tokens and password-reset tokens, in plain text</strong>
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6090">#6090</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6107">#6107</a>). Nobody used the feature and
+      nobody knew it was on. Recording was switched off
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6302">#6302</a>, 30 Sept) and both add-ons were
+      removed outright (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6271">#6271</a>, 2 Oct),
+      proven in a browser by capturing the traffic before and after. <strong>Both fixes are on main, not in
+      production</strong> &mdash; see watch item 1. How long it had been on is not established; it was already
+      running when first checked on 10 August.</p>
+      <span class="why"><b>Why it matters:</b> fewer switches that can be set wrong in production; six servers&rsquo;
+      worth of compute and Redis that cost money for nothing; a supported SDK. The leak is the one that matters:
+      passwords do not expire the way tokens do. Nothing is known to be compromised, and the decision taken was not to
+      ask LaunchDarkly to delete what it already holds. Two loose ends: the two server-side LaunchDarkly keys sitting in
+      plain text in the terraform repository still need rotating
+      (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/730">terraform #730</a>), and every
+      logged-in user&rsquo;s name and email still go to LaunchDarkly on each flag check
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6270">#6270</a>, in progress).</span>
+    </div>
+
+    <div class="theme sec">
+      <h3>3. Vercel audit closed: analytics that work, headers that protect, tokens that stay home <span class="tag tag-done">Epic closed 2 Oct</span></h3>
+      <p>Rob&rsquo;s August audit of the Vercel hosting setup
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5754">#5754</a>) found that
+      <strong>Web Analytics and Speed Insights had been switched on for fifteen months and had collected nothing</strong>
+      &mdash; a missing environment variable and an uninstalled package. Both now collect
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5657">#5657</a>; 216 visitors and 1,632
+      page views in the first week measured). Browser security headers &mdash; HSTS, Referrer-Policy,
+      Permissions-Policy &mdash; have been live since 16 August
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5658">#5658</a>). Google Tag Manager, a third
+      party able to inject any script into the app, was removed outright. A Content-Security-Policy is deployed in
+      report-only mode; making it enforcing is the one item split out and still open
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6043">#6043</a>).</p>
+      <p>The audit then became a leak hunt. Single-use sign-up and password-reset links carried their token in the
+      page address, so the token reached whoever saw the address: Vercel Analytics first
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5726">#5726</a> &mdash; counted four times, five
+      tokens, all expired by 20 August, none known used), then Sentry&rsquo;s error reports and session replays
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6092">#6092</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6091">#6091</a>), then the staff
+      &ldquo;pre-fill customer form&rdquo; link
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6221">#6221</a>), and finally LaunchDarkly
+      (theme 2). Each path is now closed: tokens travel in headers, the address bar is scrubbed before any monitoring
+      starts, and both Sentry ends redact the token routes. Three smaller wins: browsers no longer run bundles months
+      old (one had been seven months stale), the public sign-up form recovers from a stale deploy instead of crashing,
+      and a force-push can no longer leave a stale preview that passes review
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6159">#6159</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6160">#6160</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6206">#6206</a>).</p>
+      <span class="why"><b>Why it matters:</b> three fewer third parties hold customer data (GTM, Google Analytics, two
+      LaunchDarkly add-ons), the analytics the business pays for finally produce numbers, and the token exposure was
+      bounded and is structurally closed rather than merely quiet. Two accepted leftovers, so they are not a surprise
+      later: the five old token rows stay in Vercel&rsquo;s analytics for a year, and the page addresses still carry
+      the token &mdash; the durable redesign was sized too large and shelved.</span>
+    </div>
+
+    <div class="theme">
+      <h3>4. The API documentation now comes from the code, not from hand-written notes <span class="tag tag-carry">On a branch, 10 of 14</span></h3>
+      <p>Konvoy&rsquo;s public API reference (the one on konvoykegs.com) was generated from 267 files of hand-written
+      annotations, with the same twenty-odd parameters copied into every endpoint and six endpoints documented at the
+      wrong address. Millicent&rsquo;s epic
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6255">#6255</a>) replaces that with a
+      generator that reads the real routes and request objects, so a change to an endpoint changes its documentation
+      automatically, and every backend pull request now shows reviewers exactly what it changes in the published
+      contract (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6256">#6256</a>). The cut-over
+      produced a byte-for-byte identical document (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6261">#6261</a>),
+      and the Device, Asset, Order, Collection and User endpoints are migrated.</p>
+      <span class="why"><b>Why it matters:</b> API consumers get documentation that cannot drift from reality, and a
+      pull request that quietly removes a documented field will fail its checks once the last four items land. The
+      work sits on an epic branch with a draft merge open
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6385">#6385</a>); it reaches main next sprint.</span>
+    </div>
+
+    <div class="theme">
+      <h3>5. Fixes customers and support will notice <span class="tag tag-carry">Mostly on main</span></h3>
+      <p>The Pricing page&rsquo;s &ldquo;actual term rentals&rdquo; for an exclusive agreement whose extension had ended
+      showed roughly zero kegs for Brick Lane; it now counts from agreement start to extension end and shows the correct
+      <strong>26,543 kegs, 102% of their 26,000 minimum</strong> &mdash; Tommy&rsquo;s decision
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6320">#6320</a>). Global search returned
+      <em>nothing</em> for any venue whose name contained &ldquo;The&rdquo; or &ldquo;and&rdquo;, raised by Alice
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6232">#6232</a>) &mdash; fixed. The Locations
+      page gained a search box, the only way to find one venue in a 9,000-row list without paging
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6241">#6241</a>, live in v1.90.2). The Rentals
+      download was trimmed from 78 columns to the 14 Alice asked for, one row per SKU
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6186">#6186</a>). And a production bug found
+      on 2 October: a rental placed from a location with no organisation crashed the order-placed event, so
+      <strong>no Slack message, no notification and no customer email</strong> went out &mdash; a latent defect since
+      October 2025, now a one-line fix
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6341">#6341</a>).</p>
+      <span class="why"><b>Why it matters:</b> two of these are revenue-reporting corrections (Brick Lane&rsquo;s
+      contract compliance, the silent notification drop), and all but the Locations search are waiting on a release.
+      One known regression carries: an operator Manager gets a 403 on Notifications
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6231">#6231</a>); a fix is open but its cause
+      is a code reading, not yet reproduced.</span>
+    </div>
+
+    <div class="theme">
+      <h3>6. The plumbing: a broken deploy pipeline, an honest test audit, and the tools the team codes with <span class="tag tag-done">Mixed</span></h3>
+      <p><strong>Deploys.</strong> The dev-oc backend had not deployed from main since 6 September
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6384">#6384</a>). The shell scripts the
+      pipeline runs had no lint gate at all &mdash; 18 of 19 were never checked
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6190">#6190</a>); now they are. Merging an
+      epic branch now closes its issues and marks the board automatically
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6113">#6113</a>), after three rounds of
+      fixing the fixer. The NetSuite contract tests now run against a mock NetSuite in CI
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6179">#6179</a>), and the frontend test
+      runner moved to Vitest 4 (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6205">#6205</a>).</p>
+      <p><strong>Test quality.</strong> A full audit of the ~7,700 automated tests was published
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6275">#6275</a>). The suite is mostly sincere,
+      but on the paths where a silent bug costs most it does not check behaviour: 34 assertions that pass on an empty
+      result, six NetSuite invoice tests that test a <em>copy</em> of the code, and <strong>33 frontend tests that
+      only pass when run in a particular order</strong>. The fix is twelve small, scheduled slices
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6276">#6276</a>&ndash;<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6287">#6287</a>)
+      &mdash; none started, and the epic closed itself by accident when the report merged (watch item 4).</p>
+      <p><strong>Agent tooling.</strong> Eight issues went to the Claude Code skills the team writes most code through
+      &mdash; the pull-request reviewer, the atomic-commits skill, the read-only NetSuite access skill, the shared
+      engineering log &mdash; plus the staff-instructions epic that will host the NetSuite runbooks behind a login
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6161">#6161</a>, 1 of 8 done, carries).</p>
+      <span class="why"><b>Why it matters:</b> at three people, a day lost to a red pipeline or a flaky test is a
+      meaningful share of the sprint. The deploy failure went unnoticed for a month because nothing pages anyone when
+      the test environment stops updating &mdash; a cheap fix and the real lesson of this sprint.</span>
+    </div>
+
+  </div>
+
+  <!-- ============ INFRASTRUCTURE ============ -->
+  <h2>Infrastructure, counted separately</h2>
+  <div class="lede">21 changes merged in the terraform repository, 2 in kubernetes and 1 in databricks during the
+  sprint. None appear in the milestone figures above. The cost programme has its own report this time:
+  <a href="cost-programme-review-2026-10-06.html">Infrastructure Cost Programme &mdash; 6 October</a>.</div>
+
+  <table>
+    <tr><th>Area</th><th>What changed</th></tr>
+    <tr><td class="w">Production apply gate</td><td>All 42 jobs that can change production infrastructure now require an explicit, per-region, manual dispatch; 17 of 17 post-merge runs since have applied to dev and skipped prod (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/607">terraform #607</a>). Rob declined the GitHub Enterprise upgrade (~$2,040/yr) that would have added approval screens; dispatch-as-intent is the control (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/608">#608</a>).</td></tr>
+    <tr><td class="w">Databricks teardown prep</td><td>The destroy path was built, pinned and proven three times to touch nothing on the retain list (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/690">terraform #690</a>, <a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/719">#719</a>). Compute quiesced 3 October; Airbyte feeds paused. Daily spend fell from $16&ndash;17 to $1. Go/no-go Sunday 11 October, destroy 15 October.</td></tr>
+    <tr><td class="w">Cost</td><td>prod-oc spot node group halved, 2 &rarr; 1 (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/654">terraform #654</a>); the CloudWatch trim from last sprint measured &mdash; metric monitoring $30/mo to $0, log bytes unchanged (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/708">#708</a>); six LaunchDarkly relay deployments removed (theme 2).</td></tr>
+    <tr><td class="w">EKS hygiene</td><td>Node images pinned so AWS can no longer roll them unannounced (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/606">terraform #606</a>); the phantom 4-change diff on every plan eliminated (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/710">#710</a>); ingress-nginx bumped on dev-oc only, prod to follow (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/641">#641</a>).</td></tr>
+    <tr><td class="w">Security</td><td>A Grafana Cloud service key leaked into an agent transcript was revoked and replaced the same day (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/750">terraform #750</a>). The Node-NotReady alert was retuned after false positives during node rolls (<a class="iss" href="https://github.com/konvoy-kegs/terraform/issues/709">#709</a>).</td></tr>
+  </table>
+
+  <div class="caveat green">
+    <b>AWS bill, for context.</b> August closed at $6,989 USD; September is showing <strong>$5,458 USD</strong>, down
+    22%, but AWS still flags the month as estimated and the marketplace lines (Databricks, MongoDB) may not have fully
+    posted. The drivers that are already measurable: EKS Extended Support gone ($696 &rarr; $288), the RDS line down
+    ($1,080 &rarr; $715) and CloudWatch trimmed ($124 &rarr; $70). Not booked as a saving until the month finalises.
+    Detail and per-board status in the <a href="cost-programme-review-2026-10-06.html">cost programme report</a>.
+  </div>
+
+  <!-- ============ NEXT ============ -->
+  <h2>What we&rsquo;re working on next</h2>
+  <div class="lede">Milestone 33, 7 &ndash; 19 October. One item is in it so far. The workstreams below are what is
+  carried, gated or dated, for placement in this session.</div>
+
+  <table>
+    <tr><th>Workstream</th><th>Status going in</th></tr>
+    <tr><td class="w">Release first</td><td>62 pull requests merged since v1.90.2, including every security fix in themes 2 and 3 and the Billing staff view. Cut and publish this week, before Billing UAT adds to the pile. The release also needs the dev-oc deploy to be green, which it has been since 13:15 today.</td></tr>
+    <tr><td class="w">Billing to customers</td><td>In order: dev-oc rollout with production NetSuite reads for one or two named customers (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6115">#6115</a>) &rarr; walkthrough and sign-off (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5844">#5844</a>) &rarr; <a class="iss" href="https://github.com/konvoy-kegs/terraform/pull/752">terraform #752</a> applied &rarr; production release &rarr; flag on for a first cohort. Entity label wording needs Patrick (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6040">#6040</a>). The ERP-adapter tidy-up is tracked but non-blocking (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6375">#6375</a>).</td></tr>
+    <tr><td class="w">Databricks teardown</td><td>Restore test result 7 Oct; observation sitting 8 Oct; <strong>Sunday 11 Oct</strong> written go/no-go then the irreversible deletes; <strong>15 Oct</strong> destroy the workspaces, VPCs and Airbyte. Rob&rsquo;s weekend. See the cost report.</td></tr>
+    <tr><td class="w">EKS 1.35 decision</td><td>The recommended decision date (30 Sept) has passed. 1.34 leaves standard support <strong>2 December</strong>; the prerequisite chain (ingress-nginx on three prod clusters, KEDA, cert-manager, ArgoCD) has not started. Needs a yes and a sprint, not a discussion.</td></tr>
+    <tr><td class="w">API docs to main</td><td>Draft merge <a class="iss" href="https://github.com/konvoy-kegs/konvoy/pull/6385">#6385</a> is CI-clean; four endpoint groups remain (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6265">#6265</a>&ndash;<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6269">#6269</a>).</td></tr>
+    <tr><td class="w">Test-quality remediation</td><td>Twelve slices, ten marked High, none scheduled. Reopen the epic and place the frontend state-isolation and vacuous-assertion slices first (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6276">#6276</a>, <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6277">#6277</a>).</td></tr>
+    <tr><td class="w">Carried from M32</td><td>12 items: the staff-instructions epic and its seven children (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6161">#6161</a>), the Notifications 403 (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6231">#6231</a>), the user-guide screenshots that show an old navigation (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6229">#6229</a>), and the LaunchDarkly staff-rule change (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6270">#6270</a>). Plus the enforcing CSP (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6043">#6043</a>) outside any milestone.</td></tr>
+    <tr><td class="w">Still parked</td><td>Lease fees wiped on price edit (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5889">#5889</a>) and the second-account identity bug (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5647">#5647</a>) were both called out last report as needing a schedule-or-park decision. Neither was touched this sprint and neither is in a milestone. Fourth report for one, third for the other.</td></tr>
+  </table>
+
+  <div class="caveat">
+    <b>Placement is the job of this session.</b> Billing&rsquo;s remaining steps are mostly other people&rsquo;s
+    calendars (Finance, Patrick, NetSuite admin); the Databricks dates are fixed; the EKS decision is overdue. What the
+    three engineers do in between &mdash; API docs, test remediation, the instructions epic, the parked defects &mdash;
+    is the real planning question.
+  </div>
+
+  <!-- ============ WATCH ============ -->
+  <h2>Six things to watch</h2>
+  <div class="lede">Ordered by how quickly they need a decision.</div>
+
+  <div class="watch">
+
+    <div class="w-item">
+      <h3>1. A plaintext-password leak is fixed in code and still live in production</h3>
+      <p>The LaunchDarkly add-on that sent login passwords and reset tokens to a third party
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6090">#6090</a>) was switched off on
+      30 September and removed on 2 October. The last release was 25 September. Until the next one is published, the
+      production app is still running the old bundle and still sending them. The same release carries the backend
+      Sentry redaction and the staff-link token fix.</p>
+      <span class="ask">Decision: cut the release this week and treat it as the first item of M33. The rule proposed in
+      the last two reports &mdash; a cut release publishes within two working days or someone says why not &mdash; would
+      have had this live a week ago.</span>
+    </div>
+
+    <div class="w-item">
+      <h3>2. The test environment silently stopped updating for a month</h3>
+      <p>Every merge to main deploys automatically to dev-oc, where Finance will do the Billing walkthrough. The backend
+      half of that deploy failed on every run from 6 September to this morning
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6384">#6384</a>) because new dependency
+      advisories tripped the audit gate on main while pull requests stayed green. Nothing alerts anyone when a deploy
+      fails, so the first person to notice was the one trying to land Billing there today. Last report flagged the same
+      mechanism as a four-day block; this time it was 30 days.</p>
+      <span class="ask">Decision: a failed deploy to any environment posts to Slack and is cleared the same day. And
+      separate the audit gate&rsquo;s &ldquo;new upstream advisory&rdquo; failures from the deploy so a vendor CVE cannot
+      stop the test environment.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>3. Billing cannot reach a customer until Finance is in the room</h3>
+      <p>Three of the four remaining steps belong outside Engineering: Finance names the one or two customers whose
+      real NetSuite data the test environment may read; Patrick confirms the legal-entity wording customers will see
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6040">#6040</a>); and the walkthrough with
+      Patrick, Mariana, Rose, Marie Anne and Alice (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5844">#5844</a>)
+      has no booking and no named owner for making it. The 30 September scope date passed; the work is done, the
+      sign-off is not.</p>
+      <span class="ask">Decision: who books the walkthrough, and for which day in the week of 12 October. Rob can have
+      dev-oc ready within two days of the customer names.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>4. The test-quality epic closed itself with none of its work done</h3>
+      <p>The audit report merged on 28 September with a closing keyword in the commit, so GitHub closed the epic
+      (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6275">#6275</a>) although its own pull
+      request says &ldquo;stays open&rdquo;. Its twelve remediation slices are all open, in no milestone. The findings
+      are not cosmetic: 33 frontend tests pass only in declared order, and the keg-replay, device-message and
+      authorisation paths have the thinnest checks in the suite.</p>
+      <span class="ask">Decision: reopen the epic and schedule the two High frontend slices in M33, or park the whole
+      thing explicitly with a date. It should not sit closed with 0 of 12 done.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>5. The EKS 1.35 decision is past its date</h3>
+      <p>Kubernetes 1.34 leaves AWS standard support on 2 December; after that AWS either upgrades the control plane
+      for us, leaving the rest behind, or starts the Extended Support meter again &mdash; the one worth $2,147 AUD
+      a month that was removed in August. The programme page said decide by 30 September. The prerequisite chain is four components
+      and three production clusters; it fits in two sprints if it starts now.</p>
+      <span class="ask">Decision: commit to the 1.35 path in M33, starting with the ingress-nginx bumps on prod
+      eu &rarr; na &rarr; oc. Detail in the <a href="cost-programme-review-2026-10-06.html">cost report</a>.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>6. Two accepted exposures, so they are not a surprise later</h3>
+      <p>Rob decided not to ask Vercel to delete the five expired token rows in its analytics, or LaunchDarkly to delete
+      the request bodies it already holds &mdash; in both cases the effort was judged larger than the residual risk, and
+      LaunchDarkly offers no self-serve deletion. Nothing is known to be compromised. Both decisions are written on
+      the issues (<a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/5726">#5726</a>,
+      <a class="iss" href="https://github.com/konvoy-kegs/konvoy/issues/6090">#6090</a>).</p>
+      <span class="ask">Nothing from you &mdash; unless you would rather the deletion requests were sent anyway, in
+      which case say so and they will be.</span>
+    </div>
+
+  </div>
+
+  <footer>
+    Konvoy Kegs Engineering &middot; Milestone 32 review, prepared 6 October 2026 &middot; Figures taken from the
+    <a href="https://github.com/konvoy-kegs/konvoy/milestone/32">Milestone 32 issue list</a> at its extended close on
+    6 October, from issues closed and pull requests merged in konvoy-kegs/konvoy between 15 September and 6 October,
+    and from pull requests merged in the terraform, kubernetes and databricks repositories over the same window. AWS
+    figures are Cost Explorer unblended cost in USD as at 6 October; September is flagged estimated by AWS.
+    Cost-programme detail is in the <a href="cost-programme-review-2026-10-06.html">companion report</a>. Milestone 31
+    comparison figures are taken from the <a href="sprint-review-2026-09-11.html">Milestone 31 report</a> as published.
+    Theme groupings are approximate.
+  </footer>
+
+</div>
+</body>
+</html>
