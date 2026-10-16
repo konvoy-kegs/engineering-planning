@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databricks Decommission — Completion Report, 16 October 2026 — Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 24px 80px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  a { color: var(--accent); }
+  a.nm { text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.5); }
+  a.nm:hover { border-bottom-style: solid; }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+  .status { display: inline-block; margin-top: 14px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 6px 12px; border-radius: 6px; background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.35); }
+
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  h2:first-of-type { margin-top: 0; }
+  h2 .pct { font-size: 0.85rem; font-weight: 600; color: var(--muted); margin-left: 10px; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+
+  .headline { background: linear-gradient(135deg, rgba(74,222,128,0.10), rgba(56,189,248,0.06)); border: 1px solid rgba(74,222,128,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.06rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #dcfce7; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 10px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); }
+  .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); } .n.red { color: var(--red); }
+
+  .bars { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px 26px; }
+  .bar { margin-bottom: 15px; }
+  .bar:last-child { margin-bottom: 0; }
+  .bar .top { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 5px; }
+  .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 5px; background: var(--accent); }
+  .fill.step { background: var(--yellow); }
+  .fill.done { background: var(--green); }
+
+  .board { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 22px 24px; margin-bottom: 16px; }
+  .board h3 { font-size: 1.08rem; margin-bottom: 4px; }
+  .board .meta { font-size: 0.84rem; color: var(--muted); margin-bottom: 12px; }
+  .board p { font-size: 0.92rem; color: #cbd5e1; }
+  .board p + p { margin-top: 10px; }
+  .board .why { display: block; margin-top: 10px; font-size: 0.86rem; color: var(--muted); }
+  .board .why b { color: var(--accent); font-weight: 600; }
+  .board.green { border-left-color: var(--green); } .board.green .why b { color: var(--green); }
+  .board.purple { border-left-color: var(--purple); } .board.purple .why b { color: var(--purple); }
+  .board ol, .board ul { margin: 8px 0 0 20px; font-size: 0.9rem; color: #cbd5e1; }
+  .board li { margin-bottom: 6px; }
+
+  .caveat { background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.9rem; }
+  .caveat b { color: var(--yellow); }
+  .caveat.green { background: rgba(74,222,128,0.07); border-left-color: var(--green); }
+  .caveat.green b { color: var(--green); }
+  .caveat.blue { background: rgba(56,189,248,0.07); border-left-color: var(--accent); }
+  .caveat.blue b { color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 16px; background: rgba(51,65,85,0.5); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td { padding: 13px 16px; border-top: 1px solid var(--surface2); vertical-align: top; }
+  td.w { width: 30%; font-weight: 600; }
+  td.d { white-space: nowrap; font-weight: 600; width: 1%; }
+  tr.total td { font-weight: 700; background: rgba(74,222,128,0.06); }
+  tr.total td.num { color: var(--green); }
+  .down { color: var(--green); } .up { color: var(--red); } .flat { color: var(--muted); }
+  .before { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(148,163,184,0.5); }
+
+  .pill { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; white-space: nowrap; }
+  .p-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .p-live { background: rgba(56,189,248,0.15); color: var(--accent); }
+  .p-wait { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .p-note { background: rgba(167,139,250,0.15); color: var(--purple); }
+
+  .timeline { display: grid; gap: 12px; }
+  .t-item { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 18px 20px; display: grid; grid-template-columns: 150px 1fr; gap: 18px; }
+  .t-item.green { border-left-color: var(--green); }
+  .t-item.yellow { border-left-color: var(--yellow); }
+  .t-item.red { border-left-color: var(--red); }
+  .t-item .when { font-size: 0.84rem; color: var(--muted); font-weight: 600; padding-top: 2px; }
+  .t-item .when b { display: block; color: var(--text); font-size: 0.95rem; margin-bottom: 2px; }
+  .t-item p { font-size: 0.9rem; color: #cbd5e1; }
+  .t-item p + p { margin-top: 8px; }
+  @media (max-width: 640px) { .t-item { grid-template-columns: 1fr; gap: 8px; } }
+
+  .watch { display: grid; gap: 12px; }
+  .w-item { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--yellow); border-radius: 10px; padding: 18px 20px; }
+  .w-item.grey { border-left-color: var(--surface2); }
+  .w-item h3 { font-size: 0.98rem; margin-bottom: 6px; }
+  .w-item p { font-size: 0.9rem; color: #cbd5e1; }
+  .w-item p + p { margin-top: 8px; }
+  .w-item .ask { display: block; margin-top: 9px; font-size: 0.86rem; color: var(--accent); }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--surface2); color: var(--muted); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+  footer p + p { margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a> &middot; follows the <a href="cost-programme-review-2026-10-06.html">6 October cost programme review</a></div>
+    <h1>Databricks Decommission <span>&mdash;</span> Completion Report</h1>
+    <div class="dates">Cost programme board 17 &middot; 25 August &ndash; 15 October 2026 &middot; Prepared for the CEO &amp; COO &middot;
+    16 October 2026 &middot; All figures AUD</div>
+    <div class="status">Complete &middot; 34 of 34 items done &middot; closed 15 October</div>
+  </header>
+
+  <!-- ============ THE SHORT VERSION ============ -->
+  <div class="headline">
+    <p><strong>Databricks is gone.</strong> Konvoy ran three Databricks data-analytics workspaces, plus the private
+    networks, storage and data feed that supported them. Between 25 August and 15 October all of it was removed.
+    Nothing in production depended on it: the only thing that read from it was a fleet-analytics dashboard in Konvoy
+    Cloud, switched off on 2 October, and there has not been a single customer or support signal since.</p>
+
+    <p><strong>The saving is about $1,884 a month, roughly $22,600 a year.</strong> Databricks cost $1,583 in August.
+    It has cost <strong>$0 a day every day since 13 October</strong>. Add the AWS networking and storage that sat
+    underneath it and the total comes to about $1,884 a month. This is <strong>on top of</strong> the June cost
+    plan&rsquo;s target &mdash; that plan had set Databricks aside as &ldquo;strategic, not in scope&rdquo; &mdash; and
+    it needed <strong>no new contract, no exit fee and no receiver sign-off</strong>: the subscription was
+    pay-as-you-go, so the charges stopped when the usage did. The only new cost is about $3 a month to keep archive
+    copies of the data.</p>
+
+    <p><strong>The number is the measured one, not the pitch.</strong> The August briefing headlined
+    &ldquo;$1,951 a month&rdquo; with no currency on it; read as US dollars that is $2,815 and about half too high.
+    Once measured properly in August the projection became <strong>$1,883&ndash;1,946 a month</strong>, and the
+    delivered figure sits at the floor of that range because one component that cannot be separated out on the AWS
+    bill (up to $150 a month of compute) has deliberately <em>not</em> been claimed. November is the first month the
+    bill will show the full effect; a line-by-line reconciliation against the settled October bill is booked for
+    3 November.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n green">$1,884</div><div class="l">Saved per month</div><div class="s">Databricks usage plus the AWS networking and storage under it</div></div>
+    <div class="kpi"><div class="n blue">$0</div><div class="l">Databricks per day</div><div class="s">every day since 13 October &middot; from $25&ndash;49 a day in September</div></div>
+    <div class="kpi"><div class="n purple">$22,600</div><div class="l">Per year</div><div class="s">outside the June plan&rsquo;s $1,800&ndash;2,600 a month target &mdash; additional to it</div></div>
+    <div class="kpi"><div class="n yellow">3 &rarr; 0</div><div class="l">Workspaces</div><div class="s">34 of 34 board items done &middot; the data is kept in archive</div></div>
+  </div>
+
+  <!-- ============ MONTH BY MONTH ============ -->
+  <h2>The Databricks line, month by month</h2>
+  <div class="lede">What Databricks cost each month on the AWS bill. April to September are settled invoices; October is
+  the first sixteen days and is not final yet.</div>
+
+  <div class="bars">
+    <div class="bar"><div class="top"><span>April <span class="pill p-note">programme baseline</span></span><span>$1,539</span></div><div class="track"><div class="fill" style="width:96%"></div></div></div>
+    <div class="bar"><div class="top"><span>May</span><span>$1,600</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+    <div class="bar"><div class="top"><span>June</span><span>$1,487</span></div><div class="track"><div class="fill" style="width:93%"></div></div></div>
+    <div class="bar"><div class="top"><span>July</span><span>$1,480</span></div><div class="track"><div class="fill" style="width:93%"></div></div></div>
+    <div class="bar"><div class="top"><span>August <span class="pill p-note">pre-teardown baseline</span></span><span>$1,583</span></div><div class="track"><div class="fill" style="width:99%"></div></div></div>
+    <div class="bar"><div class="top"><span>September <span class="pill p-wait">first workspace gone 27 Aug</span></span><span>$1,037</span></div><div class="track"><div class="fill step" style="width:65%"></div></div></div>
+    <div class="bar"><div class="top"><span>October, 1&ndash;16 <span class="pill p-done">compute stopped 3 Oct</span></span><span>$91</span></div><div class="track"><div class="fill done" style="width:6%"></div></div></div>
+    <div class="bar"><div class="top"><span>November onward</span><span>$0 expected</span></div><div class="track"><div class="fill done" style="width:0%"></div></div></div>
+  </div>
+
+  <div class="caveat green">
+    <b>How October got to $91.</b> $63 of it was spent on 1 and 2 October before anything was paused. Daily spend then
+    fell from $25&ndash;49 a day in September to about $9 on 3 October, the day the compute was stopped, to $1&ndash;3 a
+    day over the next three days, and then to nothing apart from a final $12 on 12 October when the last data tables
+    were deleted. Every day from 13 October has been $0. The last two days are still subject to AWS&rsquo;s usual
+    two-day reporting lag.
+  </div>
+
+  <!-- ============ WHERE THE SAVING COMES FROM ============ -->
+  <h2>Where the $1,884 comes from</h2>
+  <div class="lede">Each line is marked <strong>measured</strong> (read directly from the AWS bill) or <strong>worked
+  out</strong> (the item is verified gone, but the bill cannot isolate its cost, so it is calculated from AWS&rsquo;s
+  published rates and the measured quantity).</div>
+
+  <table>
+    <tr><th>What stopped</th><th class="num">Per month</th><th>How we know</th></tr>
+    <tr><td class="w">Databricks usage (the Marketplace subscription)</td><td class="num">$1,583</td><td><strong>Measured.</strong> August&rsquo;s settled bill, now $0 a day with zero workspaces left.</td></tr>
+    <tr><td class="w">Four internet gateways built for Databricks</td><td class="num">$238</td><td><strong>Worked out.</strong> All four verified removed (one on 27 August, three on 15 October); cost from AWS&rsquo;s hourly rate for a full month. Data-transfer charges on top of that are not counted.</td></tr>
+    <tr><td class="w">Public internet addresses (at least three)</td><td class="num">&asymp;$16</td><td><strong>Worked out</strong> from the address counts on the bill.</td></tr>
+    <tr><td class="w">About 1.5 TB of working storage freed</td><td class="num">&asymp;$51</td><td><strong>Worked out</strong> from the measured size at the storage rate on the bill. Appears from the November bill, after the archive copies finish moving to the cheaper tier.</td></tr>
+    <tr><td class="w"><em>Less</em> &mdash; archive copies kept (about 1.5 TB)</td><td class="num">&minus;$3</td><td>Ongoing. Deep-archive storage, the cheapest tier AWS offers.</td></tr>
+    <tr class="total"><td class="w">Total saving</td><td class="num">&asymp;$1,884</td><td>About <strong>$22,600 a year</strong>. 84% of it is the Databricks line itself, which is measured.</td></tr>
+  </table>
+
+  <div class="caveat">
+    <b>Not claimed, on purpose.</b> Three things also stopped but are left out of the number. First, up to about
+    <strong>$150 a month</strong> of short-lived compute that Databricks spun up for its jobs: it stopped on 3 October,
+    but AWS has no way to separate it from the rest of our server line, and part of it turned out never to have been
+    Databricks in the first place. Leaving it out is why the result sits at the floor of the projected range rather
+    than the middle. Second, removing the Airbyte data feed freed about <strong>44% of the processor and two-thirds of
+    the memory</strong> that had been reserved on the US production cluster. The clusters do not shrink by themselves,
+    so this is not a bill reduction yet &mdash; it is headroom that the
+    <a class="nm" href="https://github.com/konvoy-kegs/terraform/issues/576">server right-sizing work</a> can now
+    bank. Third, a handful of small disks and some database log space: real, but too small to matter.
+  </div>
+
+  <!-- ============ AGAINST THE PROMISE ============ -->
+  <h2>Against what was promised</h2>
+  <div class="lede">The saving has been estimated four times since August. Where each one landed, in today&rsquo;s terms.</div>
+
+  <table>
+    <tr><th>Estimate</th><th class="num">Per month</th><th>Comment</th></tr>
+    <tr><td class="w">August briefing headline (12 Aug)</td><td class="num up">$2,815</td><td>Quoted as &ldquo;$1,951&rdquo; with no currency; this is what it means if read as US dollars. About 49% too high &mdash; one of its lines was six times the measured figure.</td></tr>
+    <tr><td class="w">Board specification (13 Aug)</td><td class="num flat">$1,464</td><td>Two of the three workspaces only; left out the oldest workspace and the shared storage.</td></tr>
+    <tr><td class="w">Corrected projection (24 Aug)</td><td class="num flat">$1,883&ndash;1,946</td><td>Measured components only, all three workspaces. The number the programme was run against.</td></tr>
+    <tr><td class="w">Progress review (6 Oct)</td><td class="num flat">&ldquo;about $1,800&rdquo;</td><td>Rounded, and converted at that month&rsquo;s invoice exchange rate rather than the programme&rsquo;s fixed rate (see footer).</td></tr>
+    <tr class="total"><td class="w">Delivered (16 Oct)</td><td class="num">&asymp;$1,884</td><td>At the floor of the corrected range, with the unattributable compute left out.</td></tr>
+  </table>
+
+  <!-- ============ THE WHOLE BILL ============ -->
+  <h2>Where it shows on the AWS bill</h2>
+  <div class="lede">The whole AWS bill, settled months only, with the Databricks share. September already carries the
+  first step; November is the first clean month.</div>
+
+  <table>
+    <tr><th>Settled month</th><th class="num">Total AWS bill</th><th class="num">Of which Databricks</th><th>Note</th></tr>
+    <tr><td class="w">July 2026</td><td class="num">$10,036</td><td class="num">$1,480</td><td>All three workspaces running.</td></tr>
+    <tr><td class="w">August 2026</td><td class="num">$10,083</td><td class="num">$1,583</td><td>The agreed pre-teardown baseline.</td></tr>
+    <tr><td class="w">September 2026</td><td class="num down">$7,899</td><td class="num down">$1,037</td><td>Databricks down $545 after the oldest workspace went on 27 August, plus one gateway and one address. The rest of the drop is the other cost-programme levers (EKS Extended Support ended 10 August, dev database clean-up) and is reported separately.</td></tr>
+    <tr><td class="w">October 2026 <span class="pill p-wait">settles 3 Nov</span></td><td class="num flat">&mdash;</td><td class="num flat">&asymp;$91</td><td>Will show Databricks at about $91, roughly half a month of the remaining networking, and a one-off overlap while the archive copies move to the cheaper storage tier.</td></tr>
+    <tr><td class="w">November 2026</td><td class="num flat">&mdash;</td><td class="num flat">$0</td><td><strong>First full clean month</strong>: Databricks $0, no Databricks networking, storage down about 1.5 TB.</td></tr>
+  </table>
+
+  <div class="caveat blue">
+    <b>For context.</b> The April programme baseline for the whole AWS bill was $9,451 a month, with a target of
+    $7,200 or less. Databricks was carried in that baseline at $1,539 a month but marked &ldquo;strategic &mdash; not in
+    this plan&rsquo;s target&rdquo;, which is why this saving counts as additional to what the programme had already
+    committed to. The programme&rsquo;s tracking log will be restated so that Databricks sits inside the reported saving
+    from the next weekly report.
+  </div>
+
+  <!-- ============ WHAT WAS REMOVED ============ -->
+  <h2>What was removed, and what was kept</h2>
+  <div class="lede">Everything below was checked as gone on 15 or 16 October by reading it back from AWS, not from the
+  work records.</div>
+
+  <table>
+    <tr><th>Item</th><th>Before</th><th>Now</th></tr>
+    <tr><td class="w">Databricks workspaces</td><td>3 &mdash; two managed as code, one older one set up by hand</td><td><strong>0.</strong> The older one deleted 27 August; the other two destroyed 15 October. The Databricks account lists no workspaces.</td></tr>
+    <tr><td class="w">Data catalogues</td><td>2</td><td><strong>0.</strong></td></tr>
+    <tr><td class="w">Private networks and internet gateways built for Databricks</td><td>4 gateways in 4 networks across two AWS accounts</td><td><strong>0.</strong> Only the networks that serve Konvoy Cloud itself remain.</td></tr>
+    <tr><td class="w">Working data in standard storage</td><td>About 1.5 TB across three storage buckets</td><td><strong>0.</strong> Full copies kept in deep archive (below).</td></tr>
+    <tr><td class="w">Processed data tables</td><td>Three tiers of pipelines and tables in each of two workspaces</td><td>Deleted 12 October.</td></tr>
+    <tr><td class="w">Airbyte data feed</td><td>22 running containers across the production and development clusters, six disks, and a replication hook into the Konvoy database</td><td><strong>0.</strong> Removed 15 October; the database hook dropped and its held log space released.</td></tr>
+    <tr><td class="w">Fleet-analytics dashboard in Konvoy Cloud</td><td>Switched on for fleet operators</td><td>Switched off 2 October. The code behind it is still in the product but costs nothing; removing it is deferred.</td></tr>
+    <tr><td class="w">Stored credentials, automation workflows and infrastructure code</td><td>Six stored secrets, five keys in the app&rsquo;s secret bundle (one of them a live client secret), three deployment workflows, five legacy stacks</td><td>All removed. The app was updated first so it runs without them (released 25 September), then the secrets were pulled and the running services restarted and checked.</td></tr>
+  </table>
+
+  <div class="board green">
+    <h3>Deliberately kept</h3>
+    <div class="meta">A short &ldquo;retain list&rdquo; was written before the work started and re-checked before every destructive step.</div>
+    <p>The shared data-lake storage that other systems use; two access roles belonging to other integrations; the table
+    that holds the NetSuite connection token; and <strong>three new deep-archive buckets holding a full copy of every
+    Databricks dataset</strong>. The copies were proven by restoring a sample and checking its fingerprint on 8 October,
+    then by a file-by-file coverage check on 12 October. Deep archive has a 180-day minimum and takes 12&ndash;48 hours
+    to retrieve from, which is acceptable because no system reads this data; it costs about $3 a month.</p>
+    <span class="why"><b>Why it matters:</b> if anyone ever needs the historical analytics data, it is all there and
+    recoverable in two days; nothing was lost to get the saving.</span>
+  </div>
+
+  <!-- ============ HOW IT WAS DONE ============ -->
+  <h2>How it was done</h2>
+  <div class="lede">The rule throughout was <strong>reversible first, irreversible last</strong>. Nothing was deleted
+  without an archive copy already verified, and 90% of the saving had already stopped on 3 October &mdash; twelve days
+  before anything was destroyed.</div>
+
+  <div class="timeline">
+    <div class="t-item">
+      <div class="when"><b>Preparation</b>25 August</div>
+      <div><p>Three deep-archive buckets created so that every later deletion had somewhere to copy to first.</p></div>
+    </div>
+    <div class="t-item">
+      <div class="when"><b>Answer the questions</b>25 Aug &ndash; 24 Sep</div>
+      <div><p>The oldest, hand-built workspace was archived and deleted on 27 August. Then the three business questions
+      that gated everything else were answered: the one customer organisation still tied to the dashboard turned out to
+      be Konvoy&rsquo;s own internal account; there is no live Snowflake contract reading the data lake; and the
+      Databricks subscription is pay-as-you-go with no end date, so <strong>no receiver sign-off was needed</strong>.
+      A cost baseline was snapshotted before anything changed.</p>
+      <p>A safety defect found on the way &mdash; manually-triggered deployment runs could apply changes without a
+      confirmation step across 26 workflows &mdash; was fixed at the shared component so it is closed everywhere.</p></div>
+    </div>
+    <div class="t-item">
+      <div class="when"><b>Untie the app</b>24 Sep &ndash; 6 Oct</div>
+      <div><p>Konvoy Cloud was changed to run without its Databricks settings and released to all three production regions
+      on 25 September. The fleet-analytics dashboard was switched off on 2 October &mdash; <strong>day zero</strong> &mdash;
+      and the five Databricks secrets were removed from the app on 6 October.</p></div>
+    </div>
+    <div class="t-item yellow">
+      <div class="when"><b>Pause everything</b>23 Sep &ndash; 12 Oct</div>
+      <div><p>All jobs, pipelines and query engines were stopped on 3 October and the four Airbyte connections paused
+      &mdash; nothing deleted, everything restartable. Then a <strong>seven-day observation window</strong>: no activity
+      of any kind from 4 to 10 October, the production app re-tested, zero Databricks errors in production monitoring,
+      no support contact. A written <strong>GO was recorded on 12 October</strong>. In the same window the remaining
+      storage was copied to deep archive and the copies tested.</p></div>
+    </div>
+    <div class="t-item red">
+      <div class="when"><b>Destroy</b>12 &ndash; 15 Oct</div>
+      <div><p>Data tables deleted and storage emptied on 12 October. On 15 October the two remaining workspaces were
+      destroyed, then the shared Databricks infrastructure &mdash; 69 of 69 components &mdash; from a freshly reviewed plan
+      checked against the retain list, followed by the stored secrets, the workflows and the Airbyte deployment on
+      both clusters. Each step was read back from AWS afterwards to confirm it was gone.</p></div>
+    </div>
+    <div class="t-item green">
+      <div class="when"><b>Close out</b>15 Oct &rarr; 3 Nov</div>
+      <div><p>Networks confirmed gone. The epic was closed on 15 October and the
+      <a class="nm" href="https://github.com/konvoy-kegs/terraform/issues/763">reconciliation of the settled October
+      bill</a> against this report is booked for 3 November.</p></div>
+    </div>
+  </div>
+
+  <!-- ============ ON THE RECORD ============ -->
+  <h2>Recorded for the audit trail</h2>
+  <div class="lede">Five things were written down on the <a class="nm" href="https://github.com/konvoy-kegs/terraform/issues/754">closing record</a>
+  rather than resolved. None affects the saving.</div>
+
+  <div class="board purple">
+    <ol>
+      <li>The archive of the oldest workspace holds 167,484 files against an August estimate of 176,842, although the
+      total size agrees. No file list was taken before that storage was deleted, so the gap can be explained (normal
+      churn between the estimate and the copy) but not proven.</li>
+      <li>A small folder of data with no registered owner (7,648 files, 79 MB) was found in the production catalogue.
+      It was archived and the original left in place in the shared data lake.</li>
+      <li>The production catalogue was force-deleted with a few leftover registrations still attached; the development
+      one had a stale link to a workspace that no longer existed.</li>
+      <li>One legacy network had already disappeared by 3 October. This programme did not remove it and the cause is
+      not known.</li>
+      <li>Two process notes. The Airbyte removal was run on the general instruction to complete the board rather than a
+      separate per-step go; and two small clean-up pull requests were raised by the AI agent and merged while still
+      marked as awaiting review.</li>
+    </ol>
+    <span class="why"><b>Why it matters:</b> these are the honest edges of the work. They are recorded so that nobody
+    discovers them later and wonders why they were not mentioned.</span>
+  </div>
+
+  <!-- ============ WHAT'S LEFT ============ -->
+  <h2>What is left</h2>
+  <div class="lede">Six items, all outside the board that just closed. None of them changes the saving.</div>
+
+  <div class="watch">
+    <div class="w-item">
+      <h3>1. Confirm the figures against the settled October bill <span class="pill p-wait">3 November</span></h3>
+      <p>Line by line &mdash; Databricks, networking, storage &mdash; October against September. This is the step that
+      turns &ldquo;worked out&rdquo; into &ldquo;measured&rdquo; for the smaller lines.</p>
+      <span class="ask">Nothing from you; the result will be added to the next cost report.</span>
+    </div>
+    <div class="w-item">
+      <h3>2. Unsubscribe from Databricks in the AWS Marketplace and close the Databricks account <span class="pill p-wait">Rob</span></h3>
+      <p>Not yet recorded as done. It costs nothing while it waits &mdash; pay-as-you-go with zero workspaces bills $0
+      &mdash; but it should be closed off so the vendor relationship is formally ended.</p>
+      <span class="ask">Nothing from you; flagging it so the open account is not a surprise.</span>
+    </div>
+    <div class="w-item grey">
+      <h3>3. Restate the programme tracking log <span class="pill p-wait">next weekly report</span></h3>
+      <p>Bring Databricks inside the programme&rsquo;s reported baseline and saving instead of carrying it as
+      &ldquo;strategic, out of scope&rdquo;. Reporting only.</p>
+    </div>
+    <div class="w-item grey">
+      <h3>4. Small tidy-ups in the infrastructure code <span class="pill p-note">no cost</span></h3>
+      <p>A monitoring alert, two exclusions and two stored settings that referred to Airbyte, plus one database
+      housekeeping command once the released log space is confirmed. Tracked as
+      <a class="nm" href="https://github.com/konvoy-kegs/terraform/issues/766">Airbyte leftovers</a>.</p>
+    </div>
+    <div class="w-item grey">
+      <h3>5. Remove the switched-off dashboard code from Konvoy Cloud <span class="pill p-note">deferred</span></h3>
+      <p>The feature is off and costs nothing; deleting the code is routine clean-up for a later sprint.</p>
+    </div>
+    <div class="w-item grey">
+      <h3>6. Branch housekeeping <span class="pill p-note">no cost</span></h3>
+      <p>The Airbyte definitions are still in the development branch of the cluster repository until the next promotion
+      to main. Not live anywhere.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>Konvoy Kegs Engineering &middot; Databricks decommission completion report, prepared 16 October 2026 by Robert Wilde,
+    Head of Engineering (drafted with Claude). This is the management version of the full engineering report; the work
+    itself is on <a href="https://github.com/orgs/konvoy-kegs/projects/17">board 17</a> (34 items, all done) and its
+    <a href="https://github.com/konvoy-kegs/terraform/issues/754">closing record</a>, read on 16 October.</p>
+    <p>All figures are AUD. Costs were read from AWS Cost Explorer (which reports in USD) on the payer account on
+    16 October 2026 and converted at the programme&rsquo;s fixed rate of 1.4426, the rate on the April baseline invoice,
+    so that month-to-month movement reflects usage rather than exchange rate. The
+    <a href="cost-programme-review-2026-10-06.html">6 October review</a> converted each month at its own invoice rate,
+    which is why its August Databricks figure ($1,560) is about 1.5% below the $1,583 here; the underlying US-dollar
+    amounts are the same. &ldquo;Measured&rdquo; means read directly from the bill or from AWS on 16 October;
+    &ldquo;worked out&rdquo; means calculated from AWS&rsquo;s published rates and a measured quantity, because AWS does
+    not tag Databricks costs separately. The settled bill for October, due 3 November, is the final check on the smaller
+    lines. Nothing in AWS, GitHub or the monitoring systems was changed in producing this report.</p>
+  </footer>
+
+</div>
+</body>
+</html>
