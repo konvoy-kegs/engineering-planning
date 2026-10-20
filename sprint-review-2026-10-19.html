@@ -109,8 +109,9 @@
   <header>
     <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
     <h1>Milestone 33 Review <span>&amp;</span> M34 Plan</h1>
-    <div class="dates">Sprint ran 7 &ndash; 19 October 2026 &middot; Next sprint M34, 20 October &ndash; 2 November &middot;
-    Team of 3 &middot; Prepared for the CEO &amp; COO &middot; 19 October 2026</div>
+    <div class="dates">Sprint ran 7 &ndash; 19 October 2026 &middot; Next sprint
+    <a href="https://github.com/konvoy-kegs/konvoy/milestone/34">M34, 20 October &ndash; 2 November</a> &middot;
+    Team of 3 &middot; Prepared for the CEO &amp; COO &middot; 19 October 2026, updated 20 October with the M34 milestone</div>
   </header>
 
   <!-- ============ THE SHORT VERSION ============ -->
@@ -119,8 +120,8 @@
     environment for <strong>twelve real customers</strong> &mdash; seven Australian, five New Zealand &mdash; reading their
     invoices and credit notes <em>live from production NetSuite</em>, read-only. Patrick found the first defect within hours and
     it was fixed the same day; his verdict was &ldquo;the functionality looks good&rdquo;. Mariana&rsquo;s audit on
-    15 October came back with <strong>seven asks</strong>, all sensible, none structural: three are in review today, four
-    are queued. The updated
+    15 October came back with <strong>seven asks</strong>, all sensible, none structural: by 20 October two are merged,
+    four are in review and one is queued. The updated
     Transfers page went into testing alongside it, with the flow chart Marc asked for on 7 October built two days later.</p>
 
     <p><strong>The numbers are softer than last time, for a good reason.</strong> Milestone 33 closed at
@@ -217,15 +218,18 @@
       <div class="steps">
         <div class="step"><span class="st done">Fixed</span><span>Credit-note and invoice filters apply across the whole ledger, not just the page on screen</span></div>
         <div class="step"><span class="st done">Fixed</span><span>PDFs open in a new tab, with a progress card while NetSuite renders the document</span></div>
-        <div class="step"><span class="st review">In review</span><span>Search the list by invoice or credit-note number</span></div>
+        <div class="step"><span class="st done">Fixed</span><span>Search the list by invoice or credit-note number &mdash; merged 20 October</span></div>
+        <div class="step"><span class="st done">Fixed</span><span>Downloaded PDFs are named by their invoice number, not a browser id &mdash; merged 20 October</span></div>
         <div class="step"><span class="st review">In review</span><span>Show New Zealand amounts as &ldquo;NZD$ 4,847.27&rdquo;, not &ldquo;New Zealand Dollar 4,847.27&rdquo;</span></div>
-        <div class="step"><span class="st review">In review</span><span>Downloaded PDFs are named by their invoice number, not a browser id</span></div>
-        <div class="step"><span class="st queued">Queued</span><span>A total amount and balance for whatever is filtered (e.g. &ldquo;all overdue&rdquo;)</span></div>
-        <div class="step"><span class="st queued">Queued</span><span>Status, date and overdue filters applied across the ledger too &mdash; paging while filtered currently errors</span></div>
-        <div class="step"><span class="st queued">Queued</span><span>Find an invoice by its Konvoy order number (R59867222)</span></div>
-        <div class="step"><span class="st queued">Queued</span><span>Confirm and document how an invoice edited or re-issued in NetSuite appears</span></div>
-        <div class="step"><span class="st queued">Queued</span><span>Choose which columns to show, as on Rentals</span></div>
+        <div class="step"><span class="st review">In review</span><span>Status, date and overdue filters applied across the ledger too &mdash; paging while filtered currently errors</span></div>
+        <div class="step"><span class="st review">In review</span><span>A total amount and balance for whatever is filtered (e.g. &ldquo;all overdue&rdquo;), per currency</span></div>
+        <div class="step"><span class="st review">In review</span><span>A note on the page saying how fresh the figures are, and how an invoice edited or re-issued in NetSuite appears</span></div>
+        <div class="step"><span class="st queued">M34</span><span>Find an invoice by its Konvoy order number (R59867222)</span></div>
+        <div class="step"><span class="st queued">M34</span><span>Choose which columns to show, as on Rentals</span></div>
+        <div class="step"><span class="st queued">M34</span><span>The browser&rsquo;s own Save button in the PDF viewer also proposes the document number</span></div>
       </div>
+      <p style="font-size:0.84rem;color:var(--muted)">Status as at 20 October. At the sprint close on 19 October the picture was two fixed, three in
+      review and five queued; two merged overnight and three more went into review.</p>
       <p><strong>Still to do before a customer sees it:</strong> finish the list above; written sign-off from Patrick and
       from Mariana or Rose on the UAT ticket (today it is a Slack thread); Patrick&rsquo;s answer on the legal-entity
       wording, since Konvoy Services&rsquo; name includes &ldquo;(Receivers and Managers Appointed)&rdquo;; the release;
@@ -334,26 +338,41 @@
 
   <!-- ============ NEXT ============ -->
   <h2>What we&rsquo;re working on next</h2>
-  <div class="lede">Milestone 34, 20 October &ndash; 2 November. The order below is the sprint&rsquo;s order: Billing
-  first, then the release, then PHP 8.5 onto main, then the dashboard.</div>
+  <div class="lede"><a href="https://github.com/konvoy-kegs/konvoy/milestone/34">Milestone 34</a>, 20 October &ndash; 2 November,
+  was opened on GitHub on 20 October with 18 items. The order below is the sprint&rsquo;s order: Billing first, then the
+  release, then PHP 8.5 onto main, then the dashboard.</div>
+
+  <div class="caveat green" style="margin:0 0 22px">
+    <b>What is in the milestone, as opened on 20 October.</b> Twelve issues carried from M33 that had no pull request
+    yet: two Billing follow-ups (order-number lookup, PDF-viewer file name), the Transfers user guide, the dashboard&rsquo;s
+    refill-visibility guard, two of the three access findings and the cross-tab sign-in bug (watch item 3), the LaunchDarkly
+    staff-rule change, and the staff-instructions epic with its three remaining pieces. Two items that had no milestone:
+    the Billing column chooser and the first customer-dashboard tiles (month- and year-to-date rentals, already in
+    review). And the four pull requests already in flight that will merge inside the sprint &mdash; server-side Billing
+    filters, filtered totals, the freshness note, and the tiles. <strong>Left in M33 to close on merge:</strong> the
+    server-side filters and filtered totals issues and the NZD$ pull request, which is why M33 now reads 44 of 47 rather
+    than the 38 of 57 measured at close. Not yet in the milestone because no ticket exists: the release itself, and the
+    PHP 8.5 merge to main.
+  </div>
 
   <table>
     <tr><th>Workstream</th><th>Status going in</th></tr>
-    <tr><td class="w">1. Finish Mariana&rsquo;s Billing list</td><td>Eight open follow-ups from Finance&rsquo;s testing: three in review today, five queued. Then written sign-off on the UAT ticket from Patrick and Finance, and Patrick&rsquo;s answer on the entity wording. The switch stays off for everyone but the twelve until both are in.</td></tr>
+    <tr><td class="w">1. Finish Mariana&rsquo;s Billing list</td><td>Seven open follow-ups from Finance&rsquo;s testing: four in review, three queued in M34 (order-number lookup, column chooser, PDF-viewer file name). Then written sign-off on the UAT ticket from Patrick and Finance, and Patrick&rsquo;s answer on the entity wording. The switch stays off for everyone but the twelve until both are in.</td></tr>
     <tr><td class="w">2. Release</td><td>Everything merged since 25 September, including the LaunchDarkly leak fix, Billing and its follow-ups. Cut it once the three in-review Billing fixes land &mdash; this week, with a named day. PHP 8.5 is not in this release.</td></tr>
     <tr><td class="w">3. PHP 8.5 onto main</td><td>Merge the branch after the release, test on the test environment, release separately. Two weeks of Millicent&rsquo;s work, one piece left.</td></tr>
-    <tr><td class="w">4. Customer dashboard</td><td>Start on the 17 remaining pieces of the portal epic. The backend summaries come first &mdash; account standing for the overdue-invoices tile, customer rates, rental counts &mdash; because the tiles cannot be built without them.</td></tr>
+    <tr><td class="w">4. Customer dashboard</td><td>Start on the 17 remaining pieces of the portal epic; the first tile (month- and year-to-date rentals) is already in review and is in M34, as is the guard that keeps refill orders out of customers&rsquo; charts. The backend summaries come next &mdash; account standing for the overdue-invoices tile, customer rates, rental counts &mdash; because the remaining tiles cannot be built without them.</td></tr>
     <tr><td class="w">Transfers</td><td>Flow view follow-ups (SKU filter, legend click) and the user-guide screenshots. Decisions wanted from Marc and Kim on transport-provider suggestions and email timing before anything is built. A ramp plan for the new page in production.</td></tr>
     <tr><td class="w">Kubernetes 1.35</td><td>Six weeks to 2 December. The chain is known; it needs a yes and sprint time, and it has not had either for two sprints.</td></tr>
     <tr><td class="w">Cost programme dates</td><td>1 Nov: first dry run of the backup sweeper. 3 Nov: Databricks reconciliation against the settled bill. Close the database board after the readback. Databricks account and Marketplace closure.</td></tr>
-    <tr><td class="w">Carried from M33</td><td>19 items: the Billing follow-ups above, the Transfers documentation, the staff-instructions epic and its three remaining pieces, the LaunchDarkly staff-rule change, the cross-tab sign-in bug, and two of the three security findings in watch item 3.</td></tr>
+    <tr><td class="w">Carried from M33</td><td>19 items were open at the close. Four closed overnight as their pull requests merged (search by number, PDF file name, the Transfers screenshots and the user-guide recapture); three stay in M33 to close on merge; the remaining twelve moved into M34 as listed above.</td></tr>
     <tr><td class="w">Still parked</td><td>Lease fees wiped on price edit (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5889">the lease-fee defect</a>, fifth report) and the second-account identity bug (fourth). The test-quality remediation epic is still closed with none of its twelve pieces started. All three were flagged last time as needing a schedule-or-park decision; none got one.</td></tr>
   </table>
 
   <div class="caveat">
-    <b>Placement is the job of this session.</b> The first four rows are sequential and mostly Rob&rsquo;s and
-    Bea&rsquo;s; Millicent is free once PHP 8.5 lands. The security findings and the Kubernetes work need owners named
-    today or they slip a third time.
+    <b>Placement is mostly done; two gaps remain.</b> The first four rows are sequential and mostly Rob&rsquo;s and
+    Bea&rsquo;s; Millicent is free once PHP 8.5 lands. Two of the three access findings are in M34 and assigned, the third is
+    not; the Kubernetes work is not in any milestone and still has no owner, so it will slip a third time unless that
+    changes this week.
   </div>
 
   <!-- ============ WATCH ============ -->
@@ -387,8 +406,9 @@
       rolling-collections schedule API performs no authorisation check, so a logged-in user could likely read or change
       another customer&rsquo;s schedule; and the fuel-surcharge rates API lets a default-tenant user read any
       organisation&rsquo;s rates. The first two sat in M33 unassigned to a date; the third was found this sprint. None is
-      known to have been exploited.</p>
-      <span class="ask">Decision: put all three in M34 ahead of dashboard work, owner named today.</span>
+      known to have been exploited. <em>Update 20 October:</em> the first two are now in M34; the third is still outside
+      any milestone.</p>
+      <span class="ask">Decision: sequence them ahead of dashboard work, and add the fuel-surcharge finding to M34.</span>
     </div>
 
     <div class="w-item">
@@ -420,7 +440,9 @@
   </div>
 
   <footer>
-    Konvoy Kegs Engineering &middot; Milestone 33 review, prepared 19 October 2026 &middot; Figures taken from the
+    Konvoy Kegs Engineering &middot; Milestone 33 review, prepared 19 October 2026; updated 20 October with the contents of
+    <a href="https://github.com/konvoy-kegs/konvoy/milestone/34">Milestone 34</a> and the Billing follow-ups&rsquo; status
+    at that date (the sprint figures are unchanged). Figures taken from the
     <a href="https://github.com/konvoy-kegs/konvoy/milestone/33">Milestone 33 issue list</a> at its close on 19 October,
     from issues closed and pull requests merged in konvoy-kegs/konvoy between 7 and 19 October, and from pull requests
     merged in the terraform and kubernetes repositories over the same window. Pull requests merged into the PHP 8.5 and
