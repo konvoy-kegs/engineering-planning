@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milestone 34 Review &amp; M35 Plan (3 – 16 November) — Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 24px 80px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  a { color: var(--accent); }
+  a.iss { text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.5); white-space: nowrap; }
+  a.iss:hover { border-bottom-style: solid; }
+  a.nm { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.55); }
+  a.nm:hover { color: var(--accent); border-bottom-style: solid; }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  h2:first-of-type { margin-top: 0; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+
+  .headline { background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(74,222,128,0.06)); border: 1px solid rgba(56,189,248,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.06rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #e2f5ff; }
+
+  .release { background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.4); border-radius: 14px; padding: 22px 26px; margin-bottom: 34px; }
+  .release .rtag { display: inline-block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--green); background: rgba(74,222,128,0.14); border-radius: 6px; padding: 4px 10px; margin-bottom: 12px; }
+  .release p { font-size: 0.94rem; color: #cbd5e1; }
+  .release .rnote { margin-top: 12px; font-size: 0.88rem; color: var(--muted); }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 10px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); }
+  .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); } .n.red { color: var(--red); }
+
+  .bars { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px 26px; }
+  .bar { margin-bottom: 15px; }
+  .bar:last-child { margin-bottom: 0; }
+  .bar .top { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 5px; }
+  .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 5px; background: var(--accent); }
+
+  .themes { display: grid; gap: 14px; }
+  .theme { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 20px 22px; }
+  .theme h3 { font-size: 1.02rem; margin-bottom: 8px; }
+  .theme p { font-size: 0.92rem; color: #cbd5e1; }
+  .theme p + p { margin-top: 10px; }
+  .theme .why { display: block; margin-top: 10px; font-size: 0.86rem; color: var(--muted); }
+  .theme .why b { color: var(--green); font-weight: 600; }
+  .theme.sec { border-left-color: var(--red); }
+  .theme.sec .why b { color: var(--red); }
+  .theme.money { border-left-color: var(--purple); }
+  .theme.money .why b { color: var(--purple); }
+
+  .steps { margin: 12px 0 4px; display: grid; gap: 6px; }
+  .step { display: grid; grid-template-columns: 112px 1fr; gap: 12px; font-size: 0.88rem; color: #cbd5e1; align-items: baseline; }
+  .step .st { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; text-align: center; white-space: nowrap; }
+  .st.done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .st.review { background: rgba(56,189,248,0.15); color: var(--accent); }
+  .st.queued { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .st.open { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  .caveat { background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.9rem; }
+  .caveat b { color: var(--yellow); }
+  .caveat.green { background: rgba(74,222,128,0.07); border-left-color: var(--green); }
+  .caveat.green b { color: var(--green); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 16px; background: rgba(51,65,85,0.5); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
+  td { padding: 13px 16px; border-top: 1px solid var(--surface2); vertical-align: top; }
+  td.w { width: 30%; font-weight: 600; }
+
+  .watch { display: grid; gap: 12px; }
+  .w-item { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--red); border-radius: 10px; padding: 18px 20px; }
+  .w-item.amber { border-left-color: var(--yellow); }
+  .w-item h3 { font-size: 0.98rem; margin-bottom: 6px; }
+  .w-item p { font-size: 0.9rem; color: #cbd5e1; }
+  .w-item .ask { display: block; margin-top: 9px; font-size: 0.86rem; color: var(--accent); }
+
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; }
+  .tag-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tag-carry { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tag-hold { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--surface2); color: var(--surface2); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
+    <h1>Milestone 34 Review <span>&amp;</span> M35 Plan</h1>
+    <div class="dates">Sprint ran 20 October &ndash; 2 November 2026 &middot; Next sprint M35, 3 &ndash; 16 November &middot;
+    Team of 3 &middot; Prepared for the CEO &amp; COO &middot; 3 November 2026</div>
+  </header>
+
+  <!-- ============ THE SHORT VERSION ============ -->
+  <div class="headline">
+    <p><strong>The release happened.</strong> Version 1.91.0 went to production on the evening of 2 November: every change merged
+    since 25 September, <strong>105 of them, after 38 days</strong>. Billing is now live inside Konvoy Cloud for the whole Konvoy
+    team, reading any NetSuite-linked customer&rsquo;s invoices and credit notes; the exclusive-agreement changes Tommy and Alice
+    asked for are in; the new Transfers page and its flow chart are on for every Konvoy staff member; and the LaunchDarkly add-on
+    that was sending login passwords to a third party, flagged in the last two reports, is finally gone from production. The team
+    was told in #konvoyteam that night. Nothing new has appeared in the error tracker since.</p>
+
+    <p><strong>It was also the strongest fortnight of the quarter.</strong> Milestone 34 closed at <strong>79%</strong> (86 of 109),
+    against 67% last time, and behind it <strong>73 issues closed and 63 pull requests merged</strong>, plus 14 infrastructure
+    changes. Bea took the customer dashboard from one piece to twelve of nineteen. Millicent finished the PHP 8.5 branch and, on the
+    way, did nine of the twelve test-quality fixes that last report listed as parked. Finance&rsquo;s whole Billing list was
+    closed, the entire team tested it on the test environment, and Patrick gave the go on 30 October. A critical PHP vulnerability
+    published on 22 October was patched in production the same day as a stand-alone hotfix.</p>
+
+    <p><strong>What did not move: the four access findings and Kubernetes.</strong> Two of the findings sat in the milestone all
+    sprint and were not touched; a fourth was found on 22 October. Kubernetes 1.35 now has <strong>29 days</strong> to the
+    2 December deadline and has had no work for three sprints. <strong>The plan for M35, in order:</strong> the follow-through
+    Patrick wants &mdash; Billing switched on for customers in about two weeks, which needs three decisions below &mdash; then PHP 8.5
+    onto the main branch and released on its own, then the last seven dashboard pieces. Kubernetes and the access findings need a
+    yes or a no today, not another carry.</p>
+  </div>
+
+  <div class="release">
+    <div class="rtag">Released &middot; v1.91.0 &middot; 2 November</div>
+    <p><strong>Two production releases this sprint, after none in M32 and M33.</strong> The hotfix v1.90.3 on 22 October carried
+    only the PHP security patch, built on top of the old release so the 100 waiting changes did not have to go out with it. Then
+    v1.91.0 on 2 November carried everything: 104 pull requests, 33 of them features, one additive database change, no downtime.</p>
+    <p class="rnote">Live now: staff Billing with every Finance follow-up; agreement delete, the ended-extension correction and
+    pre-filled end dates; the Transfers schedule confirmation and flow view; the &ldquo;The&rdquo; search fix; the spreadsheet-ready
+    Rentals download; the AU surcharge clause removed; fuel-levy rates for Konvoy ANZ; the Google Maps blank-screen fix; the
+    second-account identity bug; staff instruction guides; and the LaunchDarkly leak fix and add-on removal. Dark behind their
+    switches: the customer dashboard and forecast page, and the customer-facing Billing page. PHP 8.5 is <em>not</em> in this
+    release; it ships separately, next.</p>
+  </div>
+
+  <!-- ============ NUMBERS ============ -->
+  <h2>The numbers</h2>
+  <div class="lede">Milestone 34, measured today at its close. Counts include both issues and pull requests, which is how GitHub
+  reports a milestone.</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n green">86</div><div class="l">Items closed</div><div class="s">of 109 in the milestone &mdash; 79%</div></div>
+    <div class="kpi"><div class="n blue">73</div><div class="l">Issues closed</div><div class="s">46 in the milestone, 27 outside it &middot; 66 opened</div></div>
+    <div class="kpi"><div class="n purple">63</div><div class="l">Pull requests merged</div><div class="s">Rob 25, Millicent 17, Bea 13, automated 8 &middot; 14 infrastructure PRs on top</div></div>
+    <div class="kpi"><div class="n green">2</div><div class="l">Production releases</div><div class="s">v1.90.3 hotfix 22 Oct &middot; v1.91.0 on 2 Nov</div></div>
+  </div>
+
+  <div class="caveat green" style="margin-top:20px">
+    <b>On the completion figure.</b> 79% is the best close since the extended M32, on a milestone that grew from 18 items at
+    opening to 109 by close &mdash; the test-quality pieces, the hotfix, the dashboard tiles and the Billing follow-ups were all added
+    as they were started, which is the right way round. Of the 23 carried items, six are already in review (two PHP test pieces, the
+    dashboard rates card, the customer Rentals and Forecast pages); four are the staff-instructions epic and its three remaining
+    guides; three are the access findings and the cross-tab bug that were not touched; two are the Rentals flow chart Rob built
+    this weekend for Alice; one is the order-confirmation default with its fix approved and waiting to merge; the rest are small
+    chores and one post-release check. Over the fortnight <strong>66 issues were opened
+    against 73 closed</strong>, so the backlog shrank by seven after growing by thirteen last sprint. Of the 63 pull requests, 46
+    landed on the main branch and 17 on the PHP 8.5 branch.
+  </div>
+
+  <!-- ============ EFFORT ============ -->
+  <h2>Where the effort went</h2>
+  <div class="lede">All 73 issues closed between 20 October and 2 November, grouped by what they were about. Groupings are
+  approximate.</div>
+
+  <div class="bars">
+    <div class="bar"><div class="top"><span>PHP 8.5 branch &amp; test-quality remediation</span><span>18</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+    <div class="bar"><div class="top"><span>Customer dashboard &amp; forecast (behind its switch)</span><span>14</span></div><div class="track"><div class="fill" style="width:78%"></div></div></div>
+    <div class="bar"><div class="top"><span>Billing follow-ups from Finance &amp; the whole-team test</span><span>11</span></div><div class="track"><div class="fill" style="width:61%"></div></div></div>
+    <div class="bar"><div class="top"><span>Security hotfix &amp; dependency advisories</span><span>7</span></div><div class="track"><div class="fill" style="width:39%"></div></div></div>
+    <div class="bar"><div class="top"><span>Fixes customers &amp; support will notice</span><span>7</span></div><div class="track"><div class="fill" style="width:39%"></div></div></div>
+    <div class="bar"><div class="top"><span>Backlog tidy-up (old items closed)</span><span>6</span></div><div class="track"><div class="fill" style="width:33%"></div></div></div>
+    <div class="bar"><div class="top"><span>Engineering tooling &amp; CI</span><span>5</span></div><div class="track"><div class="fill" style="width:28%"></div></div></div>
+    <div class="bar"><div class="top"><span>Exclusive agreements (delete, extension counting)</span><span>4</span></div><div class="track"><div class="fill" style="width:22%"></div></div></div>
+    <div class="bar"><div class="top"><span>Transfers user guide</span><span>1</span></div><div class="track"><div class="fill" style="width:6%"></div></div></div>
+  </div>
+
+  <div class="lede" style="margin-top:14px">Three people, three clear lanes: Millicent on the PHP 8.5 branch and the test suite,
+  Bea on the customer dashboard, Rob on Billing, the agreements, the release and the infrastructure work counted separately below.
+  The release itself does not show as a ticket but took most of Rob&rsquo;s last three days: release notes reconciled against every
+  one of the 104 pull requests, the production feature switches audited, and a silently stalled test-environment deploy found and
+  fixed before the tag was cut (watch item 5).</div>
+
+  <!-- ============ WHAT WE FINISHED ============ -->
+  <h2>What we finished</h2>
+  <div class="lede">Six themes, in the order a manager should care about them. Underlined names link to the GitHub record.
+  &ldquo;Live&rdquo; means in production; &ldquo;Switched off&rdquo; means in production but dark behind its switch;
+  &ldquo;Branch&rdquo; means merged to a branch, not yet on main.</div>
+
+  <div class="themes">
+
+    <div class="theme money">
+      <h3>1. Billing is live for the Konvoy team <span class="tag tag-done">Live</span></h3>
+      <p>Mariana&rsquo;s seven asks from the 15 October audit were all merged by 25 October: search by invoice, credit-note or order
+      number; filters that look across the whole ledger rather than the page on screen; totals for whatever is filtered, per
+      currency; New Zealand amounts shown as NZD$; downloads named by document number; a column chooser; and a note on how fresh
+      the figures are. On 27 October the page was opened to the <strong>whole team</strong> on the test environment with the twelve
+      real customers. Mariana: &ldquo;a great addition to KC&rdquo;. Alice checked several NZ customers against NetSuite and
+      &ldquo;can&rsquo;t find any discrepancies&rdquo;. Grant: &ldquo;clean and simple to use&rdquo;. Patrick on 30 October:
+      comments by end of day, then production, then customers after a couple of weeks
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5835">the Billing epic</a>).</p>
+      <p>In production since 2 November it reads <strong>any</strong> NetSuite-linked Australian or New Zealand customer, not only
+      the twelve, and the Email button sends the PDF to the customer for real &mdash; Konvoy admins only, after a confirmation.
+      Three things it does not do yet, all stated in the team announcement: customers cannot see their own Billing page (switched
+      off); a customer in the EU or NA region shows an error rather than an empty list, because the read-only NetSuite credential
+      only exists for Australia; and a customer who calls the API directly can read their own invoices today even with the page
+      switched off, which was a deliberate design choice but deserves a product or security decision before the customer rollout.</p>
+      <div class="steps">
+        <div class="step"><span class="st done">Done</span><span>All seven of Mariana&rsquo;s asks, plus the column chooser and the browser&rsquo;s own Save name</span></div>
+        <div class="step"><span class="st done">Done</span><span>Whole-team test on the test environment, 27&ndash;30 October; user guide updated to match</span></div>
+        <div class="step"><span class="st done">Done</span><span>Released to production for all Konvoy staff, 2 November; signed PDF links kept out of the access logs</span></div>
+        <div class="step"><span class="st queued">Decision</span><span>Patrick&rsquo;s answer on the legal-entity wording customers will see &mdash; open since September</span></div>
+        <div class="step"><span class="st queued">Decision</span><span>Whether customers may read their invoices through the API while the page is off</span></div>
+        <div class="step"><span class="st queued">Decision</span><span>EU and NA: connect the credential, or show a clean &ldquo;not available here&rdquo; instead of an error</span></div>
+        <div class="step"><span class="st open">Open</span><span>Written sign-off on the UAT ticket &mdash; Bea took this on 23 October; today it is still a Slack thread</span></div>
+        <div class="step"><span class="st open">Open</span><span>Alice&rsquo;s one new ask: show the balance when the toggle is on &ldquo;All&rdquo;, not only on &ldquo;Invoices&rdquo;</span></div>
+      </div>
+      <span class="why"><b>Why it matters:</b> Finance and Sales can now answer &ldquo;what does this customer owe?&rdquo; without
+      opening NetSuite, and the customer-facing version is two weeks and three decisions away.</span>
+    </div>
+
+    <div class="theme sec">
+      <h3>2. Two releases: a same-day security hotfix, then the big one <span class="tag tag-done">Live</span></h3>
+      <p>On 22 October a vulnerability in PHP itself was published that allowed unauthenticated remote code execution. The platform
+      was patched in production that day as <strong>v1.90.3</strong>, a hotfix built on top of the September release carrying only
+      the patch and the dependency updates its safety gate required &mdash; the first time the team has shipped a hotfix this way
+      rather than releasing everything on the main branch to get one fix out
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6538">the PHP 8.4.27 hotfix</a>). The procedure now needs
+      writing down, and the hotfix branch deleting.</p>
+      <p><strong>v1.91.0</strong> followed on 2 November once Finance&rsquo;s list was closed and Patrick had given the go. The
+      release preparation was done properly: the notes reconciled against every pull request since September, every pull request
+      labelled, the ten production feature switches audited one by one, the test-environment and pre-production deployments proven
+      green on the exact commit being tagged, and the three production regions deployed and checked. Two things were found on the
+      way and fixed before the tag: the test-environment frontend had silently not deployed since 27 October (watch item 5), and the
+      signed billing-PDF links needed keeping out of the web-server logs in all three regions.</p>
+      <span class="why"><b>Why it matters:</b> 38 days of work reached customers in one clean step, a critical vulnerability was
+      closed within hours instead of waiting for that step, and the password-leak fix the last two reports asked for is finally in
+      production.</span>
+    </div>
+
+    <div class="theme">
+      <h3>3. The customer dashboard: 1 of 19 to 12 of 19 in a fortnight <span class="tag tag-carry">Switched off</span></h3>
+      <p>Bea&rsquo;s sprint. The customer portal now has its shell &mdash; top bar, organisation card, account-manager card, and
+      header actions for a new order, a forecast update and a keg collection &mdash; and the first real tiles: month- and
+      year-to-date rentals, the next order, the exclusive-contract band, and a rental-volume chart by keg size against forecast. The
+      Forecast page was rebuilt to the v2.2 design with a five-month grid, &ldquo;add&rdquo; cells and copy-last-year, and locked
+      months can no longer be overwritten by a late draft
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6462">the customer portal epic</a>). Rob built the backend
+      summaries the remaining tiles need &mdash; account standing and on-hold state for the overdue-invoices tile, customer rates,
+      and per-status rental counts &mdash; and answered the design questions that were blocking them (freight is per keg; the Rentals
+      total is ex-GST, all billed lines, fuel levy included).</p>
+      <p>Seven pieces remain and five are already in review: the rates card (approved), the overdue-invoices tile, the customer
+      Rentals page, the Forecast page&rsquo;s missing-months banner, and a provisional pill on the contract band. Eight small v2.2
+      follow-ups were raised on 1&ndash;2 November from Rob&rsquo;s reviews. One trap found during the release audit: the
+      dashboard&rsquo;s switch is set so that turning it on would show it to <em>every</em> customer at once; that default is to be
+      changed before any rollout.</p>
+      <span class="why"><b>Why it matters:</b> this is Patrick&rsquo;s priority #2 after Billing, and it went from &ldquo;started&rdquo;
+      to &ldquo;two weeks from a first look&rdquo; in one sprint.</span>
+    </div>
+
+    <div class="theme">
+      <h3>4. PHP 8.5 finished on its branch, and the parked test-quality work done with it <span class="tag tag-carry">Branch</span></h3>
+      <p>Millicent&rsquo;s sprint. The upgrade epic is at 20 of 22 pieces, all on its own branch, verified with a clean from-scratch
+      rebuild on 28 October. What the last report listed as parked &mdash; the test-quality remediation epic, &ldquo;closed with
+      none of its twelve pieces started&rdquo; &mdash; was quietly done on the same branch: <strong>nine of the twelve</strong>,
+      every backend one. Tests that could not fail now can; tests that checked a copy of production now check production code;
+      mutation testing has a baseline for billing, keg replay and sign-in; and controller access checks were moved to one
+      declarative pattern
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5665">the PHP 8.5 epic</a>,
+      <a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6275">the test-quality epic</a>). The three frontend test
+      pieces remain.</p>
+      <p>The merge to the main branch has been open as a draft since 26 October, deliberately held until v1.91.0 was out so the two
+      could not be confused. That condition is now met. One detail carried from the hotfix: the branch must land with the 8.5.12
+      floor, because the same vulnerability exists in older 8.5 builds.</p>
+      <span class="why"><b>Why it matters:</b> the runtime upgrade is a fortnight of careful work done early rather than a crisis
+      later, and the test suite that guards every release got materially harder to fool.</span>
+    </div>
+
+    <div class="theme">
+      <h3>5. Exclusive agreements, and the fixes customers and support asked for <span class="tag tag-done">Live</span></h3>
+      <p>Konvoy admins can now remove an agreement entered by mistake, with a reason, a Slack note to Finance and a restore path
+      &mdash; Alice&rsquo;s request from the feedback widget on 20 October, live thirteen days later
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6505">agreement delete</a>). The ended-extension counting
+      was corrected to Tommy&rsquo;s reading &mdash; the whole contract&rsquo;s volume, start to extension end &mdash; which reverses
+      the guidance in the 15 September update, and the end date is pre-filled. Both were called out to Sales in the announcement
+      because they change figures Sales watches.</p>
+      <p>Also live: venue searches beginning with &ldquo;The&rdquo; work (Alice); the Rentals download is one row per keg size,
+      ready for a pivot table (Alice); the credit-card surcharge clause is out of the AU agreement (Mariana); Konvoy ANZ can see
+      fuel-levy rates (Feruz); a Google Maps failure no longer blanks the app; customers no longer see refill orders in their Orders
+      report; and the second-account identity bug &mdash; on its fourth report as &ldquo;parked&rdquo; &mdash; turned out to be
+      fixed by the sign-in change and was closed on 27 October. A slow sign-in query that was tripping the error tracker was fixed
+      too.</p>
+      <span class="why"><b>Why it matters:</b> every one of these was a question someone in the business had asked, and several
+      came in through the feedback widget and shipped inside the same sprint.</span>
+    </div>
+
+    <div class="theme">
+      <h3>6. Transfers: on for all Konvoy staff, and Alice wants the same chart on Rentals <span class="tag tag-done">Live</span></h3>
+      <p>The updated Transfers page and its Flow view of where kegs go, which last report said reached only two people, was switched
+      on for every @konvoykegs.com user with the release, and the user guide for it is published. Scheduling a transfer now says
+      exactly who will be emailed, which closed Marc&rsquo;s &ldquo;mystery email&rdquo; question. After trying the Flow view on the
+      test environment, Alice asked on 29 October for the same picture on the Rentals page &mdash; NZ often supplies customers from a warehouse that is not their
+      local one, and she wants to see it. Rob built it over the weekend; it is uncommitted, with a short list of follow-ups that need
+      a discussion first
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6616">the Rentals flow chart</a>).</p>
+      <span class="why"><b>Why it matters:</b> the ops team now sees keg movement in production, not just on the test environment,
+      and the first request for more of it arrived unprompted.</span>
+    </div>
+
+  </div>
+
+  <!-- ============ INFRASTRUCTURE ============ -->
+  <h2>Infrastructure and the cost programme, counted separately</h2>
+  <div class="lede">14 changes merged across the infrastructure repositories during the sprint, all Rob&rsquo;s. None appear in
+  the milestone figures above. October&rsquo;s AWS invoice has arrived.</div>
+
+  <table>
+    <tr><th>Board</th><th>Where it stands</th></tr>
+    <tr><td class="w">Databricks decommission <span class="tag tag-done">Reconciled</span></td><td>The settled October bill confirms it: Databricks cost <strong>$63 USD for 1&ndash;13 October and nothing since</strong>, against $1,097 in August. The Marketplace invoice, where Databricks was billed, halved from $1,819 to $925 AUD; what remains on it is MongoDB. The reconciliation due today can be closed on these numbers. Still to do by hand: close the Databricks account and its Marketplace listing.</td></tr>
+    <tr><td class="w">MySQL 8.4 &amp; database costs <span class="tag tag-done">Board closed</span></td><td>The board that removed the Extended Support surcharge in August is closed, 49 of 50 done. One item is still marked &ldquo;verifying&rdquo;: confirming the retired test-environment database is gone and the runbook updated. The latest-only backup sweeper for the two overseas databases is merged in dry-run; it deletes for real from 1 December once dry-run is switched off.</td></tr>
+    <tr><td class="w">Kubernetes 1.33 &rarr; 1.36 <span class="tag tag-hold">No movement, 29 days</span></td><td>Nothing closed on this board for a third sprint. The current version leaves standard support on <strong>2 December</strong>, after which the $2,147 AUD a month surcharge removed in August returns. Watch item 2.</td></tr>
+    <tr><td class="w">Monitoring audit (new this sprint)</td><td>Rob&rsquo;s October pass over Grafana: production synthetic checks now <strong>page someone when they fail</strong>; the metrics volume was cut back to the 20,000 series the plan includes, so there is no overage; an alert that could never fire was fixed, a dead one removed, and one that catches a stalled metrics collector added; unused tracing was retired; and production pod CPU and memory requests were right-sized, the prerequisite for shrinking the nodes themselves.</td></tr>
+  </table>
+
+  <div class="caveat green">
+    <b>AWS bill.</b> October was invoiced at <strong>$6,575 AUD</strong> (services $5,650 including GST, Marketplace $925),
+    against $7,773 in September and $9,939 in August &mdash; <strong>down 15% on the month and 34% since August</strong>. The
+    September-to-October drop is mostly Databricks leaving the Marketplace invoice (about $890 AUD), with the NAT gateways and the
+    retired test database taking about $300 AUD off the services line. November is the first month with no Databricks at all.
+    Conversions at October&rsquo;s invoice rate of 1.4452.
+  </div>
+
+  <!-- ============ NEXT ============ -->
+  <h2>What we&rsquo;re working on next</h2>
+  <div class="lede">Milestone 35, 3 &ndash; 16 November. The order below is the proposed sprint order: the Billing follow-through
+  Patrick asked for, then PHP 8.5 onto main and released, then the dashboard. The milestone is opened on GitHub after today&rsquo;s
+  meeting, with the carried items listed in the last rows.</div>
+
+  <table>
+    <tr><th>Workstream</th><th>Status going in</th></tr>
+    <tr><td class="w">1. Billing: customers in about two weeks</td><td>Patrick&rsquo;s line on 30 October was &ldquo;after a couple of weeks will release to customers&rdquo;, which puts the customer switch around <strong>16&ndash;17 November</strong>. Before then: the three decisions in theme 1 (entity wording, API readability while the page is off, EU/NA), written sign-off on the UAT ticket, Alice&rsquo;s balance-on-All ask, and a plan for which customers see it first. Also the post-release tidy-up: document the hotfix procedure, confirm the sign-in error has stopped recurring, and run the archived-customer exclusivity backfill that has been waiting since September.</td></tr>
+    <tr><td class="w">2. PHP 8.5 onto main, released on its own</td><td>Take the draft merge out of draft, land it with the 8.5.12 floor, test on the test environment, release as its own version so any fault is unmistakably the runtime. The two PHPUnit 14 readiness pieces are in review and go with it. Millicent, with Rob reviewing.</td></tr>
+    <tr><td class="w">3. Customer dashboard: the last seven pieces</td><td>Five in review today, two to build, eight small follow-ups from review. Fix the switch default first. Then the question for Patrick: which customers see it first, and when &mdash; it is ready for a first look inside this sprint. Bea.</td></tr>
+    <tr><td class="w">4. Rentals flow chart for Alice</td><td>Built, uncommitted; needs the follow-up decisions (duplicate location labels, wording) settled, review, and a release &mdash; it can ride with PHP 8.5. Rob.</td></tr>
+    <tr><td class="w">5. The four access findings</td><td>Non-Konvoy accounts with the global maintainer role in production; the rolling-collections schedule API with no authorisation check; the keg-collections API with none either (found 22 October); and the fuel-surcharge rates readable across organisations. None has been exploited that we know of; none has had an hour of work in two sprints. Watch item 1.</td></tr>
+    <tr><td class="w">6. Kubernetes 1.35</td><td>29 days. Four weeks of Rob&rsquo;s time that does not exist alongside rows 1 and 4. Watch item 2.</td></tr>
+    <tr><td class="w">From the feedback widget &amp; support</td><td>Order confirmation emails on by default for new customers (Marie-Anne&rsquo;s, pull request approved and ready to merge); Cultivar set up as a contract brewer (Alice, 29 October, unassigned); a venue contact list so collection requests match the Mailchimp audience (Alice, needs a discussion); and the NetSuite bank-detail write that fails on sign-up &mdash; five customers since August, Finance adding the details by hand each time &mdash; which is a NetSuite permission, not code (watch item 4).</td></tr>
+    <tr><td class="w">Cost programme dates</td><td>Today: close the Databricks reconciliation. Readback on the 1 November backup-sweeper dry run. Databricks account and Marketplace closure. Tick off the last database-board item.</td></tr>
+    <tr><td class="w">Carried from M34</td><td>23 items: six pull requests or issues in review that will close in the first days; the staff-instructions epic and its three remaining guides (five of eight done, no movement this sprint); three access and identity findings; the LaunchDarkly staff-rule change; four small chores; the Rentals flow chart and its follow-ups; one post-release check. Rob&rsquo;s handover rule applies: move open issues with no pull request, leave anything already in review.</td></tr>
+    <tr><td class="w">Still parked</td><td>Lease fees wiped on price edit (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5889">the lease-fee defect</a>, sixth report, unchanged since 15 September). The three frontend test-quality pieces. The deploy-failure alert, now on its third report and now with a cost (watch item 5).</td></tr>
+  </table>
+
+  <div class="caveat">
+    <b>Placement.</b> Rows 1, 4 and 6 are all Rob&rsquo;s, and row 6 does not fit beside the other two. Row 2 is Millicent&rsquo;s;
+    row 3 is Bea&rsquo;s. Row 5 has an owner on paper and has not had time for two sprints &mdash; it needs to be placed ahead of
+    something, or said out loud that it is not. The feedback-widget items are small individually and unassigned collectively.
+  </div>
+
+  <!-- ============ WATCH ============ -->
+  <h2>Five things to watch</h2>
+  <div class="lede">Ordered by how quickly they need a decision.</div>
+
+  <div class="watch">
+
+    <div class="w-item">
+      <h3>1. Four access findings in production, two sprints without an hour of work</h3>
+      <p>Last report asked for the three findings to be sequenced ahead of dashboard work. Two went into the milestone, neither was
+      touched, and a fourth &mdash; another API with no authorisation check, on keg collections &mdash; was found by Millicent
+      on 22 October. The dashboard moved eleven pieces in the same fortnight. That is a choice the sprint made by
+      default, and it should be made on purpose.</p>
+      <span class="ask">Decision: either the two authorisation gaps go first in M35, before any dashboard follow-up, or we record
+      that they wait until the dashboard is in customers&rsquo; hands. Either is defensible; the default is not.</span>
+    </div>
+
+    <div class="w-item">
+      <h3>2. Kubernetes 1.35 &mdash; 29 days, three sprints of no movement</h3>
+      <p>Standard support for the current version ends on 2 December. After that AWS charges the $2,147 AUD a month Extended Support
+      surcharge removed in August, roughly $26,000 a year, until all four clusters are upgraded. Last report said the work fits if
+      it starts in M34; it did not start. It no longer fits beside the Billing customer rollout and the Rentals chart in M35, which
+      are both Rob&rsquo;s.</p>
+      <span class="ask">Decision: yes means Rob does the upgrade in M35 and the Rentals chart and the hotfix tidy-up wait; no means
+      budgeting about $2,150 AUD a month from December until it is done. One or the other today.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>3. The customer Billing rollout needs three answers that are not Engineering&rsquo;s</h3>
+      <p>Patrick wants customers on Billing in about two weeks. The page is built and tested, but three things are still open that
+      only the business can close: whether customer-facing documents show the receivership wording in the legal-entity name (asked
+      in September); whether a customer should be able to read their invoices through the API while the page is switched off (they
+      can today, by design); and whether EU and NA customers get connected or get a clean &ldquo;not available&rdquo; message. The
+      UAT sign-off is also still a Slack thread rather than a line on the ticket.</p>
+      <span class="ask">Decision: Patrick answers the wording and the API question this week; Rob proposes a first customer list;
+      Bea records the sign-off on the ticket from the 27&ndash;30 October thread.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>4. Sign-ups are failing to write bank details to NetSuite, and Finance is covering it by hand</h3>
+      <p>Since August, five new customers&rsquo; bank details have failed to save into NetSuite at sign-up. Konvoy Cloud keeps the
+      sign-up and alerts Finance, who enter the details manually. The cause is a permission inside NetSuite&rsquo;s UK localisation
+      add-on, not Konvoy Cloud code, so Engineering cannot fix it alone.</p>
+      <span class="ask">What would help: a NetSuite administrator (or the NetSuite partner) grants the integration role access to
+      the payment-file-format record. Half a day for whoever has admin; nothing to build.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>5. The deploy alert that slipped twice just cost a day</h3>
+      <p>Two reports ago the test environment had deployed silently red for a month; the ask was a Slack alert when a deploy stops.
+      It was not built in M33 or M34. On 1 November, preparing the release, Rob found the test-environment frontend had silently not
+      deployed since 27 October &mdash; a low-severity dependency advisory had been quietly skipping every deploy. It was fixed
+      before the tag, but it was found by inspection rather than by an alert, and the pre-production tests had been running against
+      a stale frontend for five days without anyone knowing.</p>
+      <span class="ask">Nothing from you: it is a day&rsquo;s work and it goes into M35 behind row 1. Flagging it because it is the
+      third time it appears here and the first time it has had a visible cost.</span>
+    </div>
+
+  </div>
+
+  <footer>
+    Konvoy Kegs Engineering &middot; Milestone 34 review, prepared 3 November 2026. Figures taken from the
+    <a href="https://github.com/konvoy-kegs/konvoy/milestone/34">Milestone 34 issue list</a> at its close, from issues closed and
+    pull requests merged in konvoy-kegs/konvoy between 20 October and 2 November, and from pull requests merged in the terraform
+    and kubernetes repositories over the same window. Pull requests merged into the PHP 8.5 branch are counted as merged but are
+    not on the main branch. Release contents from the <a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.91.0">v1.91.0</a>
+    and <a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.90.3">v1.90.3</a> release notes; Billing feedback quoted from
+    the #konvoyteam test thread (27&ndash;30 October). &ldquo;Nothing new in the error tracker&rdquo; means no new unresolved Sentry
+    issue first seen after the release, checked the morning of 3 November. AWS figures are the amounts invoiced in AUD (two invoices
+    per month: services including GST, and Marketplace); the Databricks line is from Cost Explorer in USD. Milestone 33 comparison
+    figures are taken from the <a href="sprint-review-2026-10-19.html">Milestone 33 report</a> as published. Theme groupings are
+    approximate.
+  </footer>
+
+</div>
+</body>
+</html>
