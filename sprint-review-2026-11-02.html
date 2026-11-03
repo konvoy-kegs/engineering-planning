@@ -191,11 +191,21 @@
     <div class="bar"><div class="top"><span>Transfers user guide</span><span>1</span></div><div class="track"><div class="fill" style="width:6%"></div></div></div>
   </div>
 
-  <div class="lede" style="margin-top:14px">Three people, three clear lanes: Millicent on the PHP 8.5 branch and the test suite,
-  Bea on the customer dashboard, Rob on Billing, the agreements, the release and the infrastructure work counted separately below.
-  The release itself does not show as a ticket but took most of Rob&rsquo;s last three days: release notes reconciled against every
-  one of the 104 pull requests, the production feature switches audited, and a silently stalled test-environment deploy found and
-  fixed before the tag was cut (watch item 5).</div>
+  <div class="lede" style="margin-top:14px">What sits behind the bigger bars. <strong>PHP 8.5 and test quality (18)</strong> is
+  the runtime upgrade&rsquo;s last pieces plus nine test-audit items &mdash; assertions that could not fail, tests checking a copy of
+  production, mocked database queries &mdash; each one a sub-issue closed as its fix merged. <strong>Customer dashboard (14)</strong>
+  is the portal shell, the header actions, the four tiles, the rental chart, the Forecast page rebuild and the backend summaries
+  behind them. <strong>Billing (11)</strong> is Mariana&rsquo;s seven asks, the column chooser, the user-guide catch-up and the
+  internal refactor that separates NetSuite&rsquo;s data shape from ours. <strong>Security and advisories (7)</strong> is the PHP
+  hotfix and six dependency advisories, most of which blocked a deploy until cleared &mdash; a tax that now arrives most weeks.
+  <strong>Fixes (7)</strong> are the ones named in theme 5 plus three long-open items confirmed already fixed and closed. The
+  tidy-up is four test entries from the chatbot trial and two tickets from the March milestone superseded by later work.</div>
+
+  <div class="lede" style="margin-top:14px">Three people, three clear lanes: Millicent on the PHP 8.5 branch and the test suite
+  (the whole first bar), Bea on the customer dashboard (the whole second), Rob on Billing, the agreements, the hotfix, the release
+  and the infrastructure work counted separately below. The release itself does not show as a ticket but took most of Rob&rsquo;s
+  last three days: release notes reconciled against every one of the 104 pull requests, the ten production feature switches
+  audited, and a silently stalled test-environment deploy found and fixed before the tag was cut (watch item 5).</div>
 
   <!-- ============ WHAT WE FINISHED ============ -->
   <h2>What we finished</h2>
