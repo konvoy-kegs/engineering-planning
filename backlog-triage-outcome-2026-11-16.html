@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backlog Triage Outcome — 16 Nov 2026</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 16px 80px; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  a { color: var(--accent); }
+  a.nm { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.55); }
+  a.nm:hover { color: var(--accent); border-bottom-style: solid; }
+  .ref { font-size: 0.74rem; color: var(--muted); white-space: nowrap; margin-left: 4px; }
+  .muted { color: var(--muted); }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  h3 { font-size: 1.02rem; margin: 26px 0 10px; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; max-width: 760px; }
+
+  .headline { background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(74,222,128,0.06)); border: 1px solid rgba(56,189,248,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.04rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #e2f5ff; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); } .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); } .n.red { color: var(--red); }
+
+  .bars { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px 26px; }
+  .bar { margin-bottom: 15px; } .bar:last-child { margin-bottom: 0; }
+  .bar .top { display: flex; justify-content: space-between; gap: 12px; font-size: 0.9rem; margin-bottom: 5px; }
+  .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bar .sub { color: var(--muted); font-size: 0.84rem; }
+  .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 5px; }
+  .fill.g { background: var(--green); } .fill.r { background: var(--red); } .fill.y { background: var(--yellow); } .fill.p { background: var(--purple); } .fill.m { background: #64748b; }
+
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--surface2); border-radius: 12px; background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  th { text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--surface2); white-space: nowrap; background: var(--surface); position: sticky; top: 0; }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(51,65,85,0.6); vertical-align: top; color: #cbd5e1; }
+  tr:last-child td { border-bottom: 0; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .enote { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+  th[data-sort] { cursor: pointer; } th[data-sort]:hover { color: var(--text); }
+
+  .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 5px; white-space: nowrap; }
+  .tCLOSE { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tNOV { background: rgba(248,113,113,0.16); color: var(--red); }
+  .tDEC { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tREVIEW { background: rgba(167,139,250,0.16); color: var(--purple); }
+  .tPARK { background: rgba(100,116,139,0.25); color: #cbd5e1; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } h1 { font-size: 1.6rem; } }
+  .panel { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 18px 20px; }
+  .panel.r { border-left-color: var(--red); } .panel.g { border-left-color: var(--green); } .panel.y { border-left-color: var(--yellow); } .panel.p { border-left-color: var(--purple); }
+  .panel h3 { margin: 0 0 4px; }
+  .panel .pl { font-size: 0.84rem; color: var(--muted); margin-bottom: 10px; }
+  ul.items { list-style: none; }
+  ul.items li { padding: 8px 0; border-top: 1px solid rgba(51,65,85,0.6); font-size: 0.9rem; }
+  ul.items li:first-child { border-top: 0; }
+  ul.items .why { display: block; font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+  .ask { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.35); border-radius: 12px; padding: 20px 24px; }
+  .ask ol { padding-left: 20px; } .ask li { margin: 8px 0; font-size: 0.94rem; color: #e2e8f0; }
+  .ask li b { color: var(--yellow); }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 8px; }
+  .chip { background: var(--surface); color: #cbd5e1; border: 1px solid var(--surface2); border-radius: 999px; padding: 5px 12px; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
+  .chip b { color: var(--muted); font-weight: 600; margin-left: 4px; }
+  .chip.on { background: rgba(56,189,248,0.15); border-color: var(--accent); color: var(--text); }
+  .search { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--surface2); border-radius: 8px; color: var(--text); padding: 8px 12px; font-size: 0.9rem; font-family: inherit; margin-top: 6px; }
+  .count { font-size: 0.82rem; color: var(--muted); margin: 6px 0 10px; }
+  .full-wrap { max-height: 760px; overflow: auto; }
+
+  footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--surface2); font-size: 0.8rem; color: var(--muted); }
+  footer p + p { margin-top: 8px; }
+  @media print { body { background: #fff; color: #000; } .filters, .search { display: none; } .full-wrap { max-height: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="crumb"><a href="index.html">Engineering Planning</a> / Backlog triage outcome</div>
+  <h1>Backlog triage <span>outcome</span></h1>
+  <div class="dates">Follow-up to the <a href="outstanding-work-review-2026-11-16.html">Outstanding Work Review</a> · Konvoy Cloud board · changes applied Monday 16 November 2026</div>
+</header>
+
+<div class="headline">
+  <p>We went through every open 2026 ticket and unstarted EPIC from the review. Each was checked against merged and released code, branches and the board, and only the changes Rob approved were made. <strong>20 tickets closed</strong> (10 done, 4 duplicates, 6 not planned), each with a comment linking what covers it.</p>
+  <p>The board now separates what is ready from what is parked. <strong>23 tickets are Ready</strong> for the next sprint, and 13 of them still need an owner. <strong>46 finance-integration tickets are parked</strong> pending a decision on the finance integration; filter by the <code>on-hold</code> label to find them. The most urgent security and revenue fixes are already in progress.</p>
+</div>
+
+<h2>The numbers</h2>
+<div class="kpis">
+  <div class="kpi"><div class="n green">20</div><div class="l">Tickets closed</div><div class="s">each with a linked comment</div></div>
+  <div class="kpi"><div class="n blue">23</div><div class="l">Ready for next sprint</div><div class="s">13 still need an owner</div></div>
+  <div class="kpi"><div class="n purple">46</div><div class="l">Parked (on-hold)</div><div class="s">pending the finance-integration decision</div></div>
+  <div class="kpi"><div class="n yellow">69</div><div class="l">Board status changes</div><div class="s">each re-checked live before it was made</div></div>
+</div>
+
+<h2>What we closed</h2>
+<p class="lede">Every closure has a comment linking the issue or pull request that covers it. Security items are shown without detail here; follow the link to the private tracker.</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Ticket</th><th>Closed as</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5136">Audit: bare DomainException business-rule violations return 500 + generic message instead of 4xx with the reason</a> <span class="ref">konvoy issue #5136</span></td><td><span class="tag tREVIEW">Duplicate</span></td><td>Same defect as <a href="https://github.com/konvoy-kegs/konvoy/issues/5690">konvoy issue #5690</a></td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5138">Production data fix: corrected the delivery location on one rental order</a> <span class="ref">konvoy issue #5138</span></td><td><span class="tag tCLOSE">Done</span></td><td>Data fix executed and verified 2026-06-15</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4379">Fix circuit breaker: add TTL for auto-recovery and fix namespace cross-contamination</a> <span class="ref">konvoy issue #4379</span></td><td><span class="tag tREVIEW">Duplicate</span></td><td>Merged into <a href="https://github.com/konvoy-kegs/konvoy/issues/6695">konvoy issue #6695</a></td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4893">Operations page detailed view — add &quot;Last Transmission&quot; field (mobile esp.)</a> <span class="ref">konvoy issue #4893</span></td><td><span class="tag tCLOSE">Done</span></td><td>Reporter asked to close; info already in product</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4268">[KEG-4268] Implement OpenTelemetry Distributed Tracing (Phase 1)</a> <span class="ref">konvoy issue #4268</span></td><td><span class="tag tCLOSE">Done</span></td><td>Phase 1 delivered; tracing later retired by decision</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6498">OTEL: trace export fails at init in every env — chart endpoint http+otlp:// rejected by plain OTel SDK</a> <span class="ref">konvoy issue #6498</span></td><td><span class="tag tCLOSE">Done</span></td><td>Init failure resolved by the retire decision</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5959">OTEL: Symfony auto-instrumentation never restored after the bundle removal — only HTTP root and SQS spans on main</a> <span class="ref">konvoy issue #5959</span></td><td><span class="tag tPARK">Not planned</span></td><td>Moot while tracing is retired</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4466">Fix slow GET /api/assets query — KONVOY-API-2RJ (Epic)</a> <span class="ref">konvoy issue #4466</span></td><td><span class="tag tCLOSE">Done</span></td><td>Remaining steps done or retired; latency now normal</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5966">Billing: let the NetSuite query command probe the billing read connection</a> <span class="ref">konvoy issue #5966</span></td><td><span class="tag tCLOSE">Done</span></td><td>Code is on main and released (v1.91.0)</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/kubernetes/issues/435">Add Grafana Cloud alerts for CrashLoopBackOff pods and KEDA health</a> <span class="ref">kubernetes issue #435</span></td><td><span class="tag tCLOSE">Done</span></td><td>Alerts delivered in terraform with tuned thresholds</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6586">Confirm KONVOY-API-3K6 stops recurring after the users/me fix is released</a> <span class="ref">konvoy issue #6586</span></td><td><span class="tag tCLOSE">Done</span></td><td>No recurrence 14 days after release (OC traffic)</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6380">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #6380</span></td><td><span class="tag tREVIEW">Duplicate</span></td><td>Covered by a tracked security issue</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4895">Built-in keg-collection reminder emails (replace Mailchimp workflow)</a> <span class="ref">konvoy issue #4895</span></td><td><span class="tag tPARK">Not planned</span></td><td>Superseded in direction by <a href="https://github.com/konvoy-kegs/konvoy/issues/6751">konvoy issue #6751</a></td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4457">Refactor joinStringsForData() with deferred-join / ID-first pagination (GET /api/assets, KONVOY-API-2RJ)</a> <span class="ref">konvoy issue #4457</span></td><td><span class="tag tPARK">Not planned</span></td><td>Abandoned after measurement</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/kubernetes/issues/495">[486] off-hours dev scaledown: verify intent + no cluster-autoscaler (drain confirmed working)</a> <span class="ref">kubernetes issue #495</span></td><td><span class="tag tPARK">Not planned</span></td><td>Superseded: scaledown disabled</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6146">Decide and enforce required status checks for CI analysers and tests</a> <span class="ref">konvoy issue #6146</span></td><td><span class="tag tREVIEW">Duplicate</span></td><td>Merged into <a href="https://github.com/konvoy-kegs/konvoy/issues/6198">konvoy issue #6198</a></td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4902">New customers not receiving order confirmation emails — default the setting to YES on signup</a> <span class="ref">konvoy issue #4902</span></td><td><span class="tag tCLOSE">Done</span></td><td>Fix released; backfill split to <a href="https://github.com/konvoy-kegs/konvoy/issues/6787">konvoy issue #6787</a></td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5778">/api/transfers has no server-side default page size when the pagination block is absent</a> <span class="ref">konvoy issue #5778</span></td><td><span class="tag tPARK">Not planned</span></td><td>Legacy transfers page to be deleted at 100% rollout</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5781">/api/transfers returns no meta.pagination, so the legacy transfers list cannot show total pages or item count</a> <span class="ref">konvoy issue #5781</span></td><td><span class="tag tPARK">Not planned</span></td><td>Legacy transfers page to be deleted at 100% rollout</td></tr>
+<tr><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5416">Finance alert on two rentals billed to a non-billable site (orders cancelled at source)</a> <span class="ref">konvoy issue #5416</span></td><td><span class="tag tCLOSE">Done</span></td><td>Resolved at source 2026-07-08</td></tr>
+</tbody></table></div>
+<p class="lede">Two more will close after the next release, once their merged changes ship: <a href="https://github.com/konvoy-kegs/konvoy/issues/4871">konvoy issue #4871</a> and <a href="https://github.com/konvoy-kegs/konvoy/issues/6623">konvoy issue #6623</a>. Two pairs were merged rather than simply closed: their acceptance criteria were copied into the surviving issue first.</p>
+
+<h2>Ready for the next sprint</h2>
+<p class="lede">Ordered by board priority, with security and revenue fixes first within each priority.</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th class="num">#</th><th>Ticket</th><th>Priority</th><th>Owner</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4541">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #4541</span></td><td>🏔 High</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">2</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4787">Remove Elvis fallback on `CompleteOrderInputDto::$completedDate` and require the field with `Assert\NotBlank`</a> <span class="ref">konvoy issue #4787</span></td><td>🏔 High</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">3</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4788">Add functional regression test asserting `completedDate` round-trips on order-complete and change-completed-date endpoints</a> <span class="ref">konvoy issue #4788</span></td><td>🏔 High</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">4</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6065">[EPIC] Shared documentation RAG bank for developer agents (Hindsight)</a> <span class="ref">konvoy issue #6065</span></td><td>🏔 High</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">5</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5779">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #5779</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">6</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4477">Fix: Null billing emails overwrite NetSuite data with empty strings</a> <span class="ref">konvoy issue #4477</span></td><td>🏕 Medium</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">7</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5742">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #5742</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">8</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6754">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #6754</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">9</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6755">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #6755</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">10</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5777">Country-name mismatch blocks collection requests and organisation saves (geo_country vs Google naming)</a> <span class="ref">konvoy issue #5777</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">11</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5783">chore: remove departed-developer references (bradroc)</a> <span class="ref">konvoy issue #5783</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">12</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6628">feat: [dashboard] show the hold on the overdue invoices tile when the standing request fails</a> <span class="ref">konvoy issue #6628</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">13</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6631">feat: [dashboard] show Total and Transport in the mobile customer rentals list</a> <span class="ref">konvoy issue #6631</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">14</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6632">feat: [dashboard] add a currency to the rates summary and format the rates card with it</a> <span class="ref">konvoy issue #6632</span></td><td>🏕 Medium</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">15</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6469">docs: Collections user guide says User is read-only and misreads Not sent</a> <span class="ref">konvoy issue #6469</span></td><td>🏝 Low</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">16</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/4509">[FL-10] Frontend: Admin order form fuel levy calculation display</a> <span class="ref">konvoy issue #4509</span></td><td>—</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">17</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5212">Observability M4: Grafana app-level panels</a> <span class="ref">konvoy issue #5212</span></td><td>—</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">18</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5597">Booths: a failed success-flush loses the EDI id and hides the order from both reconciler and alerting</a> <span class="ref">konvoy issue #5597</span></td><td>—</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">19</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6155">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #6155</span></td><td>—</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">20</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6345">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #6345</span></td><td>—</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">21</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6404">Security item (details in the private tracker)</a> <span class="ref">konvoy issue #6404</span></td><td>—</td><td>rob-ee-wilde</td></tr>
+<tr><td class="num">22</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6596">[EPIC] Clear framework and library deprecations logged in the dev profiler</a> <span class="ref">konvoy issue #6596</span></td><td>—</td><td><span class="muted">unassigned</span></td></tr>
+<tr><td class="num">23</td><td><a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6659">Engineering: confirm dev-oc deploy of 862889d43 and tell Finance it is ready for UAT</a> <span class="ref">konvoy issue #6659</span></td><td>—</td><td>rob-ee-wilde</td></tr>
+</tbody></table></div>
+
+<h2>Parked pending a decision on the finance integration</h2>
+<p class="lede">The seven NetSuite EPICs (including the six February NetSuite-gap EPICs), their open sub-issues and the stand-alone integration work are in Backlog with the <code>on-hold</code> label: <a href="https://github.com/konvoy-kegs/konvoy/issues?q=is%3Aopen+label%3Aon-hold">open on-hold tickets</a>. Live revenue and security fixes that touch NetSuite stay in play. The Billing in Konvoy Cloud and Pay Now EPICs were deliberately kept out of the parked set.</p>
+
+<h2>Started, then orphaned</h2>
+<div class="ask"><ol>
+  <li><b>Salvaged:</b> an unmerged fix for the posting-period alert had never been put up for review. It is now draft <a href="https://github.com/konvoy-kegs/konvoy/pull/6788">konvoy PR #6788</a>.</li>
+  <li><b>Resumed with owners:</b> <a href="https://github.com/konvoy-kegs/konvoy/issues/5889">konvoy issue #5889</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/5846">konvoy issue #5846</a> and <a href="https://github.com/konvoy-kegs/konvoy/issues/6106">konvoy issue #6106</a>. <a href="https://github.com/konvoy-kegs/terraform/issues/474">terraform issue #474</a> is to resume but has no owner yet.</li>
+  <li><b>Parked:</b> the Booths EDI integration (<a href="https://github.com/konvoy-kegs/konvoy/issues/5044">konvoy issue #5044</a>) and its open items, with its branch kept, plus tickets marked in progress that had no work on main.</li>
+  <li><b>Branches:</b> 10 branches hold no commits beyond main and are listed for deletion. Branches holding unmerged work are kept.</li>
+</ol></div>
+
+<h2>Decisions still needed</h2>
+<div class="ask"><ol>
+  <li><b>Owners</b> for the 13 unassigned Ready tickets, and for <a href="https://github.com/konvoy-kegs/terraform/issues/474">terraform issue #474</a>.</li>
+  <li><b>Stale statuses:</b> three tickets still show In-Progress or QA with no work on main (<a href="https://github.com/konvoy-kegs/konvoy/issues/4938">konvoy issue #4938</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/4253">konvoy issue #4253</a>, <a href="https://github.com/konvoy-kegs/konvoy/issues/4870">konvoy issue #4870</a>).</li>
+  <li><b>Labels:</b> three parked tickets are probably not finance-integration work and may come off <code>on-hold</code>.</li>
+</ol></div>
+
+<footer>
+  <p><b>Source:</b> GitHub GraphQL and REST APIs (konvoy-kegs Project 4; repos konvoy, kubernetes and terraform). Live state was re-read immediately before every change on 16 Nov 2026. Releases were checked by tag ancestry, and branches by comparison with main.</p>
+  <p><b>Scope:</b> the 166 stand-alone tickets and 17 unstarted EPICs from the Outstanding Work Review, plus the sub-issues of EPICs whose status changed. Two had already been closed before the triage began.</p>
+  <p><b>Approval:</b> every change was approved by Rob Wilde before it was applied, and each is recorded in the engineering change log.</p>
+</footer>
+
+</div>
+</body>
+</html>
