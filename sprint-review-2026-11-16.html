@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milestone 35 Review &amp; M36 Plan (17 – 30 November) — Konvoy Engineering</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 24px 80px; }
+  .wrap { max-width: 940px; margin: 0 auto; }
+
+  a { color: var(--accent); }
+  a.iss { text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.5); white-space: nowrap; }
+  a.iss:hover { border-bottom-style: solid; }
+  a.nm { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(56,189,248,0.55); }
+  a.nm:hover { color: var(--accent); border-bottom-style: solid; }
+
+  header { border-bottom: 1px solid var(--surface2); padding-bottom: 28px; margin-bottom: 36px; }
+  .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; }
+  .crumb a { text-decoration: none; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .dates { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+  h2 { font-size: 1.35rem; margin: 52px 0 6px; letter-spacing: -0.3px; }
+  h2:first-of-type { margin-top: 0; }
+  .lede { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+
+  .headline { background: linear-gradient(135deg, rgba(56,189,248,0.10), rgba(74,222,128,0.06)); border: 1px solid rgba(56,189,248,0.35); border-radius: 14px; padding: 26px 28px; margin-bottom: 34px; }
+  .headline p { font-size: 1.06rem; }
+  .headline p + p { margin-top: 14px; }
+  .headline strong { color: #e2f5ff; }
+
+  .release { background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.4); border-radius: 14px; padding: 22px 26px; margin-bottom: 34px; }
+  .release .rtag { display: inline-block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--green); background: rgba(74,222,128,0.14); border-radius: 6px; padding: 4px 10px; margin-bottom: 12px; }
+  .release p { font-size: 0.94rem; color: #cbd5e1; }
+  .release .rnote { margin-top: 12px; font-size: 0.88rem; color: var(--muted); }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 10px; }
+  .kpi { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 20px; }
+  .kpi .n { font-size: 2.1rem; font-weight: 800; line-height: 1.1; }
+  .kpi .l { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 6px; }
+  .kpi .s { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .n.green { color: var(--green); } .n.blue { color: var(--accent); }
+  .n.yellow { color: var(--yellow); } .n.purple { color: var(--purple); } .n.red { color: var(--red); }
+
+  .bars { background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; padding: 24px 26px; }
+  .bar { margin-bottom: 15px; }
+  .bar:last-child { margin-bottom: 0; }
+  .bar .top { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 5px; }
+  .bar .top span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { height: 9px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 5px; background: var(--accent); }
+
+  .themes { display: grid; gap: 14px; }
+  .theme { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--accent); border-radius: 10px; padding: 20px 22px; }
+  .theme h3 { font-size: 1.02rem; margin-bottom: 8px; }
+  .theme p { font-size: 0.92rem; color: #cbd5e1; }
+  .theme p + p { margin-top: 10px; }
+  .theme .why { display: block; margin-top: 10px; font-size: 0.86rem; color: var(--muted); }
+  .theme .why b { color: var(--green); font-weight: 600; }
+  .theme.sec { border-left-color: var(--red); }
+  .theme.sec .why b { color: var(--red); }
+  .theme.money { border-left-color: var(--purple); }
+  .theme.money .why b { color: var(--purple); }
+
+  .steps { margin: 12px 0 4px; display: grid; gap: 6px; }
+  .step { display: grid; grid-template-columns: 112px 1fr; gap: 12px; font-size: 0.88rem; color: #cbd5e1; align-items: baseline; }
+  .step .st { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; text-align: center; white-space: nowrap; }
+  .st.done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .st.review { background: rgba(56,189,248,0.15); color: var(--accent); }
+  .st.queued { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .st.open { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  .caveat { background: rgba(251,191,36,0.08); border-left: 3px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 16px 18px; margin-top: 20px; font-size: 0.9rem; }
+  .caveat b { color: var(--yellow); }
+  .caveat.green { background: rgba(74,222,128,0.07); border-left-color: var(--green); }
+  .caveat.green b { color: var(--green); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--surface2); border-radius: 12px; overflow: hidden; }
+  th { text-align: left; padding: 12px 16px; background: rgba(51,65,85,0.5); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
+  td { padding: 13px 16px; border-top: 1px solid var(--surface2); vertical-align: top; }
+  td.w { width: 30%; font-weight: 600; }
+
+  .watch { display: grid; gap: 12px; }
+  .w-item { background: var(--surface); border: 1px solid var(--surface2); border-left: 3px solid var(--red); border-radius: 10px; padding: 18px 20px; }
+  .w-item.amber { border-left-color: var(--yellow); }
+  .w-item h3 { font-size: 0.98rem; margin-bottom: 6px; }
+  .w-item p { font-size: 0.9rem; color: #cbd5e1; }
+  .w-item .ask { display: block; margin-top: 9px; font-size: 0.86rem; color: var(--accent); }
+
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: 2px; }
+  .tag-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .tag-carry { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tag-hold { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--surface2); color: var(--surface2); font-size: 0.8rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumb"><a href="index.html">&larr; Engineering Planning</a></div>
+    <h1>Milestone 35 Review <span>&amp;</span> M36 Plan</h1>
+    <div class="dates">Sprint ran 3 &ndash; 16 November 2026 &middot; Next sprint M36, 17 &ndash; 30 November &middot;
+    Team of 3 &middot; Prepared for the CEO &amp; COO &middot; 17 November 2026</div>
+  </header>
+
+  <!-- ============ THE SHORT VERSION ============ -->
+  <div class="headline">
+    <p><strong>A lot reached the main branch; less reached customers.</strong> PHP 8.5 landed on the main branch on 9 November and
+    its epic closed at 22 of 22. View as User, which lets staff see an organisation exactly as one of its members does, read-only,
+    landed on 12 November. Seven fixes for the November list, including four security fixes and both pricing fixes, all have an
+    approved pull request. None of this is in production yet: the last release was v1.91.2 on 7 November.</p>
+
+    <p><strong>The numbers held up.</strong> Milestone 35 closed at <strong>74%</strong> (66 of 89), against 79% last time.
+    Behind it, <strong>78 issues closed and 50 pull requests merged</strong>; 18 of the closures were the backlog triage on
+    16 November. Millicent merged the most (21), mostly the PHP quality-tooling work; Bea took the
+    customer dashboard to 17 of 21 across two releases. No infrastructure changes were merged.</p>
+
+    <p><strong>What did not move: Kubernetes, and the customer Billing switch.</strong> Kubernetes 1.35 now has <strong>15
+    days</strong> to the 2 December deadline and no status change since 26 October. Customer Billing is still switched off,
+    waiting on Finance. <strong>The plan for M36, in order:</strong> merge the seven fixes and release them with PHP 8.5 and View
+    as User; build the holiday lock, whose warning must be live by 8 December; then the Ready list. Kubernetes needs a yes or a no
+    today.</p>
+  </div>
+
+  <div class="release">
+    <div class="rtag">Released &middot; v1.91.1 and v1.91.2 &middot; 5 and 7 November</div>
+    <p><strong>Two small releases, both mostly the customer dashboard.</strong> v1.91.1 on 5 November carried five dashboard
+    pieces and four fixes. v1.91.2 on 7 November carried three customer Rentals refinements and two fixes.</p>
+    <p class="rnote">Live now: the overdue-invoices tile, the rates card, the provisional pill on the contract band, the Forecast
+    page&rsquo;s missing-months banner and the v2.2 customer Rentals page, all behind the dashboard switch; order-confirmation emails
+    on by default for customers who sign up; the Rentals download keeps the transport location; a service-worker failure no longer
+    raises an error; casual agreements can no longer be extended. <strong>Waiting on the main branch for the next release:</strong>
+    PHP 8.5, View as User and its one-tab fix, and 14 commits in all since v1.91.2.</p>
+  </div>
+
+  <!-- ============ NUMBERS ============ -->
+  <h2>The numbers</h2>
+  <div class="lede">Milestone 35, measured on 17 November. Counts include both issues and pull requests, which is how GitHub
+  reports a milestone.</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n green">66</div><div class="l">Items closed</div><div class="s">of 89 in the milestone &mdash; 74%</div></div>
+    <div class="kpi"><div class="n blue">78</div><div class="l">Issues closed</div><div class="s">41 in the milestone, 37 outside it &middot; 88 opened</div></div>
+    <div class="kpi"><div class="n purple">50</div><div class="l">Pull requests merged</div><div class="s">Millicent 21, Bea 16, Rob 11, automated 2 &middot; no infrastructure PRs</div></div>
+    <div class="kpi"><div class="n green">2</div><div class="l">Production releases</div><div class="s">v1.91.1 on 5 Nov &middot; v1.91.2 on 7 Nov</div></div>
+  </div>
+
+  <div class="caveat" style="margin-top:20px">
+    <b>On the completion figure.</b> 74% is five points down on M34. 23 items carried: 11 are the sign-up and login EPIC opened
+    on 10 November, mostly research and decisions; the rest are the PHP quality-tooling pieces in review, the order-email
+    follow-ups and a few small fixes. Over the fortnight <strong>88 issues were opened against 78 closed</strong>, so the backlog
+    grew by ten, after shrinking by seven last sprint. About half of the new ones came from three epics: sign-up and login (22),
+    PHP quality tooling (14) and the order-email investigation (13). Of the 50 pull requests, 37 landed on the main branch and 13 on epic branches (11 on the PHP quality-tooling
+    branch, 2 on the PHP 8.5 branch before it merged).
+  </div>
+
+  <!-- ============ EFFORT ============ -->
+  <h2>Where the effort went</h2>
+  <div class="lede">All 78 issues closed between 3 and 16 November, grouped by what they were about. Groupings are
+  approximate.</div>
+
+  <div class="bars">
+    <div class="bar"><div class="top"><span>PHP quality tooling, test quality &amp; the PHP 8.5 close-out</span><span>19</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+    <div class="bar"><div class="top"><span>Backlog triage (16 November)</span><span>18</span></div><div class="track"><div class="fill" style="width:95%"></div></div></div>
+    <div class="bar"><div class="top"><span>Customer dashboard (behind its switch)</span><span>10</span></div><div class="track"><div class="fill" style="width:53%"></div></div></div>
+    <div class="bar"><div class="top"><span>Order-email delivery investigation</span><span>10</span></div><div class="track"><div class="fill" style="width:53%"></div></div></div>
+    <div class="bar"><div class="top"><span>Fixes customers &amp; support will notice</span><span>9</span></div><div class="track"><div class="fill" style="width:47%"></div></div></div>
+    <div class="bar"><div class="top"><span>View as User</span><span>7</span></div><div class="track"><div class="fill" style="width:37%"></div></div></div>
+    <div class="bar"><div class="top"><span>Security fixes &amp; dependency advisories</span><span>3</span></div><div class="track"><div class="fill" style="width:16%"></div></div></div>
+    <div class="bar"><div class="top"><span>Old epics closed</span><span>2</span></div><div class="track"><div class="fill" style="width:11%"></div></div></div>
+  </div>
+
+  <div class="lede" style="margin-top:14px">Three people, three lanes again: Millicent on PHP quality tooling and the test suite,
+  Bea on the customer dashboard and with Rob on View as User, Rob on the order-email investigation, the November security and pricing fixes and
+  the backlog triage. The seven fixes do not show in these bars because none has merged yet.</div>
+
+  <!-- ============ WHAT WE FINISHED ============ -->
+  <h2>What we finished</h2>
+  <div class="lede">Six themes, in the order a manager should care about them. Underlined names link to the GitHub record.
+  &ldquo;Live&rdquo; means in production; &ldquo;Switched off&rdquo; means in production but dark behind its switch;
+  &ldquo;On main&rdquo; means merged and waiting for the next release.</div>
+
+  <div class="themes">
+
+    <div class="theme sec">
+      <h3>1. The November list: seven fixes approved, none merged <span class="tag tag-carry">Approved</span></h3>
+      <p>Of the 16 tickets the outstanding-work review suggested finishing by 30 November, 2 are closed and 7 have a pull request
+      that Millicent has approved: the four security fixes, both pricing fixes and the fix for the consumer breaker that caused the
+      5 November incident. Each still has one to three review comments to resolve before it can merge. The other 7 need a person
+      or a decision. Details are on the
+      <a class="nm" href="outstanding-work-review-2026-11-16.html">outstanding-work review</a>.</p>
+      <span class="why"><b>Why it matters:</b> every security code fix on the list is written and approved; what is left is
+      resolving comments, merging and releasing.</span>
+    </div>
+
+    <div class="theme">
+      <h3>2. PHP 8.5 reached the main branch <span class="tag tag-carry">On main</span></h3>
+      <p>The upgrade that finished on its branch last sprint merged to the main branch on 9 November
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/5665">the PHP 8.5 epic</a>, closed at 22 of 22). The last
+      report planned to release it on its own so any fault would be unmistakably the runtime. It has not been released yet, and
+      View as User and the seven fixes are now queued behind it.</p>
+      <span class="why"><b>Why it matters:</b> the runtime upgrade is done in code; the decision now is how to release it.</span>
+    </div>
+
+    <div class="theme">
+      <h3>3. The customer dashboard: 12 of 19 to 17 of 21 <span class="tag tag-carry">Switched off</span></h3>
+      <p>Bea&rsquo;s sprint again. The overdue-invoices tile, the rates card, the provisional contract pill, the Forecast
+      missing-months banner and the v2.2 customer Rentals page all shipped in v1.91.1; the Rentals defaults (rolling twelve months,
+      newest first, clearer column names) followed in v1.91.2
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6462">the customer portal epic</a>). The epic now has 21
+      pieces, up from 19. The dashboard&rsquo;s production switch is still off.</p>
+      <span class="why"><b>Why it matters:</b> the dashboard is nearly complete, which is why the sign-up and roles work below now
+      matters: more customers will log in once it opens.</span>
+    </div>
+
+    <div class="theme">
+      <h3>4. View as User: see an organisation as one of its members <span class="tag tag-carry">On main</span></h3>
+      <p>Staff can now preview an organisation exactly as a chosen member sees it, and the preview is read-only: any attempt to
+      change something is refused by the API, not just hidden in the screen
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6737">read-only member preview</a>). It stays in one tab
+      with a way back, the Billing page can be previewed too, and the user guide is written. Merged 9&ndash;13 November.</p>
+      <span class="why"><b>Why it matters:</b> support can answer &ldquo;what does this customer see?&rdquo; without asking for a
+      screenshot, and without any risk of changing the customer&rsquo;s data.</span>
+    </div>
+
+    <div class="theme">
+      <h3>5. PHP quality tooling: the same checks on every machine <span class="tag tag-carry">Branch</span></h3>
+      <p>Millicent&rsquo;s sprint. The PHP checks now run before every commit, fast enough not to be skipped; PHPStan and Rector
+      were upgraded in one step; one formatter replaced two; PhpStorm is set up with the same rules as CI; and CI reports code
+      complexity on changed methods. The epic is at 12 of 14
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6547">the PHP quality-tooling epic</a>); the last two pull
+      requests are waiting on Rob&rsquo;s review.</p>
+      <span class="why"><b>Why it matters:</b> problems the CI gate used to find after a push are now caught before the commit.</span>
+    </div>
+
+    <div class="theme">
+      <h3>6. The backlog triage and the order-email investigation <span class="tag tag-done">Done</span></h3>
+      <p>On 16&ndash;17 November every open 2026 ticket and unstarted EPIC was checked against merged code and the board: 20 closed,
+      46 put on hold pending the finance-integration decision (44 after two were taken off on 17 November), and 23 marked Ready for
+      this sprint (<a class="nm" href="backlog-triage-outcome-2026-11-16.html">the triage outcome</a>). Separately, Rob&rsquo;s
+      investigation into how order emails to warehouses are sent and confirmed closed 9 of its 18 pieces
+      (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6756">the order-email epic</a>).</p>
+      <span class="why"><b>Why it matters:</b> the sprint starts from a board that says what is ready and what is parked.</span>
+    </div>
+
+  </div>
+
+  <!-- ============ INFRASTRUCTURE ============ -->
+  <h2>Infrastructure, counted separately</h2>
+  <div class="lede">No changes merged in the infrastructure repositories during the sprint. The November AWS invoice arrives in
+  early December.</div>
+
+  <table>
+    <tr><th>Board</th><th>Where it stands</th></tr>
+    <tr><td class="w">Kubernetes 1.33 &rarr; 1.36 <span class="tag tag-hold">No movement, 15 days</span></td><td>36 items done, 4 Ready, 3 Blocked; no status change since 26 October, and the 1.35 step is still marked deferred. The current version leaves standard support on <strong>2 December</strong>. Watch item 1.</td></tr>
+  </table>
+
+  <!-- ============ NEXT ============ -->
+  <h2>What we&rsquo;re working on next</h2>
+  <div class="lede">Milestone 36, 17 &ndash; 30 November. Five weeks remain to 22 December: M36, M37 (1 &ndash; 14 December) and
+  a half sprint. The order below is the proposed sprint order.</div>
+
+  <table>
+    <tr><th>Workstream</th><th>Status going in</th></tr>
+    <tr><td class="w">1. Merge and release</td><td>Resolve the review comments on the seven approved fixes and merge them, the order pricing fix before the customer pricing fix. One needs a NetSuite sandbox check first. Then one release with PHP 8.5 and View as User. At release, tell Sales and Finance about the two pricing fixes, because they change billed amounts.</td></tr>
+    <tr><td class="w">2. Holiday lock</td><td>New this morning: stop new and changed orders, collection requests and transfers from 22 December to 5 January, in the system itself rather than only on the order form as last year (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6789">the holiday lock</a>). The in-app warning must be live by <strong>8 December</strong>, so this is M36 work. Which markets, whether staff are exempt and who approves the wording are decisions for today.</td></tr>
+    <tr><td class="w">3. The Ready list</td><td>23 issues from the triage, 13 without an owner. The board shows 27 Ready, including 4 that were Ready before the triage.</td></tr>
+    <tr><td class="w">4. Sign-up, login and roles</td><td>The EPIC raised on 10 November is at 4 of 23; 11 items carry from M35. A new piece was added today for staff default roles and who can edit organisation members. It needs to be right before the customer dashboard opens up.</td></tr>
+    <tr><td class="w">5. PHP quality tooling</td><td>The last two pieces, both in review.</td></tr>
+    <tr><td class="w">6. Kubernetes 1.35</td><td>15 days. Watch item 1.</td></tr>
+  </table>
+
+  <div class="caveat">
+    <b>Placement.</b> Rows 1 and 2 are both time-bound and both mostly Rob&rsquo;s; row 6 does not fit beside them. Row 4 is a
+    sequence of decisions before it is code. Owners for the 13 unassigned Ready issues are needed today.
+  </div>
+
+  <!-- ============ WATCH ============ -->
+  <h2>Five things to watch</h2>
+  <div class="lede">Ordered by how quickly they need a decision.</div>
+
+  <div class="watch">
+
+    <div class="w-item">
+      <h3>1. Kubernetes 1.35 &mdash; 15 days, four sprints of no movement</h3>
+      <p>Standard support for the current version ends on 2 December. The last report put the surcharge after that at $2,147 AUD a
+      month until all four clusters are upgraded. There has been no status change on the upgrade board since 26 October.</p>
+      <span class="ask">Decision: yes means it goes ahead of rows 3 to 5 this sprint; no means budgeting the surcharge from
+      December. One or the other today.</span>
+    </div>
+
+    <div class="w-item">
+      <h3>2. Two access findings have no owner</h3>
+      <p>Of the four access findings in the last report, one has an approved fix waiting to merge and one needs an owner&rsquo;s
+      keep-or-revoke decision. The other two have no owner and are not on the sprint board. Details stay off this page until they
+      are fixed.</p>
+      <span class="ask">What would help: name an owner for each and put both in M36, or record that they wait.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>3. Customer Billing is still switched off</h3>
+      <p>The last report expected customers on Billing around 16&ndash;17 November. The switch is still off in production. The
+      legal-entity wording has no Finance owner, and how currency names map to codes is still being decided.</p>
+      <span class="ask">What would help: a named Finance owner for the wording, and a date to aim for.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>4. The holiday lock&rsquo;s warning must be live by 8 December</h3>
+      <p>That is three weeks away, on the Tuesday of M37&rsquo;s second week, and it has to be released by then. Last year&rsquo;s notice was on
+      the order form only.</p>
+      <span class="ask">What would help: settle today which markets, whether staff are exempt, and who approves the customer
+      wording.</span>
+    </div>
+
+    <div class="w-item amber">
+      <h3>5. A large release is building up</h3>
+      <p>PHP 8.5, View as User and, once merged, seven fixes including two that change billed amounts. The last report&rsquo;s plan
+      was to release PHP 8.5 on its own.</p>
+      <span class="ask">What would help: agree today whether PHP 8.5 goes out first on its own, or with the fixes.</span>
+    </div>
+
+  </div>
+
+  <footer>
+    Konvoy Kegs Engineering &middot; Milestone 35 review, prepared 17 November 2026. Figures taken from the
+    <a href="https://github.com/konvoy-kegs/konvoy/milestone/35">Milestone 35 issue list</a> on 17 November, from issues closed
+    and opened and pull requests merged in konvoy-kegs/konvoy between 3 and 16 November (Brisbane time), and from pull requests
+    merged in the terraform and kubernetes repositories over the same window. Pull requests merged into epic branches are counted as
+    merged but were not on the main branch at the time. Release contents from the
+    <a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.91.1">v1.91.1</a> and
+    <a href="https://github.com/konvoy-kegs/konvoy/releases/tag/v1.91.2">v1.91.2</a> release notes. Switch states read from
+    LaunchDarkly production on 17 November. The Kubernetes surcharge figure is from the
+    <a href="sprint-review-2026-11-02.html">Milestone 34 report</a>. Theme groupings are approximate.
+  </footer>
+
+</div>
+</body>
+</html>
