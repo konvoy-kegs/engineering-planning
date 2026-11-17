@@ -117,8 +117,8 @@
   <div class="headline">
     <p><strong>A lot reached the main branch; less reached customers.</strong> PHP 8.5 landed on the main branch on 9 November and
     its epic closed at 22 of 22. View as User, which lets staff see an organisation exactly as one of its members does, read-only,
-    landed on 12 November. Seven fixes for the November list, including four security fixes and both pricing fixes, all have an
-    approved pull request. None of this is in production yet: the last release was v1.91.2 on 7 November.</p>
+    landed on 12 November. On 17 November the seven fixes for the November list merged too, including four security fixes and
+    both pricing fixes. None of this is in production yet: the last release was v1.91.2 on 7 November.</p>
 
     <p><strong>The numbers held up.</strong> Milestone 35 closed at <strong>74%</strong> (66 of 89), against 79% last time.
     Behind it, <strong>78 issues closed and 50 pull requests merged</strong>; 18 of the closures were the backlog triage on
@@ -127,7 +127,7 @@
 
     <p><strong>What did not move: Kubernetes, and the customer Billing switch.</strong> Kubernetes 1.35 now has <strong>15
     days</strong> to the 2 December deadline and no status change since 26 October. Customer Billing is still switched off,
-    waiting on Finance. <strong>The plan for M36, in order:</strong> merge the seven fixes and release them with PHP 8.5 and View
+    waiting on Finance. <strong>The plan for M36, in order:</strong> release the seven merged fixes, PHP 8.5 and View
     as User; build the holiday lock, whose warning must be live by 8 December; then the Ready list. Kubernetes needs a yes or a no
     today.</p>
   </div>
@@ -139,8 +139,8 @@
     <p class="rnote">Live now: the overdue-invoices tile, the rates card, the provisional pill on the contract band, the Forecast
     page&rsquo;s missing-months banner and the v2.2 customer Rentals page, all behind the dashboard switch; order-confirmation emails
     on by default for customers who sign up; the Rentals download keeps the transport location; a service-worker failure no longer
-    raises an error; casual agreements can no longer be extended. <strong>Waiting on the main branch for the next release:</strong>
-    PHP 8.5, View as User and its one-tab fix, and 14 commits in all since v1.91.2.</p>
+    raises an error; casual agreements can no longer be extended. <strong>Waiting on the main branch for the next release</strong>
+    (21 commits since v1.91.2): PHP 8.5, View as User and its one-tab fix, and the seven November fixes merged on 17 November.</p>
   </div>
 
   <!-- ============ NUMBERS ============ -->
@@ -182,7 +182,7 @@
 
   <div class="lede" style="margin-top:14px">Three people, three lanes again: Millicent on PHP quality tooling and the test suite,
   Bea on the customer dashboard and with Rob on View as User, Rob on the order-email investigation, the November security and pricing fixes and
-  the backlog triage. The seven fixes do not show in these bars because none has merged yet.</div>
+  the backlog triage. The seven November fixes do not show in these bars because they merged on 17 November, after the sprint closed.</div>
 
   <!-- ============ WHAT WE FINISHED ============ -->
   <h2>What we finished</h2>
@@ -193,14 +193,13 @@
   <div class="themes">
 
     <div class="theme sec">
-      <h3>1. The November list: seven fixes approved, none merged <span class="tag tag-carry">Approved</span></h3>
-      <p>Of the 16 tickets the outstanding-work review suggested finishing by 30 November, 2 are closed and 7 have a pull request
-      that Millicent has approved: the four security fixes, both pricing fixes and the fix for the consumer breaker that caused the
-      5 November incident. Each still has one to three review comments to resolve before it can merge. The other 7 need a person
-      or a decision. Details are on the
+      <h3>1. The November list: seven fixes merged, not yet released <span class="tag tag-carry">On main</span></h3>
+      <p>Of the 16 tickets the outstanding-work review suggested finishing by 30 November, 8 are now closed. The four security
+      fixes, the order pricing fix and the fix for the consumer breaker that caused the 5 November incident all merged on
+      17 November, after Millicent&rsquo;s review; the customer pricing fix merged too and its ticket is in QA. None is released
+      yet. The other 7 tickets need a person or a decision, or are still in progress. Details are on the
       <a class="nm" href="outstanding-work-review-2026-11-16.html">outstanding-work review</a>.</p>
-      <span class="why"><b>Why it matters:</b> every security code fix on the list is written and approved; what is left is
-      resolving comments, merging and releasing.</span>
+      <span class="why"><b>Why it matters:</b> every security code fix on the list is merged; what is left is the release.</span>
     </div>
 
     <div class="theme">
@@ -272,7 +271,7 @@
 
   <table>
     <tr><th>Workstream</th><th>Status going in</th></tr>
-    <tr><td class="w">1. Merge and release</td><td>Resolve the review comments on the seven approved fixes and merge them, the order pricing fix before the customer pricing fix. Then one release with PHP 8.5 and View as User. At release, tell Sales and Finance about the two pricing fixes, because they change billed amounts.</td></tr>
+    <tr><td class="w">1. Release</td><td>The seven November fixes merged on 17 November, so the next release carries them with PHP 8.5 and View as User, unless PHP 8.5 goes out on its own first (watch item 5). At release, tell Sales and Finance about the two pricing fixes, because they change billed amounts.</td></tr>
     <tr><td class="w">2. Holiday lock</td><td>New this morning: stop new and changed orders, collection requests and transfers from 22 December to 5 January, in the system itself rather than only on the order form as last year (<a class="nm" href="https://github.com/konvoy-kegs/konvoy/issues/6789">the holiday lock</a>). The in-app warning must be live by <strong>8 December</strong>, so this is M36 work. Which markets, whether staff are exempt and who approves the wording are decisions for today.</td></tr>
     <tr><td class="w">3. The Ready list</td><td>23 issues from the triage, 13 without an owner. The board shows 27 Ready, including 4 that were Ready before the triage.</td></tr>
     <tr><td class="w">4. Sign-up, login and roles</td><td>The EPIC raised on 10 November is at 4 of 23; 11 items carry from M35. A new piece was added today for staff default roles and who can edit organisation members. It needs to be right before the customer dashboard opens up.</td></tr>
@@ -301,7 +300,7 @@
 
     <div class="w-item">
       <h3>2. Two access findings have no owner</h3>
-      <p>Of the four access findings in the last report, one has an approved fix waiting to merge and one needs an owner&rsquo;s
+      <p>Of the four access findings in the last report, one now has its fix merged (not yet released) and one needs an owner&rsquo;s
       keep-or-revoke decision. The other two have no owner and are not on the sprint board. Details stay off this page until they
       are fixed.</p>
       <span class="ask">What would help: name an owner for each and put both in M36, or record that they wait.</span>
@@ -324,7 +323,7 @@
 
     <div class="w-item amber">
       <h3>5. A large release is building up</h3>
-      <p>PHP 8.5, View as User and, once merged, seven fixes including two that change billed amounts. The last report&rsquo;s plan
+      <p>PHP 8.5, View as User and, since 17 November, seven merged fixes including two that change billed amounts. The last report&rsquo;s plan
       was to release PHP 8.5 on its own.</p>
       <span class="ask">What would help: agree today whether PHP 8.5 goes out first on its own, or with the fixes.</span>
     </div>
